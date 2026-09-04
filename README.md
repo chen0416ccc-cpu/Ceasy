@@ -1,13 +1,12 @@
 <div align="center">
 
-<img src="work/CodexGuardian/Assets/CeasyLogo.png" width="120" alt="Ceasy">
+<img src="./work/CodexGuardian/Assets/CeasyLogo.png" width="120" alt="Ceasy">
 
 # Ceasy
 
-**盯住 Codex Desktop 的每个任务，中断了按证据决定要不要替你续上**
+### 盯住 Codex Desktop 的每个任务，中断了按证据决定要不要替你续上
 
 [![Release](https://img.shields.io/github/v/release/chen0416ccc-cpu/Ceasy?style=flat-square&label=Release&color=2ea44f)](https://github.com/chen0416ccc-cpu/Ceasy/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/chen0416ccc-cpu/Ceasy/total?style=flat-square&label=Downloads)](https://github.com/chen0416ccc-cpu/Ceasy/releases)
 [![License](https://img.shields.io/github/license/chen0416ccc-cpu/Ceasy?style=flat-square&label=License&color=blue)](LICENSE)
 [![Windows](https://img.shields.io/badge/Windows-10%20%2F%2011%20x64-0078D6?style=flat-square&logo=windows&logoColor=white)](#系统要求)
 [![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#系统要求)

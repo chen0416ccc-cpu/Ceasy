@@ -1,0 +1,29 @@
+{
+  "schema": 2,
+  "mode": "read-only-cdp-poc",
+  "packageName": "OpenAI.Codex",
+  "packageFamilyName": "OpenAI.Codex_2p2nqsd0c76g0",
+  "packagePublisher": "CN=50BDFD77-8903-4850-9FFE-6E8522F64D5B",
+  "packageArchitecture": "x64",
+  "contractId": "codex-cdp-observation-v1",
+  "asarPackageName": "openai-codex-electron",
+  "asarProductName": "Codex",
+  "asarMainPath": ".vite/build/early-bootstrap.js",
+  "asarMainSha256": "DCC940F4ABB9D2D3C84448B42A6499A19AAE7F3C221D853C48D32C9F62CE5CDB",
+  "preloadPath": ".vite/build/preload.js",
+  "preloadSha256": "A976C02AB0F9CF0EB11D5E4DA32C95E9F5DB3790D76505888C6E493F137F6AC9",
+  "preloadMarkers": [
+    "electronBridge",
+    "codex_desktop:message-for-view",
+    "contextBridge.exposeInMainWorld",
+    "MessageEvent"
+  ],
+  "pageProtocol": "app",
+  "notificationEnvelope": "top",
+  "hookSha256": "F483C1A97F138CA884EB8464C3675F0C07CC0B594B866ECF65277EE124413961",
+  "observerSha256": "6B4E942575A02DF4B5103EF4DCAE64F37A420FD7EE61011E13D4FA0141B33776",
+  "nodePath": "C:\\Program Files\\nodejs\\node.exe",
+  "nodeVersion": "24.11.1",
+  "nodeSha256": "F13AC3CA23248DC389507E8FE38C34489AB7EDB3E6D6700EB6DA6A0B7E128EAF",
+  "nodeSigner": "CN=OpenJS Foundation, O=OpenJS Foundation, L=San Francisco, S=California, C=US"
+}

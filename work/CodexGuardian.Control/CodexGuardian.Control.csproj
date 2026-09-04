@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>CodexGuardian.Control</AssemblyName>
+    <RootNamespace>CodexGuardian.Control</RootNamespace>
+    <DebugType>embedded</DebugType>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode>true</RestoreLockedMode>
+    <CodexGuardianTestFriend Condition="'$(CodexGuardianTestFriend)' == ''">false</CodexGuardianTestFriend>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(CodexGuardianTestFriend)' == 'true'">
+    <DefineConstants>$(DefineConstants);CODEXGUARDIAN_TEST_FRIEND</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CodexGuardian" />
+    <InternalsVisibleTo Include="CodexGuardian.Broker" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(CodexGuardianTestFriend)' == 'true'">
+    <InternalsVisibleTo Include="CodexGuardian.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\CodexGuardian\HookPayload\codex-guardian-cdp-runtime-hook.js"
+                      Link="HookPayload\codex-guardian-cdp-runtime-hook.js"
+                      LogicalName="CodexGuardian.HookPayload.codex-guardian-cdp-runtime-hook.js" />
+    <EmbeddedResource Include="..\CodexGuardian\HookPayload\cdp-runtime-profile.json"
+                      Link="HookPayload\cdp-runtime-profile.json"
+                      LogicalName="CodexGuardian.HookPayload.cdp-runtime-profile.json" />
+  </ItemGroup>
+</Project>

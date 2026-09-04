@@ -1,0 +1,619 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="App.Title" xml:space="preserve"><value>Ceasy</value></data>
+  <data name="App.Brand" xml:space="preserve"><value>Ceasy</value></data>
+  <data name="App.Preview" xml:space="preserve"><value>2.0</value></data>
+  <data name="App.AlreadyRunningTitle" xml:space="preserve"><value>Ceasy</value></data>
+  <data name="App.AlreadyRunningMessage" xml:space="preserve"><value>Ceasy 已在通知区域运行。</value></data>
+  <data name="App.StartFailedTitle" xml:space="preserve"><value>启动失败</value></data>
+  <data name="App.StartFailedMessage" xml:space="preserve"><value>Ceasy 无法启动：{0}</value></data>
+  <data name="Window.Minimize" xml:space="preserve"><value>最小化</value></data>
+  <data name="Window.Maximize" xml:space="preserve"><value>最大化</value></data>
+  <data name="Window.Restore" xml:space="preserve"><value>还原</value></data>
+  <data name="Window.MaximizeRestore" xml:space="preserve"><value>最大化或还原</value></data>
+  <data name="Window.CloseToTray" xml:space="preserve"><value>关闭到托盘</value></data>
+  <data name="Language.Label" xml:space="preserve"><value>界面语言</value></data>
+  <data name="Language.SimplifiedChinese" xml:space="preserve"><value>简体中文</value></data>
+  <data name="Language.English" xml:space="preserve"><value>英文</value></data>
+  <data name="Tray.ShowConsole" xml:space="preserve"><value>显示 Ceasy</value></data>
+  <data name="Tray.ScanNow" xml:space="preserve"><value>立即核对</value></data>
+  <data name="Tray.ToggleGuardian" xml:space="preserve"><value>启动或暂停守护</value></data>
+  <data name="Tray.Exit" xml:space="preserve"><value>退出</value></data>
+  <data name="Tray.MonitoringMessage" xml:space="preserve"><value>Ceasy 正在后台持续监测 Codex 会话。</value></data>
+  <data name="Sidebar.Title" xml:space="preserve"><value>Ceasy</value></data>
+  <data name="Sidebar.Subtitle" xml:space="preserve"><value>结构化检测，语义化恢复</value></data>
+  <data name="Sidebar.LocalDualChannel" xml:space="preserve"><value>本机双通道</value></data>
+  <data name="Sidebar.ActiveLayers" xml:space="preserve"><value>工作层</value></data>
+  <data name="Sidebar.OpenDataAndLogs" xml:space="preserve"><value>打开数据与日志</value></data>
+  <data name="Dashboard.Title" xml:space="preserve"><value>对话恢复控制台</value></data>
+  <data name="Dashboard.Description" xml:space="preserve"><value>同时观察多个 Codex 任务，只在可证明安全时执行恢复。</value></data>
+  <data name="Action.ScanNow" xml:space="preserve"><value>立即核对</value></data>
+  <data name="Action.PauseGuardian" xml:space="preserve"><value>暂停守护</value></data>
+  <data name="Action.StartGuardian" xml:space="preserve"><value>启动守护</value></data>
+  <data name="Action.Clear" xml:space="preserve"><value>清空</value></data>
+  <data name="Action.RecheckDesktopChannel" xml:space="preserve"><value>重新检测</value></data>
+  <data name="Stats.ProtectionEnabled" xml:space="preserve"><value>保护已启用</value></data>
+  <data name="Stats.RealtimeMonitored" xml:space="preserve"><value>实时监测</value></data>
+  <data name="Stats.WaitingRecovery" xml:space="preserve"><value>等待恢复</value></data>
+  <data name="Stats.Recovering" xml:space="preserve"><value>后台恢复中</value></data>
+  <data name="Tasks.Title" xml:space="preserve"><value>任务监测矩阵</value></data>
+  <data name="Tasks.LastScan" xml:space="preserve"><value>最近同步</value></data>
+  <data name="Tasks.Search" xml:space="preserve"><value>搜索</value></data>
+  <data name="Tasks.SearchHint" xml:space="preserve"><value>按会话名称、内容、目录或来源搜索</value></data>
+  <data name="Tasks.ShowArchived" xml:space="preserve"><value>显示归档</value></data>
+  <data name="Tasks.NoMatchingSessions" xml:space="preserve"><value>没有符合条件的会话</value></data>
+  <data name="Tasks.AdjustFilter" xml:space="preserve"><value>请调整搜索内容或会话范围</value></data>
+  <data name="Tasks.ToggleHint" xml:space="preserve"><value>保护开关控制该对话的自动操作，任务状态始终实时显示</value></data>
+  <data name="Tasks.ToggleLockedHint" xml:space="preserve"><value>任务状态实时显示；当前接口缺少原子校验，单任务自动恢复开关已锁定</value></data>
+  <data name="Tasks.ArchivedReadOnly" xml:space="preserve"><value>归档只读</value></data>
+  <data name="Tasks.SessionSummary" xml:space="preserve"><value>总会话数：{0} · 当前显示：{1} · 归档：{2} · 筛选掉：{3}</value></data>
+  <data name="Tasks.FilterSummary" xml:space="preserve"><value>{0} · {1}</value></data>
+  <data name="Tasks.ScopeAllWithArchived" xml:space="preserve"><value>范围：全部提供方、完整分页、活动会话（归档另列）</value></data>
+  <data name="Tasks.ScopeActiveOnly" xml:space="preserve"><value>范围：全部提供方、完整分页、不含归档</value></data>
+  <data name="Tasks.Truncated" xml:space="preserve"><value>结果已截断</value></data>
+  <data name="Tasks.NotTruncated" xml:space="preserve"><value>结果未截断</value></data>
+  <data name="Tasks.PossiblyTruncated" xml:space="preserve"><value>服务未返回完整性标记</value></data>
+  <data name="Tasks.TruncationUnknown" xml:space="preserve"><value>截断状态未知</value></data>
+  <data name="Tasks.Attempt" xml:space="preserve"><value>第 {0} 次</value></data>
+  <data name="Tasks.WaitingFirstScan" xml:space="preserve"><value>等待首次同步</value></data>
+  <data name="Tasks.AppServerLoading" xml:space="preserve"><value>本地服务会在几秒内返回任务列表</value></data>
+  <data name="Mode.Title" xml:space="preserve"><value>保护对话</value></data>
+  <data name="Mode.MonitorOnly" xml:space="preserve"><value>仅监测</value></data>
+  <data name="Mode.AutomaticRecovery" xml:space="preserve"><value>自动恢复</value></data>
+  <data name="Mode.MonitorOnlyDescription" xml:space="preserve"><value>只检测和分类异常，不创建任何恢复轮次。</value></data>
+  <data name="Mode.AutomaticRecoveryDescription" xml:space="preserve"><value>异常终态经安全判定后，通过 Codex 桌面端原生通道自动恢复。</value></data>
+  <data name="Policy.Title" xml:space="preserve"><value>恢复策略</value></data>
+  <data name="Policy.Saved" xml:space="preserve"><value>所有参数实时保存</value></data>
+  <data name="Policy.InitialBackoff" xml:space="preserve"><value>追问初始退避</value></data>
+  <data name="Policy.InitialBackoffHint" xml:space="preserve"><value>追问队列首次重试前的等待；失败重发不再退避</value></data>
+  <data name="Policy.MaximumBackoff" xml:space="preserve"><value>追问最大退避</value></data>
+  <data name="Policy.MaximumBackoffHint" xml:space="preserve"><value>追问队列连续失败时的等待上限</value></data>
+  <data name="Policy.MaximumAttempts" xml:space="preserve"><value>单次最大尝试</value></data>
+  <data name="Policy.MaximumAttemptsHint" xml:space="preserve"><value>超过后转人工检查</value></data>
+  <data name="Policy.UnlimitedAttempts" xml:space="preserve"><value>无限次</value></data>
+  <data name="Policy.CountingMode" xml:space="preserve"><value>计数方式</value></data>
+  <data name="Policy.CountingModeHint" xml:space="preserve"><value>只改变预算归属，不会放宽安全校验</value></data>
+  <data name="Policy.BackoffTitle" xml:space="preserve"><value>追问退避</value></data>
+  <data name="Policy.BackoffHint" xml:space="preserve"><value>只作用于追问队列。失败的轮次是立刻重发的，不走这里。</value></data>
+  <data name="Policy.SecondsUnit" xml:space="preserve"><value>秒</value></data>
+  <data name="Policy.NewThreadTitle" xml:space="preserve"><value>新会话</value></data>
+  <data name="Policy.ProtectNewThreadsHint" xml:space="preserve"><value>开启后，新出现的会话直接进入受保护状态，不必逐个打开开关</value></data>
+  <data name="Recovery.CountingPerFailedTurn" xml:space="preserve"><value>每个失败轮次</value></data>
+  <data name="Recovery.CountingSharedIncident" xml:space="preserve"><value>共享同一故障</value></data>
+  <data name="Recovery.CountingOriginalOnly" xml:space="preserve"><value>仅原始失败轮次</value></data>
+  <data name="Policy.StartWithWindows" xml:space="preserve"><value>开机自动启动</value></data>
+  <data name="Policy.MinimizeToTray" xml:space="preserve"><value>关闭窗口时进入托盘</value></data>
+  <data name="Policy.PreventSystemSleep" xml:space="preserve"><value>守护和哨兵期间阻止电脑休眠</value></data>
+  <data name="Policy.PreventSystemSleepHint" xml:space="preserve"><value>守护或哨兵运行时保持电脑唤醒</value></data>
+  <data name="Settings.UpdateCheck" xml:space="preserve"><value>检查新版本</value></data>
+  <data name="Settings.UpdateCheckHint" xml:space="preserve"><value>每天最多一次，向 GitHub 询问最新发布的版本号。只发出这一个请求，不上传会话内容、日志或任何本机信息。</value></data>
+  <data name="Settings.CheckNow" xml:space="preserve"><value>立即检查</value></data>
+  <data name="Settings.CheckNowHint" xml:space="preserve"><value>忽略每天一次的间隔，现在就查一次</value></data>
+  <data name="Settings.CurrentVersion" xml:space="preserve"><value>当前版本 v{0}</value></data>
+  <data name="Update.StatusUnknown" xml:space="preserve"><value>本次运行还没有检查过</value></data>
+  <data name="Update.StatusChecking" xml:space="preserve"><value>正在检查…</value></data>
+  <data name="Update.StatusFailed" xml:space="preserve"><value>这次没查到，下次启动或手动检查时再试</value></data>
+  <data name="Update.StatusUpToDate" xml:space="preserve"><value>已是最新版本，最新发布为 v{0}</value></data>
+  <data name="Update.StatusAvailable" xml:space="preserve"><value>有新版本 v{0} 可以下载</value></data>
+  <data name="Update.StatusDisabled" xml:space="preserve"><value>更新检查已关闭，不会发出任何网络请求</value></data>
+  <data name="Events.Title" xml:space="preserve"><value>实时事件</value></data>
+  <data name="Common.Starting" xml:space="preserve"><value>正在启动</value></data>
+  <data name="Common.PreparingLocalServices" xml:space="preserve"><value>正在准备本地服务…</value></data>
+  <data name="Common.NotChecked" xml:space="preserve"><value>尚未检查</value></data>
+  <data name="Common.Never" xml:space="preserve"><value>从未</value></data>
+  <data name="Common.NotConnected" xml:space="preserve"><value>未连接</value></data>
+  <data name="Common.Connected" xml:space="preserve"><value>已连接</value></data>
+  <data name="Common.Unknown" xml:space="preserve"><value>未知</value></data>
+  <data name="Common.Ready" xml:space="preserve"><value>已就绪</value></data>
+  <data name="Common.Paused" xml:space="preserve"><value>已暂停</value></data>
+  <data name="Common.Scanning" xml:space="preserve"><value>正在检查</value></data>
+  <data name="Common.Offline" xml:space="preserve"><value>离线</value></data>
+  <data name="Common.Protected" xml:space="preserve"><value>保护已启用</value></data>
+  <data name="Health.Healthy" xml:space="preserve"><value>正常</value></data>
+  <data name="Health.Processing" xml:space="preserve"><value>处理中</value></data>
+  <data name="Health.NeedsAttention" xml:space="preserve"><value>待恢复</value></data>
+  <data name="Health.WaitingForDesktop" xml:space="preserve"><value>等待桌面接管</value></data>
+  <data name="Health.CoolingDown" xml:space="preserve"><value>退避中</value></data>
+  <data name="Health.Recovering" xml:space="preserve"><value>恢复中</value></data>
+  <data name="Health.Paused" xml:space="preserve"><value>已暂停</value></data>
+  <data name="Health.ManualReview" xml:space="preserve"><value>需检查</value></data>
+  <data name="Health.Unknown" xml:space="preserve"><value>状态待确认</value></data>
+  <data name="Health.NoHistory" xml:space="preserve"><value>暂无轮次</value></data>
+  <data name="Health.WaitingForIdle" xml:space="preserve"><value>等待用户空闲</value></data>
+  <data name="Health.MessageUnanswered" xml:space="preserve"><value>消息未获回应</value></data>
+  <data name="Health.ContinueUnanswered" xml:space="preserve"><value>continue 未获回应</value></data>
+  <data name="Health.ToolWorkInterrupted" xml:space="preserve"><value>工作途中断开</value></data>
+  <data name="Health.ReasoningInterrupted" xml:space="preserve"><value>思考途中断开</value></data>
+  <data name="Health.ResponseInterrupted" xml:space="preserve"><value>回复途中断开</value></data>
+  <data name="Health.EvidenceIncomplete" xml:space="preserve"><value>证据不足</value></data>
+  <data name="Health.UserAborted" xml:space="preserve"><value>用户已中断</value></data>
+  <data name="Health.ContinueUserAborted" xml:space="preserve"><value>continue 已由用户中止</value></data>
+  <data name="Health.InterruptedUnverified" xml:space="preserve"><value>已中断，终态未验证</value></data>
+  <data name="Health.ContinueInterruptedUnverified" xml:space="preserve"><value>continue 已中断，终态未验证</value></data>
+  <data name="Health.AbortReasonUnverified" xml:space="preserve"><value>中止原因待确认</value></data>
+  <data name="Health.ContinueAbortReasonUnverified" xml:space="preserve"><value>continue 中止原因待确认</value></data>
+  <data name="Engine.StartConnecting" xml:space="preserve"><value>正在连接本地 Codex 服务…</value></data>
+  <data name="Engine.StartMonitorOnly" xml:space="preserve"><value>守护已启动，当前为仅监测模式。</value></data>
+  <data name="Engine.StartAutomaticRecovery" xml:space="preserve"><value>守护已启动，自动恢复已启用。</value></data>
+  <data name="Engine.MonitoringPaused" xml:space="preserve"><value>监测已暂停。</value></data>
+  <data name="Engine.ReadRecentTaskState" xml:space="preserve"><value>正在读取最近任务状态…</value></data>
+  <data name="Engine.TasksScannedAt" xml:space="preserve"><value>已于 {1} 同步 {0} 个任务</value></data>
+  <data name="Engine.ActivityStackRunning" xml:space="preserve"><value>Codex 活动堆栈显示该任务仍在运行。</value></data>
+  <data name="Engine.GuardianBackgroundRunning" xml:space="preserve"><value>后台运行中</value></data>
+  <data name="Engine.ProtectionDisabledForTask" xml:space="preserve"><value>该任务的保护已关闭。</value></data>
+  <data name="Engine.MonitorOnlyReason" xml:space="preserve"><value>仅监测：{0}</value></data>
+  <data name="Engine.RecoverySentWaiting" xml:space="preserve"><value>恢复指令已发送，正在等待 Codex 创建或完成下一轮。</value></data>
+  <data name="Engine.AttemptLimit" xml:space="preserve"><value>已达到自动尝试上限，需要人工检查。</value></data>
+  <data name="Engine.Executing" xml:space="preserve"><value>正在执行恢复动作。</value></data>
+  <data name="Engine.UnableReadLatestTurn" xml:space="preserve"><value>无法读取最新轮次</value></data>
+  <data name="Engine.DetectedCooldown" xml:space="preserve"><value>已检测到失败，冷却等待已开始。</value></data>
+  <data name="Engine.CompletedNormally" xml:space="preserve"><value>最新轮次已正常完成。</value></data>
+  <data name="Engine.TaskProtectionEnabled" xml:space="preserve"><value>任务保护已启用。</value></data>
+  <data name="Engine.TaskProtectionPaused" xml:space="preserve"><value>任务保护已暂停。</value></data>
+  <data name="Engine.ScanFailed" xml:space="preserve"><value>状态同步失败：{0}</value></data>
+  <data name="Engine.UnableInspectTask" xml:space="preserve"><value>无法检查任务状态：{0}</value></data>
+  <data name="Classifier.NoHistory" xml:space="preserve"><value>尚无轮次历史。</value></data>
+  <data name="Classifier.InProgress" xml:space="preserve"><value>Codex 仍在处理此任务。</value></data>
+  <data name="Classifier.Completed" xml:space="preserve"><value>最新轮次已正常完成。</value></data>
+  <data name="Classifier.Interrupted" xml:space="preserve"><value>最新轮次异常中断；若无明确永久错误则进入自动恢复。</value></data>
+  <data name="Classifier.UnknownStatus" xml:space="preserve"><value>未知轮次状态：{0}</value></data>
+  <data name="Classifier.NonTransient" xml:space="preserve"><value>最新轮次因明确不可恢复错误失败。</value></data>
+  <data name="Classifier.ResendContinue" xml:space="preserve"><value>继续消息在产生输出前失败；将通过 Codex 桌面端原生通道就地重试该轮次。</value></data>
+  <data name="Classifier.ResendOriginal" xml:space="preserve"><value>用户消息未产生助手或工具输出；将通过 Codex 桌面端原生通道就地重试该轮次。</value></data>
+  <data name="Classifier.SendContinue" xml:space="preserve"><value>任务已有输出后异常终止；将通过 Codex 桌面端原生通道发送继续消息。</value></data>
+  <data name="AppServer.ExecutableMissing" xml:space="preserve"><value>在本地应用数据目录下未找到可运行的 codex.exe。</value></data>
+  <data name="AppServer.LaunchFailed" xml:space="preserve"><value>无法启动 Codex 本地服务进程。</value></data>
+  <data name="AppServer.ConnectedReadOnly" xml:space="preserve"><value>已连接 Codex 只读状态服务。</value></data>
+  <data name="AppServer.ConnectionNotOpen" xml:space="preserve"><value>Codex 本地服务连接尚未打开。</value></data>
+  <data name="AppServer.RequestIdFailed" xml:space="preserve"><value>无法分配协议请求编号。</value></data>
+  <data name="AppServer.EmptyResponse" xml:space="preserve"><value>本地服务返回了空响应。</value></data>
+  <data name="AppServer.ReceiveStopped" xml:space="preserve"><value>本地服务接收循环已停止：{0}</value></data>
+  <data name="AppServer.ConnectionClosed" xml:space="preserve"><value>Codex 本地服务连接已关闭。</value></data>
+  <data name="AppServer.ConnectTimedOut" xml:space="preserve"><value>连接本地 Codex 服务超时。</value></data>
+  <data name="AppServer.SourceCli" xml:space="preserve"><value>命令行</value></data>
+  <data name="AppServer.SourceVsCode" xml:space="preserve"><value>VS Code</value></data>
+  <data name="AppServer.SourceExec" xml:space="preserve"><value>执行环境</value></data>
+  <data name="AppServer.SourceAppServer" xml:space="preserve"><value>本地服务</value></data>
+  <data name="AppServer.SourceSubAgent" xml:space="preserve"><value>子代理</value></data>
+  <data name="AppServer.SourceUnknown" xml:space="preserve"><value>未知来源</value></data>
+  <data name="AppServer.SourceOther" xml:space="preserve"><value>其他来源</value></data>
+  <data name="Settings.SaveFailed" xml:space="preserve"><value>无法保存设置：{0}</value></data>
+  <data name="Settings.OpenDataFolderFailed" xml:space="preserve"><value>无法打开数据目录：{0}</value></data>
+  <data name="Settings.UserGuideTitle" xml:space="preserve"><value>使用说明</value></data>
+  <data name="Settings.UserGuideHint" xml:space="preserve"><value>看完就会用了</value></data>
+  <data name="Settings.UpdateStartupFailed" xml:space="preserve"><value>无法更新开机启动设置：{0}</value></data>
+  <data name="Startup.ResolveExecutableFailed" xml:space="preserve"><value>无法确定应用程序可执行文件路径。</value></data>
+  <data name="Page.Overview.Title" xml:space="preserve"><value>运行总览</value></data>
+  <data name="Page.Tasks.Title" xml:space="preserve"><value>任务列表</value></data>
+  <data name="Page.Recovery.Title" xml:space="preserve"><value>自动恢复</value></data>
+  <data name="Page.UserGuide.Title" xml:space="preserve"><value>使用说明</value></data>
+  <data name="Page.Settings.Title" xml:space="preserve"><value>设置</value></data>
+  <data name="Action.ResendOriginal" xml:space="preserve"><value>需要重发原消息（当前不可用）</value></data>
+  <data name="Action.SendContinue" xml:space="preserve"><value>发送继续对话消息</value></data>
+  <data name="Action.ResendContinue" xml:space="preserve"><value>需要重发继续消息（当前不可用）</value></data>
+  <data name="Action.NoAutomaticAction" xml:space="preserve"><value>不执行自动操作</value></data>
+  <data name="Hint.MonitorOnly" xml:space="preserve"><value>只读取和分类异常，不会自动恢复。</value></data>
+  <data name="Hint.AutomaticRecovery" xml:space="preserve"><value>已有工作时可追加继续消息；原消息重发会在原生协议不可用时安全锁定。</value></data>
+  <data name="Hint.ConversationProtection" xml:space="preserve"><value>允许受保护对话执行已授权的预制工作流；自动恢复仍由独立安全门禁控制。</value></data>
+  <data name="Hint.AtomicGuardUnavailable" xml:space="preserve"><value>当前官方 Codex 接口缺少原子失败轮次校验。为避免恢复误发，自动恢复已安全锁定。</value></data>
+  <data name="Hint.DiagnosticReading" xml:space="preserve"><value>只读取近期任务摘要与最新轮次，不创建恢复轮次。</value></data>
+  <data name="Hint.Diagnostic403" xml:space="preserve"><value>此错误不可自动恢复；未执行任何 Codex 操作。</value></data>
+  <data name="Hint.DiagnosticNoAction" xml:space="preserve"><value>该错误不属于可安全自动恢复范围；未执行任何 Codex 操作。</value></data>
+  <data name="Hint.DiagnosticNoTurn" xml:space="preserve"><value>近期任务中没有可读取的对话轮次；未执行任何 Codex 操作。</value></data>
+  <data name="Hint.DiagnosticTransient" xml:space="preserve"><value>分类结果为“{0}”；本次仅展示结论，未执行任何 Codex 操作。</value></data>
+  <data name="Hint.DiagnosticFailed" xml:space="preserve"><value>只读检查失败：{0}</value></data>
+  <data name="State.Paused" xml:space="preserve"><value>已暂停</value></data>
+  <data name="Status.LocalServiceConnected" xml:space="preserve"><value>本地服务已连接</value></data>
+  <data name="Status.DesktopChannelConnected" xml:space="preserve"><value>原生同流通道已连接</value></data>
+  <data name="Status.DesktopBackgroundChannelConnected" xml:space="preserve"><value>后台同流恢复通道已连接</value></data>
+  <data name="Status.DesktopChannelDisconnected" xml:space="preserve"><value>等待 Codex 桌面端启动</value></data>
+  <data name="Status.DesktopChannelUnavailable" xml:space="preserve"><value>Codex 桌面端已连接，但原生通道不可用</value></data>
+  <data name="Status.NotConnected" xml:space="preserve"><value>未连接</value></data>
+  <data name="Status.Monitoring" xml:space="preserve"><value>监测中</value></data>
+  <data name="Status.MonitoringUnavailable" xml:space="preserve"><value>监测不可用</value></data>
+  <data name="Status.MonitorOnly" xml:space="preserve"><value>仅监测恢复</value></data>
+  <data name="Status.AutomaticRecovery" xml:space="preserve"><value>自动恢复已开启</value></data>
+  <data name="Status.ConversationProtection" xml:space="preserve"><value>对话保护已开启</value></data>
+  <data name="Status.AtomicGuardLocked" xml:space="preserve"><value>自动恢复已安全锁定</value></data>
+  <data name="Status.EnhancedObservationAvailable" xml:space="preserve"><value>系统级增强观察已启用</value></data>
+  <data name="Status.DeepObservationAvailable" xml:space="preserve"><value>Codex 进程内深度观察已启用</value></data>
+  <data name="Status.EnhancedObservationFallback" xml:space="preserve"><value>增强观察不可用，使用空闲门禁</value></data>
+  <data name="Status.DesktopStreamGap" xml:space="preserve"><value>桌面状态流缺失了一段更新，正在按任务定点核验。</value></data>
+  <data name="Status.DiagnosticReading" xml:space="preserve"><value>正在只读检查异常任务</value></data>
+  <data name="Status.Diagnostic403" xml:space="preserve"><value>检测到 403 可用额度不足</value></data>
+  <data name="Status.DiagnosticManualReview" xml:space="preserve"><value>检测到不可自动恢复的异常</value></data>
+  <data name="Status.DiagnosticNoTurn" xml:space="preserve"><value>未找到可检查的对话轮次</value></data>
+  <data name="Status.DiagnosticTransient" xml:space="preserve"><value>检测到可恢复异常</value></data>
+  <data name="Status.DiagnosticFailed" xml:space="preserve"><value>只读检查失败</value></data>
+  <data name="Value.Never" xml:space="preserve"><value>尚未同步</value></data>
+  <data name="Value.Ready" xml:space="preserve"><value>已就绪</value></data>
+  <data name="Value.NotProvided" xml:space="preserve"><value>服务未返回</value></data>
+  <data name="Value.NotIncluded" xml:space="preserve"><value>未包含</value></data>
+  <data name="Sidebar.Navigation" xml:space="preserve"><value>工作台</value></data>
+  <data name="Nav.Overview" xml:space="preserve"><value>总览</value></data>
+  <data name="Nav.Tasks" xml:space="preserve"><value>任务</value></data>
+  <data name="Nav.Recovery" xml:space="preserve"><value>自动恢复</value></data>
+  <data name="Nav.Settings" xml:space="preserve"><value>设置</value></data>
+  <data name="Action.ReadOnlyDiagnostic" xml:space="preserve"><value>检查异常</value></data>
+  <data name="Action.ViewAllTasks" xml:space="preserve"><value>查看全部</value></data>
+  <data name="Tip.ScanNow" xml:space="preserve"><value>立即执行一次只读状态同步，不发送消息</value></data>
+  <data name="Tip.AutoRecovery" xml:space="preserve"><value>关闭时只监测，开启后才允许自动恢复</value></data>
+  <data name="Stats.DiscoveredTasks" xml:space="preserve"><value>当前显示任务</value></data>
+  <data name="Overview.ProtectedHint" xml:space="preserve"><value>当前启用保护</value></data>
+  <data name="Overview.MonitoredHint" xml:space="preserve"><value>非归档会话已纳入事件监听</value></data>
+  <data name="Overview.AttentionHint" xml:space="preserve"><value>需要查看</value></data>
+  <data name="Overview.NoActivity" xml:space="preserve"><value>暂无活动</value></data>
+  <data name="Overview.RecentTasks" xml:space="preserve"><value>会话目录</value></data>
+  <data name="Tasks.Name" xml:space="preserve"><value>任务名称</value></data>
+  <data name="Tasks.Status" xml:space="preserve"><value>状态</value></data>
+  <data name="Tasks.Health" xml:space="preserve"><value>健康度</value></data>
+  <data name="Tasks.Source" xml:space="preserve"><value>来源</value></data>
+  <data name="Tasks.Updated" xml:space="preserve"><value>最近活动</value></data>
+  <data name="Tasks.Attempts" xml:space="preserve"><value>本轮已尝试</value></data>
+  <data name="Tasks.AttemptsUnit" xml:space="preserve"><value>次</value></data>
+  <data name="Tasks.LedgerTotalUnit" xml:space="preserve"><value>次成功重发</value></data>
+  <data name="Shell.GuardianAction" xml:space="preserve"><value>守护动作</value></data>
+  <data name="Shell.RecoveryHistory" xml:space="preserve"><value>恢复历史</value></data>
+  <data name="Shell.Origin" xml:space="preserve"><value>会话出处</value></data>
+  <data name="Shell.LastReply" xml:space="preserve"><value>最后一条内容</value></data>
+  <data name="Shell.LedgerEmpty" xml:space="preserve"><value>守护还没为这个会话重发过消息</value></data>
+  <data name="Tasks.RetryingHint" xml:space="preserve"><value>守护正在自动重发这条任务，数字是已尝试的次数</value></data>
+  <data name="Tasks.RecoveryLedger" xml:space="preserve"><value>累计重发</value></data>
+  <data name="Recovery.LedgerConfirmed" xml:space="preserve"><value>已成功重发 {0} 次 · 最近 {1}</value></data>
+  <data name="Recovery.LedgerNever" xml:space="preserve"><value>尚未成功重发过</value></data>
+  <data name="Recovery.LedgerOwnerBusy" xml:space="preserve"><value>上一轮未结束，已让行 {0} 次 · 已等 {1}</value></data>
+  <data name="Tasks.NextAttempt" xml:space="preserve"><value>下次动作</value></data>
+  <data name="Tasks.WorkingDirectory" xml:space="preserve"><value>工作目录</value></data>
+  <data name="Tasks.LatestTurn" xml:space="preserve"><value>最新轮次</value></data>
+  <data name="Tasks.Enabled" xml:space="preserve"><value>保护</value></data>
+  <data name="Tasks.ProtectionPaused" xml:space="preserve"><value>保护暂停</value></data>
+  <data name="Tasks.CurrentState" xml:space="preserve"><value>当前说明</value></data>
+  <data name="Observation.Format" xml:space="preserve"><value>进程观察：{0}</value></data>
+  <data name="Observation.Idle" xml:space="preserve"><value>当前空闲</value></data>
+  <data name="Observation.Running" xml:space="preserve"><value>正在运行</value></data>
+  <data name="Observation.Reasoning" xml:space="preserve"><value>正在思考</value></data>
+  <data name="Observation.Tool" xml:space="preserve"><value>正在使用工具</value></data>
+  <data name="Observation.CommandExecution" xml:space="preserve"><value>正在执行命令</value></data>
+  <data name="Observation.FileChange" xml:space="preserve"><value>正在修改文件</value></data>
+  <data name="Observation.ToolCall" xml:space="preserve"><value>正在调用工具</value></data>
+  <data name="Observation.WebSearch" xml:space="preserve"><value>正在搜索网页</value></data>
+  <data name="Observation.ImageGeneration" xml:space="preserve"><value>正在生成图像</value></data>
+  <data name="Observation.Collaboration" xml:space="preserve"><value>正在协调子任务</value></data>
+  <data name="Observation.Reconnecting" xml:space="preserve"><value>正在重连</value></data>
+  <data name="Observation.ReconnectingProgress" xml:space="preserve"><value>正在重连 {0}/{1}</value></data>
+  <data name="Observation.Completed" xml:space="preserve"><value>本轮已完成</value></data>
+  <data name="Observation.Failed" xml:space="preserve"><value>本轮失败</value></data>
+  <data name="Observation.Interrupted" xml:space="preserve"><value>本轮已中断</value></data>
+  <data name="Observation.WithHttpStatus" xml:space="preserve"><value>{0} · HTTP {1}</value></data>
+  <data name="Recovery.BackoffTitle" xml:space="preserve"><value>追问退避策略</value></data>
+  <data name="Recovery.BackoffDescription" xml:space="preserve"><value>仅作用于追问队列。失败重发按固定 1 秒间隔立即重试，不受此处影响。</value></data>
+  <data name="Recovery.SafetyTitle" xml:space="preserve"><value>操作边界</value></data>
+  <data name="Recovery.SafetyDescription" xml:space="preserve"><value>恢复轮次只由已验证的 Codex 桌面端创建，不切换任务，也不启动独立写入会话。</value></data>
+  <data name="Recovery.DesktopChannelTitle" xml:space="preserve"><value>恢复通道</value></data>
+  <data name="Recovery.DesktopChannelHint" xml:space="preserve"><value>Guardian 不安装或修改 Codex；检测到后台能力时无需打开目标任务，恢复输出仍显示在原任务中。</value></data>
+  <data name="Recovery.DesktopChannelReady" xml:space="preserve"><value>Codex 桌面端同流恢复通道已就绪。</value></data>
+  <data name="Recovery.DesktopChannelUnavailable" xml:space="preserve"><value>Codex 桌面端未运行，或当前版本不支持原生同流通道。</value></data>
+  <data name="Recovery.DesktopChannelCheckFailed" xml:space="preserve"><value>Codex 桌面端原生通道检测失败，请确认桌面端正在运行。</value></data>
+  <data name="Recovery.EventDrivenTitle" xml:space="preserve"><value>事件驱动监测</value></data>
+  <data name="Recovery.EventDrivenHint" xml:space="preserve"><value>只有协议通知、本地追加事件或人工同步才会触发状态核对。</value></data>
+  <data name="Recovery.EnhancedObservationTitle" xml:space="preserve"><value>增强观察</value></data>
+  <data name="Recovery.DeepObservationHint" xml:space="preserve"><value>按目标任务实时识别草稿、运行阶段、工具活动和重连状态；只传输白名单元数据，不记录消息正文、推理、工具输出、token 或密钥。仅在目标任务正在编辑时延后恢复。</value></data>
+  <data name="Recovery.EnhancedObservationHint" xml:space="preserve"><value>零补丁、零注入。只实时判断前台 Codex 输入框是否正在编辑，不记录正文；无法证明目标任务或后台草稿时仍按安全规则回退。</value></data>
+  <data name="Recovery.EnhancedObservationFallbackHint" xml:space="preserve"><value>当前无法可靠观察 Codex 输入框，正式发送前将回退到 15 秒 Windows 连续空闲门禁。</value></data>
+  <data name="Recovery.ContinueMessageTitle" xml:space="preserve"><value>异常后续消息</value></data>
+  <data name="Recovery.ContinueMessageHint" xml:space="preserve"><value>已有输出的任务异常结束后发送</value></data>
+  <data name="Diagnostic.ReadOnlyTitle" xml:space="preserve"><value>当前任务只读检查</value></data>
+  <data name="Diagnostic.ReadOnlyDescription" xml:space="preserve"><value>读取当前异常对话的有界摘要；403 额度不足只提示人工检查。</value></data>
+  <data name="Diagnostic.Result" xml:space="preserve"><value>只读检查结果</value></data>
+  <data name="Diagnostic.Task" xml:space="preserve"><value>检查任务</value></data>
+  <data name="Settings.InterfaceTitle" xml:space="preserve"><value>界面语言</value></data>
+  <data name="Settings.StartupTitle" xml:space="preserve"><value>启动行为</value></data>
+  <data name="Settings.AppearanceTitle" xml:space="preserve"><value>外观</value></data>
+  <data name="Settings.ThemeLabel" xml:space="preserve"><value>主题</value></data>
+  <data name="Settings.ThemeLight" xml:space="preserve"><value>当前：浅色</value></data>
+  <data name="Settings.ThemeDark" xml:space="preserve"><value>当前：深色</value></data>
+  <data name="Settings.DataTitle" xml:space="preserve"><value>数据与日志</value></data>
+  <data name="Settings.DiscoveryTitle" xml:space="preserve"><value>任务发现</value></data>
+  <data name="Settings.ProtectNewThreadsByDefault" xml:space="preserve"><value>自动保护新任务</value></data>
+  <data name="Settings.IncludeSubAgents" xml:space="preserve"><value>包含子任务</value></data>
+  <data name="Settings.RecentThreadLimit" xml:space="preserve"><value>最多载入会话数</value></data>
+  <data name="Settings.RecentThreadLookbackDays" xml:space="preserve"><value>回溯天数</value></data>
+  <data name="Settings.DiscoveryScopeHint" xml:space="preserve"><value>扫描的范围。会话列表提示"已达上限"时，就是这里的数值到顶了。</value></data>
+  <data name="Settings.DaysUnit" xml:space="preserve"><value>天</value></data>
+  <data name="Settings.Saved" xml:space="preserve"><value>设置会自动保存</value></data>
+  <data name="Diagnostic.Source" xml:space="preserve"><value>证据来源</value></data>
+  <data name="Hint.DiagnosticIdle" xml:space="preserve"><value>尚未执行检查；只读取近期任务摘要，不读取完整会话历史。</value></data>
+  <data name="Status.DiagnosticIdle" xml:space="preserve"><value>尚未执行只读检查</value></data>
+  <data name="Value.DiagnosticAppServer" xml:space="preserve"><value>Codex 本地状态服务（摘要）</value></data>
+  <data name="Diagnostic.TechnicalDetails" xml:space="preserve"><value>原始技术详情</value></data>
+  <data name="Nav.FollowUps" xml:space="preserve"><value>预制消息</value></data>
+  <data name="Page.FollowUps.Title" xml:space="preserve"><value>消息队列</value></data>
+  <data name="FollowUp.TaskListTitle" xml:space="preserve"><value>任务</value></data>
+  <data name="FollowUp.TaskListHint" xml:space="preserve"><value>选择要编辑消息队列的任务</value></data>
+  <data name="FollowUp.QueueTitle" xml:space="preserve"><value>发送队列</value></data>
+  <data name="FollowUp.QueueEnabled" xml:space="preserve"><value>启用队列</value></data>
+  <data name="FollowUp.ActiveQueue" xml:space="preserve"><value>当前生效队列</value></data>
+  <data name="FollowUp.DraftSequence" xml:space="preserve"><value>草稿顺序</value></data>
+  <data name="FollowUp.TriggerCompletion" xml:space="preserve"><value>正常完成后</value></data>
+  <data name="FollowUp.TriggerScheduled" xml:space="preserve"><value>指定时间</value></data>
+  <data name="FollowUp.Trigger" xml:space="preserve"><value>发送时机</value></data>
+  <data name="FollowUp.NoTaskSelected" xml:space="preserve"><value>未选择任务</value></data>
+  <data name="FollowUp.SelectTask" xml:space="preserve"><value>选择任务</value></data>
+  <data name="FollowUp.SelectTaskHint" xml:space="preserve"><value>从左侧选择一个未归档任务</value></data>
+  <data name="FollowUp.EmptyHint" xml:space="preserve"><value>尚未配置消息</value></data>
+  <data name="FollowUp.Loaded" xml:space="preserve"><value>{0} 条消息</value></data>
+  <data name="FollowUp.Unsaved" xml:space="preserve"><value>未保存</value></data>
+  <data name="FollowUp.InvalidMessage" xml:space="preserve"><value>第 {0} 条消息为空或标识无效</value></data>
+  <data name="FollowUp.InvalidSchedule" xml:space="preserve"><value>第 {0} 条消息的本地日期或时间无效</value></data>
+  <data name="FollowUp.NoCompletionBaseline" xml:space="preserve"><value>当前任务状态无法建立可靠完成基线，请先刷新任务状态</value></data>
+  <data name="FollowUp.Saved" xml:space="preserve"><value>已保存</value></data>
+  <data name="FollowUp.SaveFailed" xml:space="preserve"><value>保存失败，原队列保持不变</value></data>
+  <data name="FollowUp.Add" xml:space="preserve"><value>新增消息</value></data>
+  <data name="FollowUp.Remove" xml:space="preserve"><value>删除消息</value></data>
+  <data name="FollowUp.Edit" xml:space="preserve"><value>编辑消息</value></data>
+  <data name="FollowUp.DoneEditing" xml:space="preserve"><value>完成编辑</value></data>
+  <data name="FollowUp.MoveUp" xml:space="preserve"><value>上移消息</value></data>
+  <data name="FollowUp.MoveDown" xml:space="preserve"><value>下移消息</value></data>
+  <data name="FollowUp.MessagePlaceholder" xml:space="preserve"><value>消息内容</value></data>
+  <data name="FollowUp.MessageEnabled" xml:space="preserve"><value>启用这条消息</value></data>
+  <data name="FollowUp.MessageEnabledShort" xml:space="preserve"><value>启用</value></data>
+  <data name="FollowUp.ScheduleDate" xml:space="preserve"><value>日期</value></data>
+  <data name="FollowUp.ScheduleTime" xml:space="preserve"><value>时间</value></data>
+  <data name="FollowUp.MaximumErrorRetries" xml:space="preserve"><value>错误重试</value></data>
+  <data name="FollowUp.RetryShort" xml:space="preserve"><value>重试</value></data>
+  <data name="FollowUp.RetryInfinite" xml:space="preserve"><value>无限</value></data>
+  <data name="FollowUp.RetryDefaultHint" xml:space="preserve"><value>留空 = 500</value></data>
+  <data name="FollowUp.InvalidRetry" xml:space="preserve"><value>第 {0} 条消息的错误重试必须选择无限，或留空，或为 0 至 {1}</value></data>
+  <data name="FollowUp.EmptyQueue" xml:space="preserve"><value>队列为空</value></data>
+  <data name="FollowUp.SaveBeforeTaskSwitch" xml:space="preserve"><value>请先保存当前更改，再切换任务</value></data>
+  <data name="FollowUp.Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Tasks.FollowUpQueue" xml:space="preserve"><value>消息队列</value></data>
+  <data name="FollowUp.BackToTasks" xml:space="preserve"><value>返回</value></data>
+  <data name="FollowUp.OpenQueue" xml:space="preserve"><value>打开“{0}”的预制消息队列</value></data>
+  <data name="FollowUp.OpenQueueShort" xml:space="preserve"><value>预制消息</value></data>
+  <data name="FollowUp.DragHandle" xml:space="preserve"><value>拖拽调整消息顺序</value></data>
+  <data name="FollowUp.AddAttachment" xml:space="preserve"><value>添加附件</value></data>
+  <data name="FollowUp.AttachmentImportUnavailableInPreview" xml:space="preserve"><value>预览中不可导入附件</value></data>
+  <data name="FollowUp.AttachmentImportInProgress" xml:space="preserve"><value>正在添加附件</value></data>
+  <data name="FollowUp.RemoveAttachment" xml:space="preserve"><value>删除附件</value></data>
+  <data name="FollowUp.AttachmentDragHandle" xml:space="preserve"><value>拖拽调整附件顺序</value></data>
+  <data name="FollowUp.InvalidAttachments" xml:space="preserve"><value>第 {0} 条消息包含无效附件或超过附件限额</value></data>
+  <data name="FollowUp.AttachmentCapabilityWaiting" xml:space="preserve"><value>第 {0} 条消息：等待 Codex 附件能力</value></data>
+  <data name="FollowUp.AttachmentCapabilityUnsupported" xml:space="preserve"><value>第 {0} 条消息：当前 Codex 不支持此附件</value></data>
+  <data name="FollowUp.AttachmentsImported" xml:space="preserve"><value>已添加 {0} 个附件</value></data>
+  <data name="FollowUp.AttachmentImportFailed" xml:space="preserve"><value>无法添加附件</value></data>
+  <data name="FollowUp.StatusNone" xml:space="preserve"><value>未预制</value></data>
+  <data name="FollowUp.StatusConfigured" xml:space="preserve"><value>已配置 · {0} 条</value></data>
+  <data name="FollowUp.StatusPaused" xml:space="preserve"><value>已暂停 · {0} 条</value></data>
+  <data name="FollowUp.StatusScheduled" xml:space="preserve"><value>{0} 条 · {1}</value></data>
+  <data name="FollowUp.StatusWaiting" xml:space="preserve"><value>待正常完成 · {0} 条</value></data>
+  <data name="FollowUp.StatusReady" xml:space="preserve"><value>等待发送</value></data>
+  <data name="FollowUp.StatusDispatching" xml:space="preserve"><value>发送中</value></data>
+  <data name="FollowUp.StatusNoEnabledMessages" xml:space="preserve"><value>没有启用的消息</value></data>
+  <data name="FollowUp.StatusBlocked" xml:space="preserve"><value>队列需要检查</value></data>
+  <data name="FollowUp.StatusUncertain" xml:space="preserve"><value>发送状态待核对</value></data>
+  <data name="FollowUp.StatusExhausted" xml:space="preserve"><value>队列已完成</value></data>
+  <data name="FollowUp.UnsavedCloseTitle" xml:space="preserve"><value>未保存的预制消息</value></data>
+  <data name="FollowUp.UnsavedCloseMessage" xml:space="preserve"><value>当前消息队列还有未保存的更改。退出将放弃这些更改，是否仍要退出？</value></data>
+  <data name="Shell.Conversations" xml:space="preserve"><value>会话</value></data>
+  <data name="Shell.Activity" xml:space="preserve"><value>活动</value></data>
+  <data name="Shell.Guardrails" xml:space="preserve"><value>守护策略</value></data>
+  <data name="Shell.KeepAlive" xml:space="preserve"><value>保活</value></data>
+  <data name="Shell.Preferences" xml:space="preserve"><value>偏好</value></data>
+  <data name="Shell.Pulse" xml:space="preserve"><value>持续监测</value></data>
+  <data name="KeepAlive.Title" xml:space="preserve"><value>连接保活</value></data>
+  <data name="KeepAlive.SentinelTitle" xml:space="preserve"><value>哨兵模式</value></data>
+  <data name="KeepAlive.SentinelHint" xml:space="preserve"><value>任意会话拿到回复，就在下面指定的会话里持续发消息守住哨位</value></data>
+  <data name="KeepAlive.SentinelDestinationTitle" xml:space="preserve"><value>哨兵驻点</value></data>
+  <data name="KeepAlive.SentinelNoDestination" xml:space="preserve"><value>未指定</value></data>
+  <data name="KeepAlive.SentinelDestinationMissing" xml:space="preserve"><value>指定的会话已不在列表中</value></data>
+  <data name="KeepAlive.SentinelPickHint" xml:space="preserve"><value>设为哨兵驻点</value></data>
+  <data name="KeepAlive.SentinelBadge" xml:space="preserve"><value>驻点</value></data>
+  <data name="KeepAlive.StatusSentinelNoDestination" xml:space="preserve"><value>哨兵模式已开启，还没指定驻点</value></data>
+  <data name="KeepAlive.StatusSentinelWaiting" xml:space="preserve"><value>哨兵模式已就位，等任意会话拿到回复</value></data>
+  <data name="KeepAlive.Settings" xml:space="preserve"><value>设置</value></data>
+  <data name="KeepAlive.IntervalUnit" xml:space="preserve"><value>分钟</value></data>
+  <data name="KeepAlive.IntervalTitle" xml:space="preserve"><value>哨位间隔</value></data>
+  <data name="KeepAlive.MessageTitle" xml:space="preserve"><value>哨位消息</value></data>
+  <data name="KeepAlive.MessageHint" xml:space="preserve"><value>留空：自动生成算术题（每次不同，1-3 个输出 token）。自定义：一行一句，随机挑选并避开上次。间隔会在设定值上下浮动四分之一。</value></data>
+  <data name="KeepAlive.MessageWatermark" xml:space="preserve"><value>留空自动生成算术题（如"17 + 34 = ? (只写答案)"），每次不同</value></data>
+  <data name="KeepAlive.HeldOnly" xml:space="preserve"><value>哨位中</value></data>
+  <data name="KeepAlive.SearchPlaceholder" xml:space="preserve"><value>搜索会话</value></data>
+  <data name="KeepAlive.LastSentFormat" xml:space="preserve"><value>上次 {0}</value></data>
+  <data name="KeepAlive.StatusOff" xml:space="preserve"><value>保活总开关没开。点标题栏的「保活」开关才会开始发送</value></data>
+  <data name="KeepAlive.StatusMonitorOnly" xml:space="preserve"><value>当前是只监控模式，保活不会发送任何消息</value></data>
+  <data name="KeepAlive.StatusHeld" xml:space="preserve"><value>保活驻守 {0} 个会话</value></data>
+  <data name="KeepAlive.StatusHeldWithNext" xml:space="preserve"><value>保活驻守 {0} 个会话，下一次 {1}</value></data>
+  <data name="KeepAlive.StatusHeldWithRecovery" xml:space="preserve"><value>保活驻守 {0} 个会话，其中 {1} 个在等恢复完成</value></data>
+  <data name="KeepAlive.ThreadHold" xml:space="preserve"><value>驻守</value></data>
+  <data name="KeepAlive.RuntimeTitle" xml:space="preserve"><value>运行状态</value></data>
+  <data name="KeepAlive.RuntimeHeldLabel" xml:space="preserve"><value>驻守中的会话</value></data>
+  <data name="KeepAlive.RuntimeNextDueLabel" xml:space="preserve"><value>下一次发送</value></data>
+  <data name="KeepAlive.RuntimeWaitingLabel" xml:space="preserve"><value>等恢复完成</value></data>
+  <data name="KeepAlive.RuntimeSentinelLabel" xml:space="preserve"><value>哨兵</value></data>
+  <data name="KeepAlive.SentinelStateOff" xml:space="preserve"><value>未开启</value></data>
+  <data name="KeepAlive.SentinelStateNoDestination" xml:space="preserve"><value>未指定驻点</value></data>
+  <data name="KeepAlive.SentinelStateWaiting" xml:space="preserve"><value>等首个回复</value></data>
+  <data name="KeepAlive.SentinelStateArmed" xml:space="preserve"><value>已就位</value></data>
+  <data name="KeepAlive.SentinelStateMasterOff" xml:space="preserve"><value>保活未开，不发送</value></data>
+  <data name="KeepAlive.NextDueCountdownHours" xml:space="preserve"><value>还有 {0} 小时 {1} 分</value></data>
+  <data name="KeepAlive.NextDueCountdownMinutes" xml:space="preserve"><value>还有 {0} 分 {1} 秒</value></data>
+  <data name="KeepAlive.NextDueCountdownSeconds" xml:space="preserve"><value>还有 {0} 秒</value></data>
+  <data name="KeepAlive.NextDueImminent" xml:space="preserve"><value>即将发送</value></data>
+  <data name="KeepAlive.NextDueReasonMasterOff" xml:space="preserve"><value>保活总开关没开</value></data>
+  <data name="KeepAlive.NextDueReasonMonitorOnly" xml:space="preserve"><value>只监控模式，不发送</value></data>
+  <data name="KeepAlive.NextDueReasonNoHold" xml:space="preserve"><value>没有驻守中的会话</value></data>
+  <data name="KeepAlive.NextDueReasonWaitingRecovery" xml:space="preserve"><value>等恢复完成后才排程</value></data>
+  <data name="KeepAlive.SendsTitle" xml:space="preserve"><value>最近发出的消息</value></data>
+  <data name="KeepAlive.SendsHint" xml:space="preserve"><value>哨位消息落在会话里和普通消息一样，这里是它实际发出去的原文</value></data>
+  <data name="KeepAlive.SendsEmpty" xml:space="preserve"><value>本次运行还没有发出守护消息</value></data>
+  <data name="KeepAlive.SendUnknownThread" xml:space="preserve"><value>已不在列表中的会话</value></data>
+  <data name="Shell.Project" xml:space="preserve"><value>项目主页</value></data>
+  <data name="Shell.BrandToolTip" xml:space="preserve"><value>打开项目主页 · 当前版本 v{0}</value></data>
+  <data name="Shell.BrandToolTipUpdate" xml:space="preserve"><value>有新版本 v{0}（当前 v{1}），点击前往下载</value></data>
+  <data name="Shell.SwitchToDark" xml:space="preserve"><value>切换到深色外观</value></data>
+  <data name="Shell.SwitchToLight" xml:space="preserve"><value>切换到浅色外观</value></data>
+  <data name="Shell.UpdateAvailable" xml:space="preserve"><value>发现新版本</value></data>
+  <data name="Shell.SearchConversations" xml:space="preserve"><value>搜索会话</value></data>
+  <data name="Shell.AllConversations" xml:space="preserve"><value>全部</value></data>
+  <data name="Shell.AttentionConversations" xml:space="preserve"><value>需关注</value></data>
+  <data name="Shell.NoSelection" xml:space="preserve"><value>尚未选择会话</value></data>
+  <data name="Shell.NoSelectionHint" xml:space="preserve"><value>从会话索引中选择一项</value></data>
+  <data name="Shell.CurrentState" xml:space="preserve"><value>当前状态</value></data>
+  <data name="Shell.MessageSequence" xml:space="preserve"><value>消息序列</value></data>
+  <data name="Shell.RecentActivity" xml:space="preserve"><value>最近活动</value></data>
+  <data name="Shell.Protection" xml:space="preserve"><value>恢复保护</value></data>
+  <data name="Tasks.ScopeArchived" xml:space="preserve"><value>已归档</value></data>
+  <data name="Tasks.ConversationEntry" xml:space="preserve"><value>会话</value></data>
+  <data name="Tasks.PinnedSection" xml:space="preserve"><value>置顶</value></data>
+  <data name="Tasks.ProjectsSection" xml:space="preserve"><value>项目</value></data>
+  <data name="Tasks.RecentSection" xml:space="preserve"><value>最近</value></data>
+  <data name="Tasks.ArchivedSection" xml:space="preserve"><value>已归档</value></data>
+  <data name="Tasks.ScopeAllHint" xml:space="preserve"><value>显示活动会话，归档另列</value></data>
+  <data name="Tasks.ScopeAttentionHint" xml:space="preserve"><value>显示尚未解决状态的会话</value></data>
+  <data name="Tasks.ScopeArchivedHint" xml:space="preserve"><value>仅显示归档会话</value></data>
+  <data name="Tasks.NoSessions" xml:space="preserve"><value>暂时没有会话</value></data>
+  <data name="Tasks.NoSessionsHint" xml:space="preserve"><value>Ceasy 正在等待第一次只读同步。</value></data>
+  <data name="Tasks.ClearSearch" xml:space="preserve"><value>清除搜索</value></data>
+  <data name="Tasks.DragHandle" xml:space="preserve"><value>拖拽调整会话顺序</value></data>
+  <data name="Tasks.ToggleSectionHint" xml:space="preserve"><value>展开或收起此部分</value></data>
+  <data name="Tasks.Pin" xml:space="preserve"><value>置顶会话</value></data>
+  <data name="Tasks.Unpin" xml:space="preserve"><value>取消置顶</value></data>
+  <data name="Tasks.UnarchiveUnavailable" xml:space="preserve"><value>当前 Codex Desktop 不提供已验证的取消归档通道</value></data>
+  <data name="Tasks.DeleteUnavailable" xml:space="preserve"><value>当前 Codex Desktop 不提供已验证的删除通道</value></data>
+  <data name="Tasks.Unarchive" xml:space="preserve"><value>取消归档</value></data>
+  <data name="Tasks.Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Tasks.DeleteConfirm" xml:space="preserve"><value>确认永久删除</value></data>
+  <data name="Tasks.DeleteCancel" xml:space="preserve"><value>取消删除</value></data>
+  <data name="Tasks.MutationUnavailableInPreview" xml:space="preserve"><value>隔离预览不执行会话操作</value></data>
+  <data name="Tasks.MutationUnavailable" xml:space="preserve"><value>当前没有已验证的会话操作通道</value></data>
+  <data name="Tasks.MutationPending" xml:space="preserve"><value>正在等待 Codex Desktop 确认</value></data>
+  <data name="Tasks.MutationChanged" xml:space="preserve"><value>会话状态已变化，请重新查看</value></data>
+  <data name="Tasks.MutationDraftBusy" xml:space="preserve"><value>请先完成当前预制消息编辑</value></data>
+  <data name="Tasks.MutationOwnerUnavailable" xml:space="preserve"><value>Codex Desktop 所有者未就绪</value></data>
+  <data name="Tasks.MutationRejected" xml:space="preserve"><value>Codex Desktop 拒绝了操作</value></data>
+  <data name="Tasks.MutationPersistenceFailed" xml:space="preserve"><value>操作记录无法安全保存</value></data>
+  <data name="Tasks.MutationUncertain" xml:space="preserve"><value>结果待核验，再次点击只会重新读取状态</value></data>
+  <data name="Tasks.MutationFailed" xml:space="preserve"><value>操作未完成</value></data>
+  <data name="Tasks.ScopeAttention" xml:space="preserve"><value>需关注</value></data>
+  <data name="Tasks.IndexSummary" xml:space="preserve"><value>显示 {0} · 关注 {1} · 归档 {2}</value></data>
+  <data name="Tasks.ResendTally" xml:space="preserve"><value>已成功重发 {0} 次，覆盖 {1} 个会话</value></data>
+  <data name="Tasks.ResendTallyHint" xml:space="preserve"><value>守护把发送失败的那条原始消息，通过 Codex 桌面端自带通道重新发送成功的累计次数。这些会话都归入「需要关注」，可直接筛选查看。</value></data>
+  <data name="Workflow.Mode" xml:space="preserve"><value>发送方式</value></data>
+  <data name="Workflow.ModeSequence" xml:space="preserve"><value>顺序队列</value></data>
+  <data name="Workflow.ModeWorkflow" xml:space="preserve"><value>条件工作流</value></data>
+  <data name="Workflow.When" xml:space="preserve"><value>触发</value></data>
+  <data name="Workflow.Where" xml:space="preserve"><value>目标</value></data>
+  <data name="Workflow.Then" xml:space="preserve"><value>动作</value></data>
+  <data name="Workflow.Trigger" xml:space="preserve"><value>触发条件</value></data>
+  <data name="Workflow.TriggerScheduled" xml:space="preserve"><value>指定时间</value></data>
+  <data name="Workflow.TriggerConversationCompleted" xml:space="preserve"><value>会话正常完成</value></data>
+  <data name="Workflow.TriggerPresetConfirmed" xml:space="preserve"><value>预制消息确认发送</value></data>
+  <data name="Workflow.SourceConversation" xml:space="preserve"><value>来源会话</value></data>
+  <data name="Workflow.SourcePreset" xml:space="preserve"><value>来源预制消息</value></data>
+  <data name="Workflow.Destination" xml:space="preserve"><value>发送目标</value></data>
+  <data name="Workflow.DestinationCurrent" xml:space="preserve"><value>当前会话</value></data>
+  <data name="Workflow.DestinationExisting" xml:space="preserve"><value>已有会话</value></data>
+  <data name="Workflow.DestinationNew" xml:space="preserve"><value>新对话</value></data>
+  <data name="Workflow.TargetConversation" xml:space="preserve"><value>目标会话</value></data>
+  <data name="Workflow.SendThisPreset" xml:space="preserve"><value>发送本条预制消息</value></data>
+  <data name="Workflow.EnableProtection" xml:space="preserve"><value>开启目标保护</value></data>
+  <data name="Workflow.ActionSend" xml:space="preserve"><value>发送</value></data>
+  <data name="Workflow.ActionSendAndProtect" xml:space="preserve"><value>发送 + 保护</value></data>
+  <data name="Workflow.TriggerCompletionChip" xml:space="preserve"><value>{0} 完成</value></data>
+  <data name="Workflow.TriggerPresetChip" xml:space="preserve"><value>{0} 已发送</value></data>
+  <data name="Workflow.SelectConversation" xml:space="preserve"><value>选择会话</value></data>
+  <data name="Workflow.SelectPreset" xml:space="preserve"><value>选择预制消息</value></data>
+  <data name="Workflow.SelectTarget" xml:space="preserve"><value>选择目标</value></data>
+  <data name="Workflow.ConversationReady" xml:space="preserve"><value>可用</value></data>
+  <data name="Workflow.ConversationBusy" xml:space="preserve"><value>忙碌</value></data>
+  <data name="Workflow.ConversationArchived" xml:space="preserve"><value>已归档</value></data>
+  <data name="Workflow.ConversationUnavailable" xml:space="preserve"><value>不可用</value></data>
+  <data name="Workflow.ConversationMissing" xml:space="preserve"><value>已缺失</value></data>
+  <data name="Workflow.MissingConversation" xml:space="preserve"><value>缺失会话</value></data>
+  <data name="Workflow.PresetReady" xml:space="preserve"><value>可触发</value></data>
+  <data name="Workflow.PresetDisabled" xml:space="preserve"><value>已停用</value></data>
+  <data name="Workflow.PresetSequenceOnly" xml:space="preserve"><value>仅顺序队列</value></data>
+  <data name="Workflow.PresetMissing" xml:space="preserve"><value>已缺失</value></data>
+  <data name="Workflow.MissingPreset" xml:space="preserve"><value>缺失预制消息</value></data>
+  <data name="Workflow.EmptyPreset" xml:space="preserve"><value>空消息</value></data>
+  <data name="Workflow.CapabilityUnavailable" xml:space="preserve"><value>当前版本不可用</value></data>
+  <data name="Workflow.StoreLoading" xml:space="preserve"><value>正在读取规则</value></data>
+  <data name="Workflow.StoreReview" xml:space="preserve"><value>规则需复核</value></data>
+  <data name="Workflow.StoreCorrupt" xml:space="preserve"><value>规则已损坏</value></data>
+  <data name="Workflow.StoreUnsupported" xml:space="preserve"><value>规则版本不兼容</value></data>
+  <data name="Workflow.StoreUnavailable" xml:space="preserve"><value>规则不可用</value></data>
+  <data name="Workflow.StoreCannotSave" xml:space="preserve"><value>当前规则状态不可保存工作流</value></data>
+  <data name="Workflow.RulePending" xml:space="preserve"><value>保存后绑定规则</value></data>
+  <data name="Workflow.InvalidSchedule" xml:space="preserve"><value>第 {0} 条工作流时间无效</value></data>
+  <data name="Workflow.InvalidSource" xml:space="preserve"><value>第 {0} 条工作流来源会话不可用</value></data>
+  <data name="Workflow.InvalidSourcePreset" xml:space="preserve"><value>第 {0} 条工作流来源消息不可用</value></data>
+  <data name="Workflow.InvalidTarget" xml:space="preserve"><value>第 {0} 条工作流目标会话不可用</value></data>
+  <data name="Workflow.NewConversationUnavailable" xml:space="preserve"><value>新对话发送尚不可安全使用</value></data>
+  <data name="Workflow.InvalidRule" xml:space="preserve"><value>工作流规则无效</value></data>
+  <data name="Workflow.CycleRejected" xml:space="preserve"><value>工作流形成循环，未保存</value></data>
+  <data name="Workflow.SaveFailed" xml:space="preserve"><value>工作流保存失败</value></data>
+  <data name="Activity.SystemEvents" xml:space="preserve"><value>系统记录</value></data>
+  <data name="Activity.WorkflowLineage" xml:space="preserve"><value>工作流链路</value></data>
+  <data name="Activity.ClearEvents" xml:space="preserve"><value>清除系统记录</value></data>
+  <data name="Activity.RefreshLineage" xml:space="preserve"><value>刷新工作流链路</value></data>
+  <data name="Activity.LineageSummary" xml:space="preserve"><value>{0} 条链路 · {1} 个动作</value></data>
+  <data name="Activity.LineageSummaryTruncated" xml:space="preserve"><value>最近 {0} 项 · 共 {1} 个动作</value></data>
+  <data name="Activity.LineageEmpty" xml:space="preserve"><value>暂无工作流链路</value></data>
+  <data name="Activity.LineageUnavailable" xml:space="preserve"><value>链路不可用</value></data>
+  <data name="Activity.LineageConservative" xml:space="preserve"><value>链路需复核</value></data>
+  <data name="Activity.TriggerObserved" xml:space="preserve"><value>触发已观察</value></data>
+  <data name="Activity.ActionSend" xml:space="preserve"><value>发送预制消息</value></data>
+  <data name="Activity.ActionProtect" xml:space="preserve"><value>开启保护</value></data>
+  <data name="Activity.StatePrepared" xml:space="preserve"><value>已准备</value></data>
+  <data name="Activity.StateDispatching" xml:space="preserve"><value>写入中</value></data>
+  <data name="Activity.StateRetryable" xml:space="preserve"><value>可重试</value></data>
+  <data name="Activity.StateUncertain" xml:space="preserve"><value>待核验</value></data>
+  <data name="Activity.StateConfirmed" xml:space="preserve"><value>已确认</value></data>
+  <data name="Activity.StateBlocked" xml:space="preserve"><value>已阻断</value></data>
+  <data name="Activity.StateExhausted" xml:space="preserve"><value>已耗尽</value></data>
+  <data name="Activity.StateCanceled" xml:space="preserve"><value>已取消</value></data>
+  <data name="Activity.AttemptRecorded" xml:space="preserve"><value>已记录尝试 {0}</value></data>
+  <data name="Activity.RuleRef" xml:space="preserve"><value>规则 {0}</value></data>
+  <data name="Activity.TaskRef" xml:space="preserve"><value>会话 {0}</value></data>
+  <data name="Activity.ActionOrdinal" xml:space="preserve"><value>动作 {0}</value></data>
+  <data name="Activity.Route" xml:space="preserve"><value>{0} → {1}</value></data>
+  <data name="Activity.Depth" xml:space="preserve"><value>深度 {0}</value></data>
+  <data name="Activity.CorrelationRef" xml:space="preserve"><value>链路 {0}</value></data>
+  <data name="Activity.AutomationName" xml:space="preserve"><value>{0}，{1}，{2}</value></data>
+  <data name="Activity.FailureSourceInvalid" xml:space="preserve"><value>来源不可用</value></data>
+  <data name="Activity.FailureTargetUnavailable" xml:space="preserve"><value>目标不可用</value></data>
+  <data name="Activity.FailurePresetUnavailable" xml:space="preserve"><value>预制消息不可用</value></data>
+  <data name="Activity.FailurePolicyBlocked" xml:space="preserve"><value>策略已阻断</value></data>
+  <data name="Activity.FailureUserActive" xml:space="preserve"><value>用户正在操作</value></data>
+  <data name="Activity.FailureDesktopUnavailable" xml:space="preserve"><value>桌面通道不可用</value></data>
+  <data name="Activity.FailureDesktopIncompatible" xml:space="preserve"><value>桌面版本不兼容</value></data>
+  <data name="Activity.FailurePersistence" xml:space="preserve"><value>持久化未确认</value></data>
+  <data name="Activity.FailureReceipt" xml:space="preserve"><value>回执不可用</value></data>
+  <data name="Activity.FailureStateChanged" xml:space="preserve"><value>权威状态已变更</value></data>
+  <data name="Activity.FailureSettings" xml:space="preserve"><value>设置权威不可用</value></data>
+  <data name="Activity.FailureUncertain" xml:space="preserve"><value>结果待权威核验</value></data>
+  <data name="Activity.FailureRetryExhausted" xml:space="preserve"><value>重试次数已耗尽</value></data>
+  <data name="Activity.FailureNewConversation" xml:space="preserve"><value>新对话能力不可用</value></data>
+  <data name="Activity.FailureNoProgress" xml:space="preserve"><value>未检测到新进展</value></data>
+  <data name="Activity.FailureLifetime" xml:space="preserve"><value>链路已超过 24 小时</value></data>
+  <data name="Activity.FailureClock" xml:space="preserve"><value>时钟证据矛盾</value></data>
+  <data name="Activity.FailureBudget" xml:space="preserve"><value>小时写入预算已用尽</value></data>
+  <data name="Activity.FailureAuthority" xml:space="preserve"><value>链路权威不可用</value></data>
+  <data name="Activity.FailureOther" xml:space="preserve"><value>当前条件已阻断</value></data>
+  <data name="Activity.PresetOrdinal" xml:space="preserve"><value>预制 {0}</value></data>
+  <data name="Activity.PresetRef" xml:space="preserve"><value>预制 {0}</value></data>
+  <data name="Activity.NextAction" xml:space="preserve"><value>下一步 · {0}</value></data>
+  <data name="Activity.NextEvaluate" xml:space="preserve"><value>等待规则评估</value></data>
+  <data name="Activity.NextDispatch" xml:space="preserve"><value>等待受控发送</value></data>
+  <data name="Activity.NextVerifyReceipt" xml:space="preserve"><value>核验回执</value></data>
+  <data name="Activity.NextRetry" xml:space="preserve"><value>等待重试条件</value></data>
+  <data name="Activity.NextVerifyAuthority" xml:space="preserve"><value>权威核验</value></data>
+  <data name="Activity.NextAwaitTrigger" xml:space="preserve"><value>等待后续触发</value></data>
+  <data name="Activity.NextStopped" xml:space="preserve"><value>无自动动作</value></data>
+  <data name="Activity.AutomationLineageName" xml:space="preserve"><value>{0}，{1}，{2}，{3}，{4}，{5}，{6}</value></data>
+</root>

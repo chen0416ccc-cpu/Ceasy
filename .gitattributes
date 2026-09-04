@@ -1,0 +1,10 @@
+* text eol=lf
+*.ico binary
+*.png binary
+
+# Inno Setup 的语言文件与许可文本由 Windows 控件直接消费，不经过 ISCC 的行解析，
+# 所以按 Windows 换行签出。这两类文件在本机工作树里本来就是 CRLF（.isl 取自上游时
+# 即为 CRLF），若让它们跟随全局的 eol=lf，本机验证过的形态就与别人 clone 出的形态
+# 不同，而向导页的渲染只能人眼验证，这种差异无法用离线手段发现。
+work/installer/Languages/*.isl text eol=crlf
+work/installer/License-*.txt text eol=crlf

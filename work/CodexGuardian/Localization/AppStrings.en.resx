@@ -1,0 +1,619 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="App.Title" xml:space="preserve"><value>Ceasy</value></data>
+  <data name="App.Brand" xml:space="preserve"><value>Ceasy</value></data>
+  <data name="App.Preview" xml:space="preserve"><value>2.0</value></data>
+  <data name="App.AlreadyRunningTitle" xml:space="preserve"><value>Ceasy</value></data>
+  <data name="App.AlreadyRunningMessage" xml:space="preserve"><value>Ceasy is already running in the notification area.</value></data>
+  <data name="App.StartFailedTitle" xml:space="preserve"><value>Startup failed</value></data>
+  <data name="App.StartFailedMessage" xml:space="preserve"><value>Ceasy could not start: {0}</value></data>
+  <data name="Window.Minimize" xml:space="preserve"><value>Minimize</value></data>
+  <data name="Window.Maximize" xml:space="preserve"><value>Maximize</value></data>
+  <data name="Window.Restore" xml:space="preserve"><value>Restore</value></data>
+  <data name="Window.MaximizeRestore" xml:space="preserve"><value>Maximize or restore</value></data>
+  <data name="Window.CloseToTray" xml:space="preserve"><value>Close to notification area</value></data>
+  <data name="Language.Label" xml:space="preserve"><value>Display language</value></data>
+  <data name="Language.SimplifiedChinese" xml:space="preserve"><value>Simplified Chinese</value></data>
+  <data name="Language.English" xml:space="preserve"><value>English</value></data>
+  <data name="Tray.ShowConsole" xml:space="preserve"><value>Show Ceasy</value></data>
+  <data name="Tray.ScanNow" xml:space="preserve"><value>Sync now</value></data>
+  <data name="Tray.ToggleGuardian" xml:space="preserve"><value>Start or pause guardian</value></data>
+  <data name="Tray.Exit" xml:space="preserve"><value>Exit</value></data>
+  <data name="Tray.MonitoringMessage" xml:space="preserve"><value>Ceasy is continuously monitoring Codex conversations in the background.</value></data>
+  <data name="Sidebar.Title" xml:space="preserve"><value>Ceasy</value></data>
+  <data name="Sidebar.Subtitle" xml:space="preserve"><value>Structured detection, semantic recovery</value></data>
+  <data name="Sidebar.LocalDualChannel" xml:space="preserve"><value>Local dual channel</value></data>
+  <data name="Sidebar.ActiveLayers" xml:space="preserve"><value>ACTIVE LAYERS</value></data>
+  <data name="Sidebar.OpenDataAndLogs" xml:space="preserve"><value>Open data and logs</value></data>
+  <data name="Dashboard.Title" xml:space="preserve"><value>Conversation recovery desk</value></data>
+  <data name="Dashboard.Description" xml:space="preserve"><value>Observe multiple Codex tasks and recover only when safety can be established.</value></data>
+  <data name="Action.ScanNow" xml:space="preserve"><value>Sync now</value></data>
+  <data name="Action.PauseGuardian" xml:space="preserve"><value>Pause guardian</value></data>
+  <data name="Action.StartGuardian" xml:space="preserve"><value>Start guardian</value></data>
+  <data name="Action.Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Action.RecheckDesktopChannel" xml:space="preserve"><value>Recheck</value></data>
+  <data name="Stats.DiscoveredTasks" xml:space="preserve"><value>Tasks shown</value></data>
+  <data name="Stats.ProtectionEnabled" xml:space="preserve"><value>Protection enabled</value></data>
+  <data name="Stats.RealtimeMonitored" xml:space="preserve"><value>Realtime monitored</value></data>
+  <data name="Stats.WaitingRecovery" xml:space="preserve"><value>Waiting to recover</value></data>
+  <data name="Stats.Recovering" xml:space="preserve"><value>Background recovery</value></data>
+  <data name="Tasks.Title" xml:space="preserve"><value>Task monitoring matrix</value></data>
+  <data name="Tasks.LastScan" xml:space="preserve"><value>Last sync</value></data>
+  <data name="Tasks.Search" xml:space="preserve"><value>Search</value></data>
+  <data name="Tasks.SearchHint" xml:space="preserve"><value>Search by session name, content, directory, or source</value></data>
+  <data name="Tasks.ShowArchived" xml:space="preserve"><value>Show archived</value></data>
+  <data name="Tasks.NoMatchingSessions" xml:space="preserve"><value>No matching sessions</value></data>
+  <data name="Tasks.AdjustFilter" xml:space="preserve"><value>Adjust the search text or conversation scope</value></data>
+  <data name="Tasks.ToggleHint" xml:space="preserve"><value>Protection controls automatic actions for this conversation; live status remains visible</value></data>
+  <data name="Tasks.ToggleLockedHint" xml:space="preserve"><value>Task status remains live; per-task automatic recovery is locked because the current interface lacks an atomic precondition</value></data>
+  <data name="Tasks.ArchivedReadOnly" xml:space="preserve"><value>Archived read-only</value></data>
+  <data name="Tasks.SessionSummary" xml:space="preserve"><value>Total sessions: {0} · Shown: {1} · Archived: {2} · Filtered out: {3}</value></data>
+  <data name="Tasks.FilterSummary" xml:space="preserve"><value>{0} · {1}</value></data>
+  <data name="Tasks.ScopeAllWithArchived" xml:space="preserve"><value>Scope: all providers, complete pagination, active conversations (archived is separate)</value></data>
+  <data name="Tasks.ScopeActiveOnly" xml:space="preserve"><value>Scope: all providers, complete pagination, archived excluded</value></data>
+  <data name="Tasks.Truncated" xml:space="preserve"><value>Results are truncated</value></data>
+  <data name="Tasks.NotTruncated" xml:space="preserve"><value>Results are not truncated</value></data>
+  <data name="Tasks.PossiblyTruncated" xml:space="preserve"><value>The service did not return a completeness marker</value></data>
+  <data name="Tasks.TruncationUnknown" xml:space="preserve"><value>Truncation status unavailable</value></data>
+  <data name="Tasks.Attempt" xml:space="preserve"><value>TRY {0}</value></data>
+  <data name="Tasks.WaitingFirstScan" xml:space="preserve"><value>Waiting for first sync</value></data>
+  <data name="Tasks.AppServerLoading" xml:space="preserve"><value>The local service will return tasks within a few seconds</value></data>
+  <data name="Mode.Title" xml:space="preserve"><value>Protect conversations</value></data>
+  <data name="Mode.MonitorOnly" xml:space="preserve"><value>Monitor only</value></data>
+  <data name="Mode.AutomaticRecovery" xml:space="preserve"><value>Automatic recovery</value></data>
+  <data name="Mode.MonitorOnlyDescription" xml:space="preserve"><value>Detect and classify failures without creating a recovery turn.</value></data>
+  <data name="Mode.AutomaticRecoveryDescription" xml:space="preserve"><value>Recover abnormal terminal states through the native Codex Desktop channel.</value></data>
+  <data name="Policy.Title" xml:space="preserve"><value>Recovery policy</value></data>
+  <data name="Policy.Saved" xml:space="preserve"><value>All settings are saved immediately</value></data>
+  <data name="Policy.InitialBackoff" xml:space="preserve"><value>Follow-up initial backoff</value></data>
+  <data name="Policy.InitialBackoffHint" xml:space="preserve"><value>Wait before the first follow-up retry; failed turns are resent without backoff</value></data>
+  <data name="Policy.MaximumBackoff" xml:space="preserve"><value>Follow-up maximum backoff</value></data>
+  <data name="Policy.MaximumBackoffHint" xml:space="preserve"><value>Wait limit after repeated follow-up failures</value></data>
+  <data name="Policy.MaximumAttempts" xml:space="preserve"><value>Maximum attempts</value></data>
+  <data name="Policy.MaximumAttemptsHint" xml:space="preserve"><value>Require manual review after this limit</value></data>
+  <data name="Policy.UnlimitedAttempts" xml:space="preserve"><value>Unlimited</value></data>
+  <data name="Policy.CountingMode" xml:space="preserve"><value>Budget scope</value></data>
+  <data name="Policy.CountingModeHint" xml:space="preserve"><value>Changes budget ownership only; safety gates remain unchanged</value></data>
+  <data name="Policy.BackoffTitle" xml:space="preserve"><value>Follow-up backoff</value></data>
+  <data name="Policy.BackoffHint" xml:space="preserve"><value>Applies to the follow-up queue only. A failed turn is resent immediately and does not wait on this.</value></data>
+  <data name="Policy.SecondsUnit" xml:space="preserve"><value>sec</value></data>
+  <data name="Policy.NewThreadTitle" xml:space="preserve"><value>New conversations</value></data>
+  <data name="Policy.ProtectNewThreadsHint" xml:space="preserve"><value>New conversations arrive protected, instead of needing their switch turned on one at a time</value></data>
+  <data name="Recovery.CountingPerFailedTurn" xml:space="preserve"><value>Per failed turn</value></data>
+  <data name="Recovery.CountingSharedIncident" xml:space="preserve"><value>Shared incident</value></data>
+  <data name="Recovery.CountingOriginalOnly" xml:space="preserve"><value>Original failed turn only</value></data>
+  <data name="Policy.StartWithWindows" xml:space="preserve"><value>Start with Windows</value></data>
+  <data name="Policy.MinimizeToTray" xml:space="preserve"><value>Minimize to notification area when closed</value></data>
+  <data name="Policy.PreventSystemSleep" xml:space="preserve"><value>Keep the computer awake while guarding</value></data>
+  <data name="Policy.PreventSystemSleepHint" xml:space="preserve"><value>Applies only while monitoring runs, and is released when it stops. It does not keep the display on, and cannot override a lid close or a system power policy.</value></data>
+  <data name="Settings.UpdateCheck" xml:space="preserve"><value>Check for new versions</value></data>
+  <data name="Settings.UpdateCheckHint" xml:space="preserve"><value>At most once a day, asks GitHub for the latest published version number. That single request is the only one this program makes: no conversation content, logs, or machine information leaves this computer.</value></data>
+  <data name="Settings.CheckNow" xml:space="preserve"><value>Check now</value></data>
+  <data name="Settings.CheckNowHint" xml:space="preserve"><value>Check immediately, ignoring the once-a-day interval</value></data>
+  <data name="Settings.CurrentVersion" xml:space="preserve"><value>Installed version v{0}</value></data>
+  <data name="Update.StatusUnknown" xml:space="preserve"><value>Not checked yet this run</value></data>
+  <data name="Update.StatusChecking" xml:space="preserve"><value>Checking…</value></data>
+  <data name="Update.StatusFailed" xml:space="preserve"><value>No answer this time; it will try again on next launch or when you check manually</value></data>
+  <data name="Update.StatusUpToDate" xml:space="preserve"><value>Up to date — the latest release is v{0}</value></data>
+  <data name="Update.StatusAvailable" xml:space="preserve"><value>Version v{0} is available to download</value></data>
+  <data name="Update.StatusDisabled" xml:space="preserve"><value>Update checks are off; no network request is made</value></data>
+  <data name="Events.Title" xml:space="preserve"><value>Live events</value></data>
+  <data name="Common.Starting" xml:space="preserve"><value>Starting</value></data>
+  <data name="Common.PreparingLocalServices" xml:space="preserve"><value>Preparing local services...</value></data>
+  <data name="Common.NotChecked" xml:space="preserve"><value>Not checked</value></data>
+  <data name="Common.Never" xml:space="preserve"><value>Never</value></data>
+  <data name="Common.NotConnected" xml:space="preserve"><value>Not connected</value></data>
+  <data name="Common.Connected" xml:space="preserve"><value>Connected</value></data>
+  <data name="Common.Unknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Common.Ready" xml:space="preserve"><value>Ready</value></data>
+  <data name="Common.Paused" xml:space="preserve"><value>Paused</value></data>
+  <data name="Common.Scanning" xml:space="preserve"><value>Checking</value></data>
+  <data name="Common.Offline" xml:space="preserve"><value>Offline</value></data>
+  <data name="Common.Protected" xml:space="preserve"><value>Protected</value></data>
+  <data name="Health.Healthy" xml:space="preserve"><value>Healthy</value></data>
+  <data name="Health.Processing" xml:space="preserve"><value>Processing</value></data>
+  <data name="Health.NeedsAttention" xml:space="preserve"><value>Needs attention</value></data>
+  <data name="Health.WaitingForDesktop" xml:space="preserve"><value>Waiting for Desktop</value></data>
+  <data name="Health.CoolingDown" xml:space="preserve"><value>Cooling down</value></data>
+  <data name="Health.Recovering" xml:space="preserve"><value>Recovering</value></data>
+  <data name="Health.Paused" xml:space="preserve"><value>Paused</value></data>
+  <data name="Health.ManualReview" xml:space="preserve"><value>Manual review</value></data>
+  <data name="Health.Unknown" xml:space="preserve"><value>State unconfirmed</value></data>
+  <data name="Health.NoHistory" xml:space="preserve"><value>No turn history</value></data>
+  <data name="Health.WaitingForIdle" xml:space="preserve"><value>Waiting for user idle</value></data>
+  <data name="Health.MessageUnanswered" xml:space="preserve"><value>Message unanswered</value></data>
+  <data name="Health.ContinueUnanswered" xml:space="preserve"><value>Continue unanswered</value></data>
+  <data name="Health.ToolWorkInterrupted" xml:space="preserve"><value>Work interrupted</value></data>
+  <data name="Health.ReasoningInterrupted" xml:space="preserve"><value>Reasoning interrupted</value></data>
+  <data name="Health.ResponseInterrupted" xml:space="preserve"><value>Response interrupted</value></data>
+  <data name="Health.EvidenceIncomplete" xml:space="preserve"><value>Evidence incomplete</value></data>
+  <data name="Health.UserAborted" xml:space="preserve"><value>Stopped by user</value></data>
+  <data name="Health.ContinueUserAborted" xml:space="preserve"><value>Continue stopped by user</value></data>
+  <data name="Health.InterruptedUnverified" xml:space="preserve"><value>Interruption unverified</value></data>
+  <data name="Health.ContinueInterruptedUnverified" xml:space="preserve"><value>Continue stop unverified</value></data>
+  <data name="Health.AbortReasonUnverified" xml:space="preserve"><value>Abort reason unverified</value></data>
+  <data name="Health.ContinueAbortReasonUnverified" xml:space="preserve"><value>Continue abort unverified</value></data>
+  <data name="Engine.StartConnecting" xml:space="preserve"><value>Connecting to the local Codex service...</value></data>
+  <data name="Engine.StartMonitorOnly" xml:space="preserve"><value>Guardian started in monitor-only mode.</value></data>
+  <data name="Engine.StartAutomaticRecovery" xml:space="preserve"><value>Guardian started with automatic recovery enabled.</value></data>
+  <data name="Engine.MonitoringPaused" xml:space="preserve"><value>Monitoring is paused.</value></data>
+  <data name="Engine.ReadRecentTaskState" xml:space="preserve"><value>Reading recent task state...</value></data>
+  <data name="Engine.TasksScannedAt" xml:space="preserve"><value>{0} tasks synchronized at {1}</value></data>
+  <data name="Engine.ActivityStackRunning" xml:space="preserve"><value>The Codex activity stack reports that this task is still running.</value></data>
+  <data name="Engine.GuardianBackgroundRunning" xml:space="preserve"><value>Running in background</value></data>
+  <data name="Engine.ProtectionDisabledForTask" xml:space="preserve"><value>Protection is disabled for this task.</value></data>
+  <data name="Engine.MonitorOnlyReason" xml:space="preserve"><value>Monitor-only: {0}</value></data>
+  <data name="Engine.RecoverySentWaiting" xml:space="preserve"><value>Recovery was sent; waiting for Codex to create or finish the next turn.</value></data>
+  <data name="Engine.AttemptLimit" xml:space="preserve"><value>Automatic attempt limit reached; manual review is required.</value></data>
+  <data name="Engine.Executing" xml:space="preserve"><value>Executing recovery action.</value></data>
+  <data name="Engine.UnableReadLatestTurn" xml:space="preserve"><value>Unable to read latest turn</value></data>
+  <data name="Engine.DetectedCooldown" xml:space="preserve"><value>Failure detected; cooldown started.</value></data>
+  <data name="Engine.CompletedNormally" xml:space="preserve"><value>Latest turn completed normally.</value></data>
+  <data name="Engine.TaskProtectionEnabled" xml:space="preserve"><value>Task protection enabled.</value></data>
+  <data name="Engine.TaskProtectionPaused" xml:space="preserve"><value>Task protection paused.</value></data>
+  <data name="Engine.ScanFailed" xml:space="preserve"><value>State synchronization failed: {0}</value></data>
+  <data name="Engine.UnableInspectTask" xml:space="preserve"><value>Unable to inspect task state: {0}</value></data>
+  <data name="Classifier.NoHistory" xml:space="preserve"><value>No turn history is available yet.</value></data>
+  <data name="Classifier.InProgress" xml:space="preserve"><value>Codex is still processing this task.</value></data>
+  <data name="Classifier.Completed" xml:space="preserve"><value>The latest turn completed normally.</value></data>
+  <data name="Classifier.Interrupted" xml:space="preserve"><value>The latest turn ended abnormally and will recover unless the error is explicitly permanent.</value></data>
+  <data name="Classifier.UnknownStatus" xml:space="preserve"><value>Unknown turn status: {0}</value></data>
+  <data name="Classifier.NonTransient" xml:space="preserve"><value>The latest turn failed with an explicitly non-recoverable error.</value></data>
+  <data name="Classifier.ResendContinue" xml:space="preserve"><value>The continue message failed before output; retry the failed turn in place through the native Codex Desktop channel.</value></data>
+  <data name="Classifier.ResendOriginal" xml:space="preserve"><value>The user message produced no assistant or tool output; retry the failed turn in place through the native Codex Desktop channel.</value></data>
+  <data name="Classifier.SendContinue" xml:space="preserve"><value>The task ended abnormally after producing output; send continue through the native Codex Desktop channel.</value></data>
+  <data name="AppServer.ExecutableMissing" xml:space="preserve"><value>A runnable local codex.exe was not found under LocalAppData.</value></data>
+  <data name="AppServer.LaunchFailed" xml:space="preserve"><value>Unable to launch the Codex app-server process.</value></data>
+  <data name="AppServer.ConnectedReadOnly" xml:space="preserve"><value>Connected to the read-only Codex state service.</value></data>
+  <data name="AppServer.ConnectionNotOpen" xml:space="preserve"><value>The Codex app-server connection is not open.</value></data>
+  <data name="AppServer.RequestIdFailed" xml:space="preserve"><value>Unable to allocate a protocol request id.</value></data>
+  <data name="AppServer.EmptyResponse" xml:space="preserve"><value>The app-server returned an empty response.</value></data>
+  <data name="AppServer.ReceiveStopped" xml:space="preserve"><value>The app-server receive loop stopped: {0}</value></data>
+  <data name="AppServer.ConnectionClosed" xml:space="preserve"><value>The Codex app-server connection closed.</value></data>
+  <data name="AppServer.ConnectTimedOut" xml:space="preserve"><value>Timed out while connecting to the local Codex app-server.</value></data>
+  <data name="AppServer.SourceCli" xml:space="preserve"><value>Command line</value></data>
+  <data name="AppServer.SourceVsCode" xml:space="preserve"><value>VS Code</value></data>
+  <data name="AppServer.SourceExec" xml:space="preserve"><value>Execution environment</value></data>
+  <data name="AppServer.SourceAppServer" xml:space="preserve"><value>Local service</value></data>
+  <data name="AppServer.SourceSubAgent" xml:space="preserve"><value>Sub-agent</value></data>
+  <data name="AppServer.SourceUnknown" xml:space="preserve"><value>Unknown source</value></data>
+  <data name="AppServer.SourceOther" xml:space="preserve"><value>Other source</value></data>
+  <data name="Settings.SaveFailed" xml:space="preserve"><value>Unable to save settings: {0}</value></data>
+  <data name="Settings.OpenDataFolderFailed" xml:space="preserve"><value>Unable to open the data folder: {0}</value></data>
+  <data name="Settings.UserGuideTitle" xml:space="preserve"><value>User guide</value></data>
+  <data name="Settings.UserGuideHint" xml:space="preserve"><value>Reading it once is enough.</value></data>
+  <data name="Settings.UpdateStartupFailed" xml:space="preserve"><value>Unable to update Windows startup: {0}</value></data>
+  <data name="Startup.ResolveExecutableFailed" xml:space="preserve"><value>Unable to resolve the application executable path.</value></data>
+  <data name="Page.Overview.Title" xml:space="preserve"><value>Overview</value></data>
+  <data name="Page.Tasks.Title" xml:space="preserve"><value>Tasks</value></data>
+  <data name="Page.Recovery.Title" xml:space="preserve"><value>Automatic Recovery</value></data>
+  <data name="Page.UserGuide.Title" xml:space="preserve"><value>User Guide</value></data>
+  <data name="Page.Settings.Title" xml:space="preserve"><value>Settings</value></data>
+  <data name="Action.ResendOriginal" xml:space="preserve"><value>Original resend required (unavailable)</value></data>
+  <data name="Action.SendContinue" xml:space="preserve"><value>Send continue</value></data>
+  <data name="Action.ResendContinue" xml:space="preserve"><value>Continue resend required (unavailable)</value></data>
+  <data name="Action.NoAutomaticAction" xml:space="preserve"><value>No automatic action</value></data>
+  <data name="Hint.MonitorOnly" xml:space="preserve"><value>Reads and classifies failures without automatic recovery.</value></data>
+  <data name="Hint.AutomaticRecovery" xml:space="preserve"><value>Append continue after useful work; original-message resend stays locked when the native protocol is unavailable.</value></data>
+  <data name="Hint.ConversationProtection" xml:space="preserve"><value>Allows authorized preset workflows for protected conversations; automatic recovery keeps its separate safety gate.</value></data>
+  <data name="Hint.AtomicGuardUnavailable" xml:space="preserve"><value>The current official Codex interface has no atomic failed-turn precondition. Automatic recovery is safety-locked to prevent writes into an active turn.</value></data>
+  <data name="Hint.DiagnosticReading" xml:space="preserve"><value>Only recent task summaries and latest turns are read; no recovery turn is created.</value></data>
+  <data name="Hint.Diagnostic403" xml:space="preserve"><value>This error is not automatically recoverable. No Codex action was performed.</value></data>
+  <data name="Hint.DiagnosticNoAction" xml:space="preserve"><value>This error is outside the safe recovery scope. No Codex action was performed.</value></data>
+  <data name="Hint.DiagnosticNoTurn" xml:space="preserve"><value>No recent task turn is available. No Codex action was performed.</value></data>
+  <data name="Hint.DiagnosticTransient" xml:space="preserve"><value>Classification: {0}. This run only reports the result; no Codex action was performed.</value></data>
+  <data name="Hint.DiagnosticFailed" xml:space="preserve"><value>Read-only check failed: {0}</value></data>
+  <data name="State.Paused" xml:space="preserve"><value>Paused</value></data>
+  <data name="Status.LocalServiceConnected" xml:space="preserve"><value>Local service connected</value></data>
+  <data name="Status.DesktopChannelConnected" xml:space="preserve"><value>Native same-stream channel connected</value></data>
+  <data name="Status.DesktopBackgroundChannelConnected" xml:space="preserve"><value>Background same-stream recovery connected</value></data>
+  <data name="Status.DesktopChannelDisconnected" xml:space="preserve"><value>Waiting for Codex Desktop to start</value></data>
+  <data name="Status.DesktopChannelUnavailable" xml:space="preserve"><value>Codex Desktop is connected, but its native channel is unavailable</value></data>
+  <data name="Status.NotConnected" xml:space="preserve"><value>Not connected</value></data>
+  <data name="Status.Monitoring" xml:space="preserve"><value>Monitoring</value></data>
+  <data name="Status.MonitoringUnavailable" xml:space="preserve"><value>Monitoring unavailable</value></data>
+  <data name="Status.MonitorOnly" xml:space="preserve"><value>Recovery monitoring only</value></data>
+  <data name="Status.AutomaticRecovery" xml:space="preserve"><value>Automatic recovery enabled</value></data>
+  <data name="Status.ConversationProtection" xml:space="preserve"><value>Conversation protection enabled</value></data>
+  <data name="Status.AtomicGuardLocked" xml:space="preserve"><value>Automatic recovery safety-locked</value></data>
+  <data name="Status.EnhancedObservationAvailable" xml:space="preserve"><value>System-level enhanced observation enabled</value></data>
+  <data name="Status.DeepObservationAvailable" xml:space="preserve"><value>In-process Codex deep observation enabled</value></data>
+  <data name="Status.EnhancedObservationFallback" xml:space="preserve"><value>Enhanced observation unavailable; using idle gate</value></data>
+  <data name="Status.DesktopStreamGap" xml:space="preserve"><value>The Desktop state stream missed an update; verifying this task by ID.</value></data>
+  <data name="Status.DiagnosticReading" xml:space="preserve"><value>Reading task failures</value></data>
+  <data name="Status.Diagnostic403" xml:space="preserve"><value>Detected 403 paid balance insufficient</value></data>
+  <data name="Status.DiagnosticManualReview" xml:space="preserve"><value>Detected a non-recoverable failure</value></data>
+  <data name="Status.DiagnosticNoTurn" xml:space="preserve"><value>No task turn available for inspection</value></data>
+  <data name="Status.DiagnosticTransient" xml:space="preserve"><value>Detected a recoverable failure</value></data>
+  <data name="Status.DiagnosticFailed" xml:space="preserve"><value>Read-only check failed</value></data>
+  <data name="Value.Never" xml:space="preserve"><value>Not synchronized yet</value></data>
+  <data name="Value.Ready" xml:space="preserve"><value>Ready</value></data>
+  <data name="Value.NotProvided" xml:space="preserve"><value>Not provided by service</value></data>
+  <data name="Value.NotIncluded" xml:space="preserve"><value>Not included</value></data>
+  <data name="Sidebar.Navigation" xml:space="preserve"><value>Workspace</value></data>
+  <data name="Nav.Overview" xml:space="preserve"><value>Overview</value></data>
+  <data name="Nav.Tasks" xml:space="preserve"><value>Tasks</value></data>
+  <data name="Nav.Recovery" xml:space="preserve"><value>Automatic recovery</value></data>
+  <data name="Nav.Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Action.ReadOnlyDiagnostic" xml:space="preserve"><value>Check failure</value></data>
+  <data name="Action.ViewAllTasks" xml:space="preserve"><value>View all</value></data>
+  <data name="Tip.ScanNow" xml:space="preserve"><value>Run one read-only state synchronization without sending</value></data>
+  <data name="Tip.AutoRecovery" xml:space="preserve"><value>Off means monitor only; on allows automatic recovery</value></data>
+  <data name="Overview.ProtectedHint" xml:space="preserve"><value>Protection currently enabled</value></data>
+  <data name="Overview.MonitoredHint" xml:space="preserve"><value>Non-archived sessions are covered by event monitoring</value></data>
+  <data name="Overview.AttentionHint" xml:space="preserve"><value>Needs review</value></data>
+  <data name="Overview.NoActivity" xml:space="preserve"><value>No activity</value></data>
+  <data name="Overview.RecentTasks" xml:space="preserve"><value>Session directory</value></data>
+  <data name="Tasks.Name" xml:space="preserve"><value>Task name</value></data>
+  <data name="Tasks.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Tasks.Health" xml:space="preserve"><value>Health</value></data>
+  <data name="Tasks.Source" xml:space="preserve"><value>Source</value></data>
+  <data name="Tasks.Updated" xml:space="preserve"><value>Last activity</value></data>
+  <data name="Tasks.Attempts" xml:space="preserve"><value>Attempts this failure</value></data>
+  <data name="Tasks.AttemptsUnit" xml:space="preserve"><value>so far</value></data>
+  <data name="Tasks.LedgerTotalUnit" xml:space="preserve"><value>successful resends</value></data>
+  <data name="Shell.GuardianAction" xml:space="preserve"><value>What guarding does next</value></data>
+  <data name="Shell.RecoveryHistory" xml:space="preserve"><value>Recovery history</value></data>
+  <data name="Shell.Origin" xml:space="preserve"><value>Where this came from</value></data>
+  <data name="Shell.LastReply" xml:space="preserve"><value>Last message</value></data>
+  <data name="Shell.LedgerEmpty" xml:space="preserve"><value>Guarding has not resent anything for this conversation yet</value></data>
+  <data name="Tasks.RetryingHint" xml:space="preserve"><value>Guardian is resending this task; the number is how many attempts it has made.</value></data>
+  <data name="Tasks.RecoveryLedger" xml:space="preserve"><value>Resends all time</value></data>
+  <data name="Recovery.LedgerConfirmed" xml:space="preserve"><value>Resent {0} time(s) · last {1}</value></data>
+  <data name="Recovery.LedgerNever" xml:space="preserve"><value>No resend confirmed yet</value></data>
+  <data name="Recovery.LedgerOwnerBusy" xml:space="preserve"><value>Previous turn still running · deferred {0} time(s) over {1}</value></data>
+  <data name="Tasks.NextAttempt" xml:space="preserve"><value>Next action</value></data>
+  <data name="Tasks.WorkingDirectory" xml:space="preserve"><value>Working directory</value></data>
+  <data name="Tasks.LatestTurn" xml:space="preserve"><value>Latest turn</value></data>
+  <data name="Tasks.Enabled" xml:space="preserve"><value>Protect</value></data>
+  <data name="Tasks.ProtectionPaused" xml:space="preserve"><value>Protection paused</value></data>
+  <data name="Tasks.CurrentState" xml:space="preserve"><value>Current detail</value></data>
+  <data name="Observation.Format" xml:space="preserve"><value>Live process: {0}</value></data>
+  <data name="Observation.Idle" xml:space="preserve"><value>idle</value></data>
+  <data name="Observation.Running" xml:space="preserve"><value>running</value></data>
+  <data name="Observation.Reasoning" xml:space="preserve"><value>reasoning</value></data>
+  <data name="Observation.Tool" xml:space="preserve"><value>using a tool</value></data>
+  <data name="Observation.CommandExecution" xml:space="preserve"><value>executing a command</value></data>
+  <data name="Observation.FileChange" xml:space="preserve"><value>changing files</value></data>
+  <data name="Observation.ToolCall" xml:space="preserve"><value>calling a tool</value></data>
+  <data name="Observation.WebSearch" xml:space="preserve"><value>searching the web</value></data>
+  <data name="Observation.ImageGeneration" xml:space="preserve"><value>generating an image</value></data>
+  <data name="Observation.Collaboration" xml:space="preserve"><value>coordinating a subtask</value></data>
+  <data name="Observation.Reconnecting" xml:space="preserve"><value>reconnecting</value></data>
+  <data name="Observation.ReconnectingProgress" xml:space="preserve"><value>reconnecting {0}/{1}</value></data>
+  <data name="Observation.Completed" xml:space="preserve"><value>turn completed</value></data>
+  <data name="Observation.Failed" xml:space="preserve"><value>turn failed</value></data>
+  <data name="Observation.Interrupted" xml:space="preserve"><value>turn interrupted</value></data>
+  <data name="Observation.WithHttpStatus" xml:space="preserve"><value>{0} · HTTP {1}</value></data>
+  <data name="Recovery.BackoffTitle" xml:space="preserve"><value>Follow-up backoff policy</value></data>
+  <data name="Recovery.BackoffDescription" xml:space="preserve"><value>Applies to the follow-up queue only. Failed turns are retried at a flat one-second interval regardless of these values.</value></data>
+  <data name="Recovery.SafetyTitle" xml:space="preserve"><value>Safety boundary</value></data>
+  <data name="Recovery.SafetyDescription" xml:space="preserve"><value>Recovery turns are created only by the verified Codex Desktop app, without switching tasks or starting a separate writer session.</value></data>
+  <data name="Recovery.DesktopChannelTitle" xml:space="preserve"><value>Recovery channel</value></data>
+  <data name="Recovery.DesktopChannelHint" xml:space="preserve"><value>Guardian does not install or modify Codex. When background capability is detected, the target task need not be open and output remains in the original task.</value></data>
+  <data name="Recovery.DesktopChannelReady" xml:space="preserve"><value>The Codex Desktop same-stream recovery channel is ready.</value></data>
+  <data name="Recovery.DesktopChannelUnavailable" xml:space="preserve"><value>Codex Desktop is not running, or this version does not support the native same-stream channel.</value></data>
+  <data name="Recovery.DesktopChannelCheckFailed" xml:space="preserve"><value>Native Codex Desktop channel check failed. Confirm that Codex Desktop is running.</value></data>
+  <data name="Recovery.EventDrivenTitle" xml:space="preserve"><value>Event-driven monitoring</value></data>
+  <data name="Recovery.EventDrivenHint" xml:space="preserve"><value>Only protocol notifications, local append events, or a manual sync trigger state reconciliation.</value></data>
+  <data name="Recovery.EnhancedObservationTitle" xml:space="preserve"><value>Enhanced observation</value></data>
+  <data name="Recovery.DeepObservationHint" xml:space="preserve"><value>Tracks target-specific drafts, runtime phases, tool activity, and reconnect state. Only allowlisted metadata crosses the pipe; message text, reasoning, tool output, tokens, and secrets are never recorded. Recovery waits only while the target task is being edited.</value></data>
+  <data name="Recovery.EnhancedObservationHint" xml:space="preserve"><value>Zero patching and zero injection. It only checks whether a foreground Codex composer is being edited and never records its text; unverified target identity or background drafts still fail back safely.</value></data>
+  <data name="Recovery.EnhancedObservationFallbackHint" xml:space="preserve"><value>The Codex composer cannot currently be observed reliably, so dispatch falls back to 15 seconds of continuous Windows idle time.</value></data>
+  <data name="Recovery.ContinueMessageTitle" xml:space="preserve"><value>Failure follow-up</value></data>
+  <data name="Recovery.ContinueMessageHint" xml:space="preserve"><value>Sent when a task ends abnormally after producing output</value></data>
+  <data name="Diagnostic.ReadOnlyTitle" xml:space="preserve"><value>Read-only current task check</value></data>
+  <data name="Diagnostic.ReadOnlyDescription" xml:space="preserve"><value>Reads a bounded summary of the current failure; a 403 balance error is reported for manual review only.</value></data>
+  <data name="Diagnostic.Result" xml:space="preserve"><value>Read-only result</value></data>
+  <data name="Diagnostic.Task" xml:space="preserve"><value>Task checked</value></data>
+  <data name="Settings.InterfaceTitle" xml:space="preserve"><value>Interface language</value></data>
+  <data name="Settings.StartupTitle" xml:space="preserve"><value>Startup behavior</value></data>
+  <data name="Settings.AppearanceTitle" xml:space="preserve"><value>Appearance</value></data>
+  <data name="Settings.ThemeLabel" xml:space="preserve"><value>Theme</value></data>
+  <data name="Settings.ThemeLight" xml:space="preserve"><value>Currently light</value></data>
+  <data name="Settings.ThemeDark" xml:space="preserve"><value>Currently dark</value></data>
+  <data name="Settings.DataTitle" xml:space="preserve"><value>Data and logs</value></data>
+  <data name="Settings.DiscoveryTitle" xml:space="preserve"><value>Task discovery</value></data>
+  <data name="Settings.ProtectNewThreadsByDefault" xml:space="preserve"><value>Protect new tasks automatically</value></data>
+  <data name="Settings.IncludeSubAgents" xml:space="preserve"><value>Include sub-agents</value></data>
+  <data name="Settings.RecentThreadLimit" xml:space="preserve"><value>Conversations to load</value></data>
+  <data name="Settings.RecentThreadLookbackDays" xml:space="preserve"><value>Look back</value></data>
+  <data name="Settings.DiscoveryScopeHint" xml:space="preserve"><value>How wide the scan reaches. When the conversation list reports it has hit the limit, this is the limit it means.</value></data>
+  <data name="Settings.DaysUnit" xml:space="preserve"><value>days</value></data>
+  <data name="Settings.Saved" xml:space="preserve"><value>Settings save automatically</value></data>
+  <data name="Diagnostic.Source" xml:space="preserve"><value>Evidence source</value></data>
+  <data name="Hint.DiagnosticIdle" xml:space="preserve"><value>No check has run yet. It reads recent task summaries, never full conversation history.</value></data>
+  <data name="Status.DiagnosticIdle" xml:space="preserve"><value>Read-only check has not run</value></data>
+  <data name="Value.DiagnosticAppServer" xml:space="preserve"><value>Codex local state service (summary)</value></data>
+  <data name="Diagnostic.TechnicalDetails" xml:space="preserve"><value>Raw technical details</value></data>
+  <data name="Nav.FollowUps" xml:space="preserve"><value>Preset messages</value></data>
+  <data name="Page.FollowUps.Title" xml:space="preserve"><value>Message queue</value></data>
+  <data name="FollowUp.TaskListTitle" xml:space="preserve"><value>Tasks</value></data>
+  <data name="FollowUp.TaskListHint" xml:space="preserve"><value>Select a task to edit its message queue</value></data>
+  <data name="FollowUp.QueueTitle" xml:space="preserve"><value>Send queue</value></data>
+  <data name="FollowUp.QueueEnabled" xml:space="preserve"><value>Queue enabled</value></data>
+  <data name="FollowUp.ActiveQueue" xml:space="preserve"><value>Active queue</value></data>
+  <data name="FollowUp.DraftSequence" xml:space="preserve"><value>Draft order</value></data>
+  <data name="FollowUp.TriggerCompletion" xml:space="preserve"><value>After normal completion</value></data>
+  <data name="FollowUp.TriggerScheduled" xml:space="preserve"><value>At a specified time</value></data>
+  <data name="FollowUp.Trigger" xml:space="preserve"><value>Send timing</value></data>
+  <data name="FollowUp.NoTaskSelected" xml:space="preserve"><value>No task selected</value></data>
+  <data name="FollowUp.SelectTask" xml:space="preserve"><value>Select a task</value></data>
+  <data name="FollowUp.SelectTaskHint" xml:space="preserve"><value>Choose a non-archived task from the left</value></data>
+  <data name="FollowUp.EmptyHint" xml:space="preserve"><value>No messages configured</value></data>
+  <data name="FollowUp.Loaded" xml:space="preserve"><value>{0} messages</value></data>
+  <data name="FollowUp.Unsaved" xml:space="preserve"><value>Unsaved</value></data>
+  <data name="FollowUp.InvalidMessage" xml:space="preserve"><value>Message {0} is empty or has an invalid identity</value></data>
+  <data name="FollowUp.InvalidSchedule" xml:space="preserve"><value>Message {0} has an invalid local date or time</value></data>
+  <data name="FollowUp.NoCompletionBaseline" xml:space="preserve"><value>The current task state cannot establish a reliable completion baseline; refresh the task first</value></data>
+  <data name="FollowUp.Saved" xml:space="preserve"><value>Saved</value></data>
+  <data name="FollowUp.SaveFailed" xml:space="preserve"><value>Save failed; the previous queue remains active</value></data>
+  <data name="FollowUp.Add" xml:space="preserve"><value>Add message</value></data>
+  <data name="FollowUp.Remove" xml:space="preserve"><value>Remove message</value></data>
+  <data name="FollowUp.Edit" xml:space="preserve"><value>Edit message</value></data>
+  <data name="FollowUp.DoneEditing" xml:space="preserve"><value>Done editing</value></data>
+  <data name="FollowUp.MoveUp" xml:space="preserve"><value>Move message up</value></data>
+  <data name="FollowUp.MoveDown" xml:space="preserve"><value>Move message down</value></data>
+  <data name="FollowUp.MessagePlaceholder" xml:space="preserve"><value>Message content</value></data>
+  <data name="FollowUp.MessageEnabled" xml:space="preserve"><value>Enable this message</value></data>
+  <data name="FollowUp.MessageEnabledShort" xml:space="preserve"><value>Enabled</value></data>
+  <data name="FollowUp.ScheduleDate" xml:space="preserve"><value>Date</value></data>
+  <data name="FollowUp.ScheduleTime" xml:space="preserve"><value>Time</value></data>
+  <data name="FollowUp.MaximumErrorRetries" xml:space="preserve"><value>Error retries</value></data>
+  <data name="FollowUp.RetryShort" xml:space="preserve"><value>Retries</value></data>
+  <data name="FollowUp.RetryInfinite" xml:space="preserve"><value>Infinite</value></data>
+  <data name="FollowUp.RetryDefaultHint" xml:space="preserve"><value>Blank = 500</value></data>
+  <data name="FollowUp.InvalidRetry" xml:space="preserve"><value>Message {0} error retries must be Infinite, blank, or between 0 and {1}</value></data>
+  <data name="FollowUp.EmptyQueue" xml:space="preserve"><value>The queue is empty</value></data>
+  <data name="FollowUp.SaveBeforeTaskSwitch" xml:space="preserve"><value>Save the current changes before switching tasks</value></data>
+  <data name="FollowUp.Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Tasks.FollowUpQueue" xml:space="preserve"><value>Message queue</value></data>
+  <data name="FollowUp.BackToTasks" xml:space="preserve"><value>Back</value></data>
+  <data name="FollowUp.OpenQueue" xml:space="preserve"><value>Open the preset message queue for "{0}"</value></data>
+  <data name="FollowUp.OpenQueueShort" xml:space="preserve"><value>Preset messages</value></data>
+  <data name="FollowUp.DragHandle" xml:space="preserve"><value>Drag to reorder message</value></data>
+  <data name="FollowUp.AddAttachment" xml:space="preserve"><value>Add attachment</value></data>
+  <data name="FollowUp.AttachmentImportUnavailableInPreview" xml:space="preserve"><value>Attachment import is unavailable in preview</value></data>
+  <data name="FollowUp.AttachmentImportInProgress" xml:space="preserve"><value>Adding attachments</value></data>
+  <data name="FollowUp.RemoveAttachment" xml:space="preserve"><value>Remove attachment</value></data>
+  <data name="FollowUp.AttachmentDragHandle" xml:space="preserve"><value>Drag to reorder attachment</value></data>
+  <data name="FollowUp.InvalidAttachments" xml:space="preserve"><value>Message {0} contains invalid attachments or exceeds the attachment limits</value></data>
+  <data name="FollowUp.AttachmentCapabilityWaiting" xml:space="preserve"><value>Message {0}: waiting for Codex attachment capability</value></data>
+  <data name="FollowUp.AttachmentCapabilityUnsupported" xml:space="preserve"><value>Message {0}: this attachment is not supported by the current Codex</value></data>
+  <data name="FollowUp.AttachmentsImported" xml:space="preserve"><value>Added {0} attachments</value></data>
+  <data name="FollowUp.AttachmentImportFailed" xml:space="preserve"><value>Could not add attachments</value></data>
+  <data name="FollowUp.StatusNone" xml:space="preserve"><value>Not configured</value></data>
+  <data name="FollowUp.StatusConfigured" xml:space="preserve"><value>{0} queued</value></data>
+  <data name="FollowUp.StatusPaused" xml:space="preserve"><value>Paused - {0}</value></data>
+  <data name="FollowUp.StatusScheduled" xml:space="preserve"><value>{0} - {1}</value></data>
+  <data name="FollowUp.StatusWaiting" xml:space="preserve"><value>Completion - {0}</value></data>
+  <data name="FollowUp.StatusReady" xml:space="preserve"><value>Ready to send</value></data>
+  <data name="FollowUp.StatusDispatching" xml:space="preserve"><value>Sending</value></data>
+  <data name="FollowUp.StatusNoEnabledMessages" xml:space="preserve"><value>No enabled messages</value></data>
+  <data name="FollowUp.StatusBlocked" xml:space="preserve"><value>Review needed</value></data>
+  <data name="FollowUp.StatusUncertain" xml:space="preserve"><value>Reconcile send</value></data>
+  <data name="FollowUp.StatusExhausted" xml:space="preserve"><value>Queue complete</value></data>
+  <data name="FollowUp.UnsavedCloseTitle" xml:space="preserve"><value>Unsaved preset messages</value></data>
+  <data name="FollowUp.UnsavedCloseMessage" xml:space="preserve"><value>This message queue has unsaved changes. Exiting will discard them. Exit anyway?</value></data>
+  <data name="Shell.Conversations" xml:space="preserve"><value>Conversations</value></data>
+  <data name="Shell.Activity" xml:space="preserve"><value>Activity</value></data>
+  <data name="Shell.Guardrails" xml:space="preserve"><value>Guardrails</value></data>
+  <data name="Shell.KeepAlive" xml:space="preserve"><value>Keep-alive</value></data>
+  <data name="Shell.Preferences" xml:space="preserve"><value>Preferences</value></data>
+  <data name="Shell.Pulse" xml:space="preserve"><value>Always monitoring</value></data>
+  <data name="KeepAlive.Title" xml:space="preserve"><value>Connection keep-alive</value></data>
+  <data name="KeepAlive.SentinelTitle" xml:space="preserve"><value>Sentinel</value></data>
+  <data name="KeepAlive.SentinelHint" xml:space="preserve"><value>When any conversation gets a reply, hold the slot by sending into the conversation chosen below</value></data>
+  <data name="KeepAlive.SentinelDestinationTitle" xml:space="preserve"><value>Sends into</value></data>
+  <data name="KeepAlive.SentinelNoDestination" xml:space="preserve"><value>Not chosen</value></data>
+  <data name="KeepAlive.SentinelDestinationMissing" xml:space="preserve"><value>Chosen conversation is no longer listed</value></data>
+  <data name="KeepAlive.SentinelPickHint" xml:space="preserve"><value>Send the sentinel's turns here</value></data>
+  <data name="KeepAlive.SentinelBadge" xml:space="preserve"><value>Sentinel</value></data>
+  <data name="KeepAlive.StatusSentinelNoDestination" xml:space="preserve"><value>Sentinel mode is on, but no destination has been chosen</value></data>
+  <data name="KeepAlive.StatusSentinelWaiting" xml:space="preserve"><value>Sentinel mode is ready, waiting for any conversation to reply</value></data>
+  <data name="KeepAlive.Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="KeepAlive.IntervalUnit" xml:space="preserve"><value>minutes</value></data>
+  <data name="KeepAlive.IntervalTitle" xml:space="preserve"><value>Interval</value></data>
+  <data name="KeepAlive.MessageTitle" xml:space="preserve"><value>Message</value></data>
+  <data name="KeepAlive.MessageHint" xml:space="preserve"><value>Empty: auto-generate arithmetic questions (different each time, 1-3 output tokens). Custom: one phrasing per line, picked at random and avoiding the previous one. Interval varies by up to a quarter either side.</value></data>
+  <data name="KeepAlive.MessageWatermark" xml:space="preserve"><value>Leave empty to auto-generate arithmetic questions (e.g. "17 + 34 = ? (answer only)"), different each time</value></data>
+  <data name="KeepAlive.HeldOnly" xml:space="preserve"><value>Held</value></data>
+  <data name="KeepAlive.SearchPlaceholder" xml:space="preserve"><value>Search conversations</value></data>
+  <data name="KeepAlive.LastSentFormat" xml:space="preserve"><value>Last {0}</value></data>
+  <data name="KeepAlive.StatusOff" xml:space="preserve"><value>Keep-alive is off. Use the "Keep-alive" switch in the title bar to start sending</value></data>
+  <data name="KeepAlive.StatusMonitorOnly" xml:space="preserve"><value>Monitor-only mode is on, so keep-alive sends nothing</value></data>
+  <data name="KeepAlive.StatusHeld" xml:space="preserve"><value>Holding {0} conversation(s)</value></data>
+  <data name="KeepAlive.StatusHeldWithNext" xml:space="preserve"><value>Holding {0} conversation(s), next at {1}</value></data>
+  <data name="KeepAlive.StatusHeldWithRecovery" xml:space="preserve"><value>Holding {0} conversation(s); {1} waiting for recovery</value></data>
+  <data name="KeepAlive.ThreadHold" xml:space="preserve"><value>Hold</value></data>
+  <data name="KeepAlive.RuntimeTitle" xml:space="preserve"><value>Live state</value></data>
+  <data name="KeepAlive.RuntimeHeldLabel" xml:space="preserve"><value>Conversations held</value></data>
+  <data name="KeepAlive.RuntimeNextDueLabel" xml:space="preserve"><value>Next send</value></data>
+  <data name="KeepAlive.RuntimeWaitingLabel" xml:space="preserve"><value>Awaiting recovery</value></data>
+  <data name="KeepAlive.RuntimeSentinelLabel" xml:space="preserve"><value>Sentinel</value></data>
+  <data name="KeepAlive.SentinelStateOff" xml:space="preserve"><value>Off</value></data>
+  <data name="KeepAlive.SentinelStateNoDestination" xml:space="preserve"><value>No destination</value></data>
+  <data name="KeepAlive.SentinelStateWaiting" xml:space="preserve"><value>Awaiting first reply</value></data>
+  <data name="KeepAlive.SentinelStateArmed" xml:space="preserve"><value>Armed</value></data>
+  <data name="KeepAlive.SentinelStateMasterOff" xml:space="preserve"><value>Keep-alive off, not sending</value></data>
+  <data name="KeepAlive.NextDueCountdownHours" xml:space="preserve"><value>in {0} h {1} min</value></data>
+  <data name="KeepAlive.NextDueCountdownMinutes" xml:space="preserve"><value>in {0} min {1} s</value></data>
+  <data name="KeepAlive.NextDueCountdownSeconds" xml:space="preserve"><value>in {0} s</value></data>
+  <data name="KeepAlive.NextDueImminent" xml:space="preserve"><value>sending shortly</value></data>
+  <data name="KeepAlive.NextDueReasonMasterOff" xml:space="preserve"><value>keep-alive switch is off</value></data>
+  <data name="KeepAlive.NextDueReasonMonitorOnly" xml:space="preserve"><value>monitor-only, not sending</value></data>
+  <data name="KeepAlive.NextDueReasonNoHold" xml:space="preserve"><value>no conversation held</value></data>
+  <data name="KeepAlive.NextDueReasonWaitingRecovery" xml:space="preserve"><value>scheduled after recovery finishes</value></data>
+  <data name="KeepAlive.SendsTitle" xml:space="preserve"><value>Recently sent</value></data>
+  <data name="KeepAlive.SendsHint" xml:space="preserve"><value>A heartbeat reads as an ordinary message once it lands. This is the wording as it went out.</value></data>
+  <data name="KeepAlive.SendsEmpty" xml:space="preserve"><value>Nothing sent yet this run</value></data>
+  <data name="KeepAlive.SendUnknownThread" xml:space="preserve"><value>Conversation no longer listed</value></data>
+  <data name="Shell.Project" xml:space="preserve"><value>Project home</value></data>
+  <data name="Shell.BrandToolTip" xml:space="preserve"><value>Open the project page · version v{0}</value></data>
+  <data name="Shell.BrandToolTipUpdate" xml:space="preserve"><value>Version v{0} is available (you have v{1}) — click to download</value></data>
+  <data name="Shell.SwitchToDark" xml:space="preserve"><value>Switch to dark appearance</value></data>
+  <data name="Shell.SwitchToLight" xml:space="preserve"><value>Switch to light appearance</value></data>
+  <data name="Shell.UpdateAvailable" xml:space="preserve"><value>New version available</value></data>
+  <data name="Shell.SearchConversations" xml:space="preserve"><value>Search conversations</value></data>
+  <data name="Shell.AllConversations" xml:space="preserve"><value>All</value></data>
+  <data name="Shell.AttentionConversations" xml:space="preserve"><value>Needs attention</value></data>
+  <data name="Shell.NoSelection" xml:space="preserve"><value>No conversation selected</value></data>
+  <data name="Shell.NoSelectionHint" xml:space="preserve"><value>Select one from the conversation index</value></data>
+  <data name="Shell.CurrentState" xml:space="preserve"><value>Current state</value></data>
+  <data name="Shell.MessageSequence" xml:space="preserve"><value>Message sequence</value></data>
+  <data name="Shell.RecentActivity" xml:space="preserve"><value>Recent activity</value></data>
+  <data name="Shell.Protection" xml:space="preserve"><value>Recovery protection</value></data>
+  <data name="Tasks.ScopeArchived" xml:space="preserve"><value>Archived</value></data>
+  <data name="Tasks.ConversationEntry" xml:space="preserve"><value>Conversations</value></data>
+  <data name="Tasks.PinnedSection" xml:space="preserve"><value>Pinned</value></data>
+  <data name="Tasks.ProjectsSection" xml:space="preserve"><value>Projects</value></data>
+  <data name="Tasks.RecentSection" xml:space="preserve"><value>Recent</value></data>
+  <data name="Tasks.ArchivedSection" xml:space="preserve"><value>Archived</value></data>
+  <data name="Tasks.ScopeAllHint" xml:space="preserve"><value>Show active conversations; archived is separate</value></data>
+  <data name="Tasks.ScopeAttentionHint" xml:space="preserve"><value>Show conversations with an unresolved state</value></data>
+  <data name="Tasks.ScopeArchivedHint" xml:space="preserve"><value>Show archived conversations only</value></data>
+  <data name="Tasks.NoSessions" xml:space="preserve"><value>No conversations yet</value></data>
+  <data name="Tasks.NoSessionsHint" xml:space="preserve"><value>Ceasy is waiting for the first read-only sync.</value></data>
+  <data name="Tasks.ClearSearch" xml:space="preserve"><value>Clear search</value></data>
+  <data name="Tasks.DragHandle" xml:space="preserve"><value>Drag to reorder conversation</value></data>
+  <data name="Tasks.ToggleSectionHint" xml:space="preserve"><value>Expand or collapse this section</value></data>
+  <data name="Tasks.Pin" xml:space="preserve"><value>Pin conversation</value></data>
+  <data name="Tasks.Unpin" xml:space="preserve"><value>Unpin conversation</value></data>
+  <data name="Tasks.UnarchiveUnavailable" xml:space="preserve"><value>This Codex Desktop version has no verified unarchive channel</value></data>
+  <data name="Tasks.DeleteUnavailable" xml:space="preserve"><value>This Codex Desktop version has no verified delete channel</value></data>
+  <data name="Tasks.Unarchive" xml:space="preserve"><value>Unarchive</value></data>
+  <data name="Tasks.Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Tasks.DeleteConfirm" xml:space="preserve"><value>Delete permanently</value></data>
+  <data name="Tasks.DeleteCancel" xml:space="preserve"><value>Cancel deletion</value></data>
+  <data name="Tasks.MutationUnavailableInPreview" xml:space="preserve"><value>Conversation actions are unavailable in isolated preview</value></data>
+  <data name="Tasks.MutationUnavailable" xml:space="preserve"><value>No verified conversation action channel is available</value></data>
+  <data name="Tasks.MutationPending" xml:space="preserve"><value>Waiting for Codex Desktop confirmation</value></data>
+  <data name="Tasks.MutationChanged" xml:space="preserve"><value>Conversation state changed; review it again</value></data>
+  <data name="Tasks.MutationDraftBusy" xml:space="preserve"><value>Finish the open preset-message edit first</value></data>
+  <data name="Tasks.MutationOwnerUnavailable" xml:space="preserve"><value>Codex Desktop owner is not ready</value></data>
+  <data name="Tasks.MutationRejected" xml:space="preserve"><value>Codex Desktop rejected the action</value></data>
+  <data name="Tasks.MutationPersistenceFailed" xml:space="preserve"><value>The operation record could not be saved safely</value></data>
+  <data name="Tasks.MutationUncertain" xml:space="preserve"><value>Result needs verification; another click only reads state</value></data>
+  <data name="Tasks.MutationFailed" xml:space="preserve"><value>Action did not complete</value></data>
+  <data name="Tasks.ScopeAttention" xml:space="preserve"><value>Attention</value></data>
+  <data name="Tasks.IndexSummary" xml:space="preserve"><value>{0} shown · {1} attention · {2} archived</value></data>
+  <data name="Tasks.ResendTally" xml:space="preserve"><value>{0} resend(s) confirmed across {1} conversation(s)</value></data>
+  <data name="Tasks.ResendTallyHint" xml:space="preserve"><value>How many times Guardian has resent the failed turn's own message through the stock Codex Desktop channel and had it accepted. Those conversations are kept in the Attention scope, so they can be filtered to directly.</value></data>
+  <data name="Workflow.Mode" xml:space="preserve"><value>Send mode</value></data>
+  <data name="Workflow.ModeSequence" xml:space="preserve"><value>Sequence queue</value></data>
+  <data name="Workflow.ModeWorkflow" xml:space="preserve"><value>Conditional workflow</value></data>
+  <data name="Workflow.When" xml:space="preserve"><value>When</value></data>
+  <data name="Workflow.Where" xml:space="preserve"><value>Where</value></data>
+  <data name="Workflow.Then" xml:space="preserve"><value>Then</value></data>
+  <data name="Workflow.Trigger" xml:space="preserve"><value>Trigger</value></data>
+  <data name="Workflow.TriggerScheduled" xml:space="preserve"><value>At a specified time</value></data>
+  <data name="Workflow.TriggerConversationCompleted" xml:space="preserve"><value>Conversation completes normally</value></data>
+  <data name="Workflow.TriggerPresetConfirmed" xml:space="preserve"><value>Preset send confirmed</value></data>
+  <data name="Workflow.SourceConversation" xml:space="preserve"><value>Source conversation</value></data>
+  <data name="Workflow.SourcePreset" xml:space="preserve"><value>Source preset</value></data>
+  <data name="Workflow.Destination" xml:space="preserve"><value>Destination</value></data>
+  <data name="Workflow.DestinationCurrent" xml:space="preserve"><value>Current conversation</value></data>
+  <data name="Workflow.DestinationExisting" xml:space="preserve"><value>Existing conversation</value></data>
+  <data name="Workflow.DestinationNew" xml:space="preserve"><value>New conversation</value></data>
+  <data name="Workflow.TargetConversation" xml:space="preserve"><value>Target conversation</value></data>
+  <data name="Workflow.SendThisPreset" xml:space="preserve"><value>Send this preset</value></data>
+  <data name="Workflow.EnableProtection" xml:space="preserve"><value>Enable target protection</value></data>
+  <data name="Workflow.ActionSend" xml:space="preserve"><value>Send</value></data>
+  <data name="Workflow.ActionSendAndProtect" xml:space="preserve"><value>Send + protect</value></data>
+  <data name="Workflow.TriggerCompletionChip" xml:space="preserve"><value>{0} completes</value></data>
+  <data name="Workflow.TriggerPresetChip" xml:space="preserve"><value>{0} sent</value></data>
+  <data name="Workflow.SelectConversation" xml:space="preserve"><value>Select conversation</value></data>
+  <data name="Workflow.SelectPreset" xml:space="preserve"><value>Select preset</value></data>
+  <data name="Workflow.SelectTarget" xml:space="preserve"><value>Select target</value></data>
+  <data name="Workflow.ConversationReady" xml:space="preserve"><value>Available</value></data>
+  <data name="Workflow.ConversationBusy" xml:space="preserve"><value>Busy</value></data>
+  <data name="Workflow.ConversationArchived" xml:space="preserve"><value>Archived</value></data>
+  <data name="Workflow.ConversationUnavailable" xml:space="preserve"><value>Unavailable</value></data>
+  <data name="Workflow.ConversationMissing" xml:space="preserve"><value>Missing</value></data>
+  <data name="Workflow.MissingConversation" xml:space="preserve"><value>Missing conversation</value></data>
+  <data name="Workflow.PresetReady" xml:space="preserve"><value>Triggerable</value></data>
+  <data name="Workflow.PresetDisabled" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Workflow.PresetSequenceOnly" xml:space="preserve"><value>Sequence only</value></data>
+  <data name="Workflow.PresetMissing" xml:space="preserve"><value>Missing</value></data>
+  <data name="Workflow.MissingPreset" xml:space="preserve"><value>Missing preset</value></data>
+  <data name="Workflow.EmptyPreset" xml:space="preserve"><value>Empty preset</value></data>
+  <data name="Workflow.CapabilityUnavailable" xml:space="preserve"><value>Unavailable in this version</value></data>
+  <data name="Workflow.StoreLoading" xml:space="preserve"><value>Reading rules</value></data>
+  <data name="Workflow.StoreReview" xml:space="preserve"><value>Rules need review</value></data>
+  <data name="Workflow.StoreCorrupt" xml:space="preserve"><value>Rules are corrupt</value></data>
+  <data name="Workflow.StoreUnsupported" xml:space="preserve"><value>Rule version unsupported</value></data>
+  <data name="Workflow.StoreUnavailable" xml:space="preserve"><value>Rules unavailable</value></data>
+  <data name="Workflow.StoreCannotSave" xml:space="preserve"><value>The current rule state cannot save workflows</value></data>
+  <data name="Workflow.RulePending" xml:space="preserve"><value>Save to bind rule</value></data>
+  <data name="Workflow.InvalidSchedule" xml:space="preserve"><value>Workflow {0} has an invalid time</value></data>
+  <data name="Workflow.InvalidSource" xml:space="preserve"><value>Workflow {0} has an unavailable source conversation</value></data>
+  <data name="Workflow.InvalidSourcePreset" xml:space="preserve"><value>Workflow {0} has an unavailable source preset</value></data>
+  <data name="Workflow.InvalidTarget" xml:space="preserve"><value>Workflow {0} has an unavailable target conversation</value></data>
+  <data name="Workflow.NewConversationUnavailable" xml:space="preserve"><value>New-conversation sending is not yet safe to use</value></data>
+  <data name="Workflow.InvalidRule" xml:space="preserve"><value>Workflow rule is invalid</value></data>
+  <data name="Workflow.CycleRejected" xml:space="preserve"><value>Workflow cycle rejected; nothing was saved</value></data>
+  <data name="Workflow.SaveFailed" xml:space="preserve"><value>Workflow save failed</value></data>
+  <data name="Activity.SystemEvents" xml:space="preserve"><value>System events</value></data>
+  <data name="Activity.WorkflowLineage" xml:space="preserve"><value>Workflow lineage</value></data>
+  <data name="Activity.ClearEvents" xml:space="preserve"><value>Clear system events</value></data>
+  <data name="Activity.RefreshLineage" xml:space="preserve"><value>Refresh workflow lineage</value></data>
+  <data name="Activity.LineageSummary" xml:space="preserve"><value>{0} flows · {1} actions</value></data>
+  <data name="Activity.LineageSummaryTruncated" xml:space="preserve"><value>{0} recent items · {1} actions total</value></data>
+  <data name="Activity.LineageEmpty" xml:space="preserve"><value>No workflow lineage</value></data>
+  <data name="Activity.LineageUnavailable" xml:space="preserve"><value>Lineage unavailable</value></data>
+  <data name="Activity.LineageConservative" xml:space="preserve"><value>Lineage needs review</value></data>
+  <data name="Activity.TriggerObserved" xml:space="preserve"><value>Trigger observed</value></data>
+  <data name="Activity.ActionSend" xml:space="preserve"><value>Send preset</value></data>
+  <data name="Activity.ActionProtect" xml:space="preserve"><value>Enable protection</value></data>
+  <data name="Activity.StatePrepared" xml:space="preserve"><value>Prepared</value></data>
+  <data name="Activity.StateDispatching" xml:space="preserve"><value>Writing</value></data>
+  <data name="Activity.StateRetryable" xml:space="preserve"><value>Retryable</value></data>
+  <data name="Activity.StateUncertain" xml:space="preserve"><value>Verify</value></data>
+  <data name="Activity.StateConfirmed" xml:space="preserve"><value>Confirmed</value></data>
+  <data name="Activity.StateBlocked" xml:space="preserve"><value>Blocked</value></data>
+  <data name="Activity.StateExhausted" xml:space="preserve"><value>Exhausted</value></data>
+  <data name="Activity.StateCanceled" xml:space="preserve"><value>Canceled</value></data>
+  <data name="Activity.AttemptRecorded" xml:space="preserve"><value>Recorded attempts {0}</value></data>
+  <data name="Activity.RuleRef" xml:space="preserve"><value>Rule {0}</value></data>
+  <data name="Activity.TaskRef" xml:space="preserve"><value>Task {0}</value></data>
+  <data name="Activity.ActionOrdinal" xml:space="preserve"><value>Action {0}</value></data>
+  <data name="Activity.Route" xml:space="preserve"><value>{0} → {1}</value></data>
+  <data name="Activity.Depth" xml:space="preserve"><value>Depth {0}</value></data>
+  <data name="Activity.CorrelationRef" xml:space="preserve"><value>Flow {0}</value></data>
+  <data name="Activity.AutomationName" xml:space="preserve"><value>{0}, {1}, {2}</value></data>
+  <data name="Activity.FailureSourceInvalid" xml:space="preserve"><value>Source unavailable</value></data>
+  <data name="Activity.FailureTargetUnavailable" xml:space="preserve"><value>Target unavailable</value></data>
+  <data name="Activity.FailurePresetUnavailable" xml:space="preserve"><value>Preset unavailable</value></data>
+  <data name="Activity.FailurePolicyBlocked" xml:space="preserve"><value>Policy blocked</value></data>
+  <data name="Activity.FailureUserActive" xml:space="preserve"><value>User is active</value></data>
+  <data name="Activity.FailureDesktopUnavailable" xml:space="preserve"><value>Desktop channel unavailable</value></data>
+  <data name="Activity.FailureDesktopIncompatible" xml:space="preserve"><value>Desktop version incompatible</value></data>
+  <data name="Activity.FailurePersistence" xml:space="preserve"><value>Persistence not confirmed</value></data>
+  <data name="Activity.FailureReceipt" xml:space="preserve"><value>Receipt unavailable</value></data>
+  <data name="Activity.FailureStateChanged" xml:space="preserve"><value>Authority changed</value></data>
+  <data name="Activity.FailureSettings" xml:space="preserve"><value>Settings authority unavailable</value></data>
+  <data name="Activity.FailureUncertain" xml:space="preserve"><value>Authoritative verification required</value></data>
+  <data name="Activity.FailureRetryExhausted" xml:space="preserve"><value>Retry allowance exhausted</value></data>
+  <data name="Activity.FailureNewConversation" xml:space="preserve"><value>New-conversation capability unavailable</value></data>
+  <data name="Activity.FailureNoProgress" xml:space="preserve"><value>No new progress</value></data>
+  <data name="Activity.FailureLifetime" xml:space="preserve"><value>Flow exceeded 24 hours</value></data>
+  <data name="Activity.FailureClock" xml:space="preserve"><value>Clock evidence conflict</value></data>
+  <data name="Activity.FailureBudget" xml:space="preserve"><value>Hourly write budget exhausted</value></data>
+  <data name="Activity.FailureAuthority" xml:space="preserve"><value>Lineage authority unavailable</value></data>
+  <data name="Activity.FailureOther" xml:space="preserve"><value>Current conditions blocked</value></data>
+  <data name="Activity.PresetOrdinal" xml:space="preserve"><value>Preset {0}</value></data>
+  <data name="Activity.PresetRef" xml:space="preserve"><value>Preset {0}</value></data>
+  <data name="Activity.NextAction" xml:space="preserve"><value>Next · {0}</value></data>
+  <data name="Activity.NextEvaluate" xml:space="preserve"><value>Evaluate rules</value></data>
+  <data name="Activity.NextDispatch" xml:space="preserve"><value>Await guarded send</value></data>
+  <data name="Activity.NextVerifyReceipt" xml:space="preserve"><value>Verify receipt</value></data>
+  <data name="Activity.NextRetry" xml:space="preserve"><value>Await retry conditions</value></data>
+  <data name="Activity.NextVerifyAuthority" xml:space="preserve"><value>Verify authority</value></data>
+  <data name="Activity.NextAwaitTrigger" xml:space="preserve"><value>Await downstream trigger</value></data>
+  <data name="Activity.NextStopped" xml:space="preserve"><value>No automatic action</value></data>
+  <data name="Activity.AutomationLineageName" xml:space="preserve"><value>{0}, {1}, {2}, {3}, {4}, {5}, {6}</value></data>
+</root>

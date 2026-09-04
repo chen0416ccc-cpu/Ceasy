@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>CodexGuardian.Trust</AssemblyName>
+    <RootNamespace>CodexGuardian.Trust</RootNamespace>
+    <DebugType>embedded</DebugType>
+    <CodexGuardianTestFriend Condition="'$(CodexGuardianTestFriend)' == ''">false</CodexGuardianTestFriend>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(CodexGuardianTestFriend)' == 'true'">
+    <DefineConstants>$(DefineConstants);CODEXGUARDIAN_TEST_FRIEND</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(CodexGuardianTestFriend)' == 'true'">
+    <InternalsVisibleTo Include="CodexGuardian.Tests" />
+  </ItemGroup>
+</Project>

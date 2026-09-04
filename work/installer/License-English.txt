@@ -1,0 +1,63 @@
+﻿Ceasy License
+================================================================
+
+Ceasy is released under the MIT License. You may use, copy, modify, merge,
+publish, distribute, sublicense and sell copies of the software, including for
+commercial purposes, provided the copyright notice and the permission notice
+below are retained in all copies.
+
+The software is provided "as is", without warranty of any kind. The full
+license text follows.
+
+----------------------------------------------------------------
+
+MIT License
+
+Copyright (c) 2026 chen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+----------------------------------------------------------------
+
+Third-party components
+
+  The installation directory includes the full .NET 8 runtime and WPF (MIT
+  License), so that .NET does not have to be installed separately. The
+  installer itself is built with Inno Setup 6 (Inno Setup License), and the
+  Simplified Chinese wizard text comes from a community translation project
+  (MIT License).
+
+  The complete copyright and license texts for these components are installed
+  to:
+
+      <installation directory>\THIRD-PARTY-NOTICES.md
+
+About Codex
+
+  Ceasy observes task state in OpenAI Codex Desktop and acts on it only after
+  you explicitly authorize it. It does not contain or modify the Codex
+  package, its state databases, its session records, or task content.
+
+  Ceasy is not affiliated with or endorsed by OpenAI.
+
+Code signing
+
+  This installer is not code signed, so Windows shows an "unknown publisher"
+  warning the first time it runs. To verify the download before installing,
+  check it against the SHA256SUMS.txt file published alongside it.

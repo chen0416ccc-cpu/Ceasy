@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>CodexGuardian.Broker</AssemblyName>
+    <RootNamespace>CodexGuardian.Broker</RootNamespace>
+    <Version>2.0.0</Version>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <DebugType>embedded</DebugType>
+    <CodexGuardianTestFriend Condition="'$(CodexGuardianTestFriend)' == ''">false</CodexGuardianTestFriend>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(CodexGuardianTestFriend)' == 'true'">
+    <InternalsVisibleTo Include="CodexGuardian.Tests" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(CodexGuardianTestFriend)' == 'true'">
+    <DefineConstants>$(DefineConstants);CODEXGUARDIAN_TEST_FRIEND</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodexGuardian.Control\CodexGuardian.Control.csproj" />
+    <ProjectReference Include="..\CodexGuardian.Trust\CodexGuardian.Trust.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,25 @@
+{
+  "schema": 2,
+  "mode": "read-only-cdp-pipe-runtime",
+  "transport": "remote-debugging-io-pipes",
+  "packageName": "OpenAI.Codex",
+  "packageFamilyName": "OpenAI.Codex_2p2nqsd0c76g0",
+  "packagePublisher": "CN=50BDFD77-8903-4850-9FFE-6E8522F64D5B",
+  "packageArchitecture": "x64",
+  "contractId": "codex-cdp-observation-v1",
+  "asarPackageName": "openai-codex-electron",
+  "asarProductName": "Codex",
+  "asarMainPath": ".vite/build/early-bootstrap.js",
+  "asarMainSha256": "DCC940F4ABB9D2D3C84448B42A6499A19AAE7F3C221D853C48D32C9F62CE5CDB",
+  "preloadPath": ".vite/build/preload.js",
+  "preloadSha256": "A976C02AB0F9CF0EB11D5E4DA32C95E9F5DB3790D76505888C6E493F137F6AC9",
+  "preloadMarkers": [
+    "electronBridge",
+    "codex_desktop:message-for-view",
+    "contextBridge.exposeInMainWorld",
+    "MessageEvent"
+  ],
+  "pageProtocol": "app",
+  "notificationEnvelope": "top",
+  "hookSha256": "2F1B599D17478F741BA4E3CD0C2715486B0D7BE57329AFEB2473651032B9848D"
+}

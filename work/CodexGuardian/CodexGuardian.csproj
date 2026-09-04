@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>CodexGuardian</AssemblyName>
+    <RootNamespace>CodexGuardian</RootNamespace>
+    <StartupObject>CodexGuardian.Program</StartupObject>
+    <Version>2.0.0</Version>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Product>Ceasy</Product>
+    <AssemblyTitle>Ceasy</AssemblyTitle>
+    <ApplicationIcon>Assets\Ceasy.ico</ApplicationIcon>
+    <SatelliteResourceLanguages>zh-CN;en</SatelliteResourceLanguages>
+    <DebugType>embedded</DebugType>
+    <CodexGuardianTestFriend Condition="'$(CodexGuardianTestFriend)' == ''">false</CodexGuardianTestFriend>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodexGuardian.Control\CodexGuardian.Control.csproj" />
+    <ProjectReference Include="..\CodexGuardian.Trust\CodexGuardian.Trust.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\CeasyLogo.png" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(CodexGuardianTestFriend)' == 'true'">
+    <InternalsVisibleTo Include="CodexGuardian.Tests" />
+  </ItemGroup>
+
+</Project>

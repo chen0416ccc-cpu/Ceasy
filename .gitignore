@@ -1,0 +1,11 @@
+# Build and test output
+**/bin/
+**/obj/
+
+# Local CodexGuardian diagnostics and staged PoC artifacts
+outputs/
+**/logs/
+**/r*-cdp-poc/
+**/r*-dev-artifacts/
+*.user
+*.suo

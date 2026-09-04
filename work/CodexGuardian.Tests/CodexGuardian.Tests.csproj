@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodexGuardian.Broker\CodexGuardian.Broker.csproj"
+                      AdditionalProperties="CodexGuardianTestFriend=true"
+                      ReferenceOutputAssembly="true" />
+    <ProjectReference Include="..\CodexGuardian.Control\CodexGuardian.Control.csproj"
+                      AdditionalProperties="CodexGuardianTestFriend=true" />
+    <ProjectReference Include="..\CodexGuardian\CodexGuardian.csproj"
+                      AdditionalProperties="CodexGuardianTestFriend=true" />
+    <ProjectReference Include="..\CodexGuardian.Trust\CodexGuardian.Trust.csproj"
+                      AdditionalProperties="CodexGuardianTestFriend=true" />
+  </ItemGroup>
+</Project>

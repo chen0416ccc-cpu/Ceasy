@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="work/CodexGuardian/Assets/CeasyLogo.png" width="120" alt="Ceasy">
+
 # Ceasy
 
 **盯住 Codex Desktop 的每个任务，中断了按证据决定要不要替你续上**

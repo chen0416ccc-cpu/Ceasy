@@ -13,6 +13,11 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
+if (StructuredAttachmentLiveGate.IsRequested(args))
+{
+    return await StructuredAttachmentLiveGate.RunAsync(args);
+}
+
 if (AutomaticRecoveryFreshFailureObserver.IsRequested(args))
 {
     return await AutomaticRecoveryFreshFailureObserver.RunAsync(args);
@@ -142,6 +147,16 @@ if (args.Contains("--follow-up-offline-only", StringComparer.OrdinalIgnoreCase))
 {
     await FollowUpOfflineTests.RunAsync(Assert);
     Console.WriteLine("FOLLOW_UP_OFFLINE_TESTS_COMPLETE");
+    Console.WriteLine(failures.Count == 0
+        ? "\nALL TESTS PASSED"
+        : $"\n{failures.Count} TEST(S) FAILED");
+    return failures.Count == 0 ? 0 : 1;
+}
+
+if (args.Contains("--ui-refinement-offline-only", StringComparer.OrdinalIgnoreCase))
+{
+    await UiRefinementOfflineTests.RunAsync(Assert);
+    Console.WriteLine("UI_REFINEMENT_OFFLINE_TESTS_COMPLETE");
     Console.WriteLine(failures.Count == 0
         ? "\nALL TESTS PASSED"
         : $"\n{failures.Count} TEST(S) FAILED");
@@ -336,6 +351,7 @@ string[] implementedOfflineSuiteSubjects =
     "follow-up",
     "keep-alive-schedule",
     "structured-follow-up",
+    "ui-refinement",
     "update-check",
     "workflow-automation",
 ];
@@ -417,6 +433,7 @@ await AttachmentPresentationReconciliationOfflineTests.RunAsync(Assert);
 await FollowUpAttachmentSaveAuthorityValidatorOfflineTests.RunAsync(Assert);
 await StructuredFollowUpOfflineTests.RunAsync(Assert);
 await FollowUpOfflineTests.RunAsync(Assert);
+await UiRefinementOfflineTests.RunAsync(Assert);
 await AttachmentFoundationOfflineTests.RunAsync(Assert);
 await AttachmentInteractionOfflineTests.RunAsync(Assert);
 await ConversationMutationOfflineTests.RunAsync(Assert);

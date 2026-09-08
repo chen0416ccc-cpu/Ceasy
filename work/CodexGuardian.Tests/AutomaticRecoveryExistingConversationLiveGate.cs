@@ -867,8 +867,7 @@ internal static class AutomaticRecoveryExistingConversationLiveGate
 
             var readback = await WaitForReadbackAsync(
                     appServer,
-                    prepared.Plan.TargetThreadId,
-                    prepared.Plan.ClientMessageId,
+                    prepared.Plan,
                     result.NewTurnId,
                     cancellationToken)
                 .ConfigureAwait(false);
@@ -877,20 +876,8 @@ internal static class AutomaticRecoveryExistingConversationLiveGate
                     20,
                     cancellationToken)
                 .ConfigureAwait(false);
-            var beforeIds = beforeTurns.Select(turn => turn.Id).ToHashSet(
-                StringComparer.OrdinalIgnoreCase);
-            var newIds = afterTurns
-                .Select(turn => turn.Id)
-                .Where(id => !beforeIds.Contains(id))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray();
-            if (newIds.Length != 1 ||
-                !string.Equals(newIds[0], result.NewTurnId, StringComparison.OrdinalIgnoreCase) ||
-                !string.Equals(readback.Id, result.NewTurnId, StringComparison.OrdinalIgnoreCase) ||
-                !afterTurns.Any(turn => string.Equals(
-                    turn.Id,
-                    prepared.Plan.ExpectedFailedTurnId,
-                    StringComparison.OrdinalIgnoreCase)))
+            if (!HasExpectedTurnTransition(prepared.Plan, beforeTurns, afterTurns, result.NewTurnId) ||
+                !string.Equals(readback.Id, result.NewTurnId, StringComparison.OrdinalIgnoreCase))
             {
                 throw new AutomaticRecoveryLiveGateException("turn-count-not-exactly-once");
             }
@@ -911,6 +898,7 @@ internal static class AutomaticRecoveryExistingConversationLiveGate
                 " readbackTurn=" + readback.Id +
                 " attempts=" + operation.AttemptCount.ToString(CultureInfo.InvariantCulture) +
                 " authorizationState=" + confirmed.State +
+                " inPlace=" + IsInPlaceAction(prepared.Plan.Action) +
                 " newTurns=1 realSend=True");
             return 0;
         }
@@ -1093,21 +1081,36 @@ internal static class AutomaticRecoveryExistingConversationLiveGate
 
     private static async Task<TurnSnapshot> WaitForReadbackAsync(
         AppServerClient appServer,
-        string targetThreadId,
-        string clientMessageId,
+        AutomaticRecoveryLiveGatePlan plan,
         string expectedNewTurnId,
         CancellationToken cancellationToken)
     {
         var deadline = DateTimeOffset.UtcNow + ReadbackTimeout;
         while (DateTimeOffset.UtcNow < deadline)
         {
+            if (IsInPlaceAction(plan.Action))
+            {
+                // The owner edit replaces the turn and does not carry our journal client id.
+                var latest = await appServer.ReadLatestTurnWithFullItemsAsync(
+                        plan.TargetThreadId,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+                if (latest is not null && MatchesInPlaceReadback(plan, latest, expectedNewTurnId))
+                {
+                    return latest;
+                }
+
+                await Task.Delay(ReadbackPollInterval, cancellationToken).ConfigureAwait(false);
+                continue;
+            }
+
             var matches = (await appServer.ReadRecentTurnsAsync(
-                    targetThreadId,
+                    plan.TargetThreadId,
                     20,
                     cancellationToken).ConfigureAwait(false))
                 .Where(turn =>
                     turn.UserMessageClientIds?.Contains(
-                        clientMessageId,
+                        plan.ClientMessageId,
                         StringComparer.OrdinalIgnoreCase) == true)
                 .Take(2)
                 .ToArray();
@@ -1126,6 +1129,49 @@ internal static class AutomaticRecoveryExistingConversationLiveGate
         }
 
         throw new AutomaticRecoveryLiveGateException("successor-readback-timeout");
+    }
+
+    private static bool IsInPlaceAction(RecoveryActionKind action) =>
+        action is RecoveryActionKind.ResendOriginal or RecoveryActionKind.ResendContinue;
+
+    internal static bool MatchesInPlaceReadback(
+        AutomaticRecoveryLiveGatePlan plan,
+        TurnSnapshot turn,
+        string expectedNewTurnId) =>
+        IsInPlaceAction(plan.Action) &&
+        string.Equals(turn.Id, expectedNewTurnId, StringComparison.OrdinalIgnoreCase) &&
+        !string.Equals(turn.Id, plan.ExpectedFailedTurnId, StringComparison.OrdinalIgnoreCase) &&
+        turn.HasCompleteItemEvidence && turn.HasUserMessage && turn.IsSingleTextUserInput &&
+        !turn.HasAttachments && !turn.HasAmbiguousActivity &&
+        string.Equals(
+            RecoveryService.BuildRecoveryPayloadHash(plan.Action, RecoveryClassifier.NormalizeRecoveryInput(turn.UserText)),
+            plan.PayloadDigest,
+            StringComparison.Ordinal);
+
+    internal static bool HasExpectedTurnTransition(
+        AutomaticRecoveryLiveGatePlan plan,
+        IReadOnlyList<TurnSnapshot> before,
+        IReadOnlyList<TurnSnapshot> after,
+        string newTurnId)
+    {
+        var beforeIds = before.Select(turn => turn.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var afterIds = after.Select(turn => turn.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var newIds = afterIds.Except(beforeIds, StringComparer.OrdinalIgnoreCase).ToArray();
+        if (beforeIds.Count != before.Count || afterIds.Count != after.Count ||
+            !beforeIds.Contains(plan.ExpectedFailedTurnId) || newIds.Length != 1 ||
+            !string.Equals(newIds[0], newTurnId, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (!IsInPlaceAction(plan.Action))
+        {
+            return afterIds.Contains(plan.ExpectedFailedTurnId);
+        }
+
+        beforeIds.Remove(plan.ExpectedFailedTurnId);
+        afterIds.Remove(newTurnId);
+        return beforeIds.SetEquals(afterIds);
     }
 
     private static async Task EnsureStableClientIdAbsentAsync(

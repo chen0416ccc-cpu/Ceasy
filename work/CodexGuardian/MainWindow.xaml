@@ -7,7 +7,7 @@
         xmlns:models="clr-namespace:CodexGuardian.Models"
         xmlns:vm="clr-namespace:CodexGuardian.ViewModels"
         Title="{Binding [App.Title], Source={StaticResource Loc}}"
-        Icon="/CodexGuardian;component/Assets/CeasyLogo.png"
+        Icon="/CodexGuardian;component/Assets/Ceasy.ico"
         Width="1380"
         Height="860"
         MinWidth="1024"
@@ -30,7 +30,7 @@
         TextOptions.TextHintingMode="Auto"
         Activated="Window_Activated">
     <shell:WindowChrome.WindowChrome>
-        <shell:WindowChrome CaptionHeight="52"
+        <shell:WindowChrome CaptionHeight="56"
                             ResizeBorderThickness="6"
                             CornerRadius="8"
                             GlassFrameThickness="1"
@@ -39,28 +39,51 @@
 
         <Grid x:Name="ShellRoot"
               Opacity="0"
-              Background="{DynamicResource CanvasBrush}"
+              Background="{DynamicResource WindowBackdropBrush}"
               RenderTransformOrigin="0.5,0.5">
         <Grid.RenderTransform>
             <ScaleTransform x:Name="ShellRootScale" ScaleX="1" ScaleY="1" />
         </Grid.RenderTransform>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="64" />
+            <ColumnDefinition Width="212" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="52" />
+            <RowDefinition Height="76" />
+            <RowDefinition Height="0" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="2"
-                Grid.ColumnSpan="2"
-                Background="{DynamicResource AmbientGlowBrush}"
-                Opacity="0.045"
-                IsHitTestVisible="False" />
+        <Grid Grid.RowSpan="3" Grid.ColumnSpan="2" IsHitTestVisible="False" ClipToBounds="True">
+            <Border Background="{DynamicResource AmbientCoolBrush}">
+                <Border.OpacityMask>
+                    <RadialGradientBrush Center="0.9,0.05" GradientOrigin="0.9,0.05" RadiusX="0.85" RadiusY="0.9">
+                        <GradientStop Color="White" Offset="0" />
+                        <GradientStop Color="Transparent" Offset="1" />
+                    </RadialGradientBrush>
+                </Border.OpacityMask>
+            </Border>
+            <Border Background="{DynamicResource AmbientWarmBrush}">
+                <Border.OpacityMask>
+                    <RadialGradientBrush Center="0.1,0.95" GradientOrigin="0.1,0.95" RadiusX="0.8" RadiusY="0.85">
+                        <GradientStop Color="White" Offset="0" />
+                        <GradientStop Color="Transparent" Offset="1" />
+                    </RadialGradientBrush>
+                </Border.OpacityMask>
+            </Border>
+            <Border Background="{DynamicResource GlassReflectionBrush}" Opacity="0.45">
+                <Border.OpacityMask>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="Transparent" Offset="0.18" />
+                        <GradientStop Color="#90FFFFFF" Offset="0.43" />
+                        <GradientStop Color="Transparent" Offset="0.67" />
+                    </LinearGradientBrush>
+                </Border.OpacityMask>
+            </Border>
+        </Grid>
 
         <Border x:Name="ShellEdgeFrame"
-                Grid.RowSpan="2"
+                Grid.RowSpan="3"
                 Grid.ColumnSpan="2"
                 BorderBrush="{DynamicResource WindowEdgeBrush}"
                 BorderThickness="1"
@@ -68,25 +91,114 @@
                 IsHitTestVisible="False"
                 Panel.ZIndex="900" />
 
-        <!-- The old shell snapshot is clipped by a growing radial hole during theme changes. -->
-        <Grid x:Name="ThemeTransitionOverlay"
-              Grid.RowSpan="2"
-              Grid.ColumnSpan="2"
-              Panel.ZIndex="1000"
-              Visibility="Collapsed"
-              IsHitTestVisible="False">
-            <Image x:Name="ThemeTransitionSnapshot"
-                   Stretch="Fill"
-                   SnapsToDevicePixels="True"
-                   IsHitTestVisible="False" />
-        </Grid>
-
-        <!-- Focus Workspace title bar -->
-        <Border Grid.Row="0"
+        <Border Grid.Row="1"
                 Grid.Column="1"
                 Background="{DynamicResource GlassSurfaceStrongBrush}"
-                BorderBrush="{DynamicResource GlassBorderBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="0,0,0,1"
+                Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal"
+                        Margin="18,0,18,0"
+                        VerticalAlignment="Center">
+                <Button Command="{Binding NavigateCommand}"
+                        CommandParameter="Tasks"
+                        AutomationProperties.AutomationId="ScopeDeckConversationsButton"
+                        AutomationProperties.Name="{Binding [Shell.Conversations], Source={StaticResource Loc}}"
+                        >
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ScopeDeckButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsTasksNavigationSelected}" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <TextBlock Text="{Binding [Shell.Conversations], Source={StaticResource Loc}}"
+                               Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                </Button>
+                <Button Command="{Binding NavigateCommand}"
+                        CommandParameter="Overview"
+                        AutomationProperties.AutomationId="ScopeDeckActivityButton"
+                        AutomationProperties.Name="{Binding [Shell.Activity], Source={StaticResource Loc}}"
+                        >
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ScopeDeckButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsOverviewPage}" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <TextBlock Text="{Binding [Shell.Activity], Source={StaticResource Loc}}"
+                               Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                </Button>
+                <Button Command="{Binding NavigateCommand}"
+                        CommandParameter="Recovery"
+                        AutomationProperties.AutomationId="ScopeDeckGuardrailsButton"
+                        AutomationProperties.Name="{Binding [Shell.Guardrails], Source={StaticResource Loc}}"
+                        >
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ScopeDeckButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsRecoveryPage}" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <TextBlock Text="{Binding [Shell.Guardrails], Source={StaticResource Loc}}"
+                               Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                </Button>
+                <Button Command="{Binding NavigateCommand}"
+                        CommandParameter="KeepAlive"
+                        AutomationProperties.AutomationId="ScopeDeckKeepAliveButton"
+                        AutomationProperties.Name="{Binding [Shell.KeepAlive], Source={StaticResource Loc}}"
+                        >
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ScopeDeckButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsKeepAlivePage}" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <TextBlock Text="{Binding [Shell.KeepAlive], Source={StaticResource Loc}}"
+                               Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                </Button>
+                <Button Command="{Binding NavigateCommand}"
+                        CommandParameter="Settings"
+                        AutomationProperties.AutomationId="ScopeDeckPreferencesButton"
+                        AutomationProperties.Name="{Binding [Shell.Preferences], Source={StaticResource Loc}}"
+                        >
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ScopeDeckButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSettingsPage}" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <TextBlock Text="{Binding [Shell.Preferences], Source={StaticResource Loc}}"
+                               Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!-- Focus Workspace title bar -->
+        <controls:GlassSurface Grid.Row="0"
+                Grid.Column="1"
+                Margin="0,16,18,10"
+                CornerRadius="16"
+                Elevation="8"
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -102,8 +214,12 @@
                          rendered the wordmark as "Ce asy". -->
                     <TextBlock VerticalAlignment="Center"
                                FontFamily="{StaticResource DisplayFont}"
-                               FontSize="15"
-                               FontWeight="SemiBold"><Run Text="Ce" /><Run Text="asy" Foreground="{DynamicResource SignatureBrush}" /></TextBlock>
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource InkMutedBrush}"
+                               MaxWidth="190"
+                               TextTrimming="CharacterEllipsis"
+                               Text="{Binding SelectedPageTitle}" />
 
                     <Border Width="1"
                             Margin="16,11,14,11"
@@ -115,9 +231,9 @@
                          turn protection on. Hit-testing is opted in per control because the caption
                          area otherwise swallows the click into a window drag. -->
                     <ToggleButton Tag="&#xE72E;"
-                                  Content="{Binding [Mode.Title], Source={StaticResource Loc}}"
+                                  Content="{Binding [Mode.AutomaticRecovery], Source={StaticResource Loc}}"
                                   AutomationProperties.AutomationId="AutoRecoveryMasterSwitch"
-                                  AutomationProperties.Name="{Binding [Mode.Title], Source={StaticResource Loc}}"
+                                  AutomationProperties.Name="{Binding [Mode.AutomaticRecovery], Source={StaticResource Loc}}"
                                   IsChecked="{Binding AutoRecoveryEnabled, Mode=TwoWay}"
                                   IsEnabled="{Binding CanToggleAutoRecovery}"
                                   Style="{StaticResource TitleBarSwitchStyle}"
@@ -270,17 +386,17 @@
                     </Button>
                 </StackPanel>
             </Grid>
-        </Border>
+        </controls:GlassSurface>
 
-        <!-- Focus Workspace product rail -->
-        <Border Grid.RowSpan="2"
+        <!-- The navigation dock floats independently of the working surface. -->
+        <controls:GlassSurface Grid.RowSpan="3"
                 Grid.Column="0"
-                Background="{DynamicResource GlassSurfaceStrongBrush}"
-                BorderBrush="{DynamicResource GlassBorderBrush}"
-                BorderThickness="0,0,1,0">
+                Margin="16,16,14,18"
+                CornerRadius="22"
+                Elevation="18">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="64" />
+                    <RowDefinition Height="88" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -290,17 +406,19 @@
                          explicit hit-test opt-in above; without it the click is swallowed by window dragging.
                          The button draws nothing of its own — see BrandButtonStyle — because the mark already
                          has a hover animation and a second surface behind it would read as another control. -->
-                    <Button Width="34"
-                            Height="34"
+                    <Button Width="40"
+                            Height="40"
+                            Margin="18,0,0,0"
+                            HorizontalAlignment="Left"
                             Command="{Binding OpenProjectPageCommand}"
                             AutomationProperties.AutomationId="BrandProjectButton"
                             AutomationProperties.Name="Ceasy"
                             Style="{StaticResource BrandButtonStyle}"
                             ToolTip="{Binding BrandToolTipText}">
-                        <Grid Width="34" Height="34">
+                        <Grid Width="40" Height="40">
                             <Image x:Name="BrandMark"
-                                   Width="28"
-                                   Height="28"
+                                   Width="36"
+                                   Height="36"
                                    Source="/CodexGuardian;component/Assets/CeasyLogo.png"
                                    Stretch="Uniform"
                                    RenderOptions.BitmapScalingMode="HighQuality"
@@ -379,12 +497,21 @@
                                     Visibility="{Binding HasUpdateAvailable, Converter={StaticResource BoolToVisibility}}" />
                         </Grid>
                     </Button>
+                    <TextBlock Margin="68,0,0,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontFamily="{StaticResource DisplayFont}"
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource InkBrush}"
+                               Text="Ceasy" />
                 </Grid>
 
                 <Grid Grid.Row="1"
-                      Margin="0,14,0,0"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Top">
+                      Margin="12,6,12,0"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Top"
+                      Visibility="Visible">
                     <!-- Selection is also carried by the button's own tinted background, but that
                          swaps in one frame. This bar is the part that moves: RailIndicatorOffset
                          slides it to the selected button while RailIndicatorStretch briefly
@@ -397,7 +524,7 @@
                             CornerRadius="1.5"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
-                            Margin="-7.5,0,0,0"
+                            Margin="-6,0,0,0"
                             Background="{DynamicResource PrimaryBrush}"
                             IsHitTestVisible="False"
                             Opacity="0">
@@ -411,124 +538,120 @@
 
                     <!-- Indentation of this panel's children is left as it was so the navigation
                          buttons stay diff-comparable against the pre-indicator layout. -->
-                    <StackPanel HorizontalAlignment="Center"
+                    <StackPanel HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"
                                 shell:WindowChrome.IsHitTestVisibleInChrome="True">
                     <Button Command="{Binding NavigateCommand}"
                             CommandParameter="Tasks"
                             AutomationProperties.AutomationId="ConversationsScopeButton"
+                            Tag="&#xE8BD;"
+                            Content="{Binding [Shell.Conversations], Source={StaticResource Loc}}"
                             AutomationProperties.Name="{Binding [Shell.Conversations], Source={StaticResource Loc}}"
                             ToolTip="{Binding [Shell.Conversations], Source={StaticResource Loc}}">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource RailNavigationButtonStyle}">
+                            <Style TargetType="Button" BasedOn="{StaticResource SidebarNavigationButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsTasksNavigationSelected}" Value="True">
                                         <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
-                                        <Setter Property="Background" Value="{DynamicResource PrimarySoftBrush}" />
-                                        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                                        <Setter Property="Background" Value="{DynamicResource SurfaceSubtleBrush}" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="BorderBrush" Value="Transparent" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                        <TextBlock Text="&#xE8BD;"
-                                   FontFamily="{StaticResource IconFont}"
-                                   FontSize="16"
-                                   Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
                     </Button>
 
                     <Button Command="{Binding NavigateCommand}"
                             CommandParameter="Overview"
                             AutomationProperties.AutomationId="ActivityScopeButton"
+                            Tag="&#xE9D9;"
+                            Content="{Binding [Shell.Activity], Source={StaticResource Loc}}"
                             AutomationProperties.Name="{Binding [Shell.Activity], Source={StaticResource Loc}}"
                             ToolTip="{Binding [Shell.Activity], Source={StaticResource Loc}}">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource RailNavigationButtonStyle}">
+                            <Style TargetType="Button" BasedOn="{StaticResource SidebarNavigationButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsOverviewPage}" Value="True">
                                         <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
-                                        <Setter Property="Background" Value="{DynamicResource PrimarySoftBrush}" />
-                                        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                                        <Setter Property="Background" Value="{DynamicResource SurfaceSubtleBrush}" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="BorderBrush" Value="Transparent" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                        <TextBlock Text="&#xE9D9;"
-                                   FontFamily="{StaticResource IconFont}"
-                                   FontSize="16"
-                                   Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
                     </Button>
 
                     <Button Command="{Binding NavigateCommand}"
                             CommandParameter="Recovery"
                             AutomationProperties.AutomationId="GuardrailsScopeButton"
+                            Tag="&#xEA18;"
+                            Content="{Binding [Shell.Guardrails], Source={StaticResource Loc}}"
                             AutomationProperties.Name="{Binding [Shell.Guardrails], Source={StaticResource Loc}}"
                             ToolTip="{Binding [Shell.Guardrails], Source={StaticResource Loc}}">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource RailNavigationButtonStyle}">
+                            <Style TargetType="Button" BasedOn="{StaticResource SidebarNavigationButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsRecoveryPage}" Value="True">
                                         <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
-                                        <Setter Property="Background" Value="{DynamicResource PrimarySoftBrush}" />
-                                        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                                        <Setter Property="Background" Value="{DynamicResource SurfaceSubtleBrush}" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="BorderBrush" Value="Transparent" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                        <TextBlock Text="&#xEA18;"
-                                   FontFamily="{StaticResource IconFont}"
-                                   FontSize="16"
-                                   Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
                     </Button>
 
                     <Button Command="{Binding NavigateCommand}"
                             CommandParameter="KeepAlive"
                             AutomationProperties.AutomationId="KeepAliveScopeButton"
+                            Tag="&#xE945;"
+                            Content="{Binding [Shell.KeepAlive], Source={StaticResource Loc}}"
                             AutomationProperties.Name="{Binding [Shell.KeepAlive], Source={StaticResource Loc}}"
                             ToolTip="{Binding [Shell.KeepAlive], Source={StaticResource Loc}}">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource RailNavigationButtonStyle}">
+                            <Style TargetType="Button" BasedOn="{StaticResource SidebarNavigationButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsKeepAlivePage}" Value="True">
                                         <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
-                                        <Setter Property="Background" Value="{DynamicResource PrimarySoftBrush}" />
-                                        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                                        <Setter Property="Background" Value="{DynamicResource SurfaceSubtleBrush}" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="BorderBrush" Value="Transparent" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                        <TextBlock Text="&#xE945;"
-                                   FontFamily="{StaticResource IconFont}"
-                                   FontSize="16"
-                                   Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
                     </Button>
 
                     <Button Command="{Binding NavigateCommand}"
                             CommandParameter="Settings"
                             AutomationProperties.AutomationId="PreferencesScopeButton"
+                            Tag="&#xE713;"
+                            Content="{Binding [Shell.Preferences], Source={StaticResource Loc}}"
                             AutomationProperties.Name="{Binding [Shell.Preferences], Source={StaticResource Loc}}"
                             ToolTip="{Binding [Shell.Preferences], Source={StaticResource Loc}}">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource RailNavigationButtonStyle}">
+                            <Style TargetType="Button" BasedOn="{StaticResource SidebarNavigationButtonStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsSettingsPage}" Value="True">
                                         <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
-                                        <Setter Property="Background" Value="{DynamicResource PrimarySoftBrush}" />
-                                        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                                        <Setter Property="Background" Value="{DynamicResource SurfaceSubtleBrush}" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="BorderBrush" Value="Transparent" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                        <TextBlock Text="&#xE713;"
-                                   FontFamily="{StaticResource IconFont}"
-                                   FontSize="16"
-                                   Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
                     </Button>
                 </StackPanel>
                 </Grid>
 
                 <StackPanel Grid.Row="2"
-                            Margin="0,0,0,10"
-                            HorizontalAlignment="Center"
+                            Margin="18,0,18,16"
+                            HorizontalAlignment="Left"
+                            Orientation="Horizontal"
                             shell:WindowChrome.IsHitTestVisibleInChrome="True">
                     <Button Command="{Binding OpenProjectPageCommand}"
                             AutomationProperties.AutomationId="ProjectUtilityButton"
@@ -564,11 +687,16 @@
                     </Button>
                 </StackPanel>
             </Grid>
-        </Border>
+        </controls:GlassSurface>
 
+        <controls:GlassSurface x:Name="WorkspaceGlassSurface"
+                               Grid.Row="2"
+                               Grid.Column="1"
+                               Margin="0,2,18,18"
+                               CornerRadius="22"
+                               Elevation="20">
         <Grid x:Name="WorkspaceViewport"
-              Grid.Row="1"
-              Grid.Column="1"
+              Margin="8"
               Background="Transparent"
               RenderTransformOrigin="0.5,0">
             <Grid.RenderTransform>
@@ -589,24 +717,24 @@
                     </Style>
                 </Grid.Style>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="360" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <!-- Conversation index -->
                 <Grid x:Name="TasksIndexPane"
                       Grid.Column="0"
-                      Background="{DynamicResource GlassSurfaceBrush}">
+                      Background="Transparent">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="64" />
-                        <RowDefinition Height="54" />
+                        <RowDefinition Height="76" />
+                        <RowDefinition Height="52" />
                         <RowDefinition Height="44" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <Grid x:Name="TasksIndexHeaderStage"
-                          Margin="18,0,14,0">
+                          Margin="24,0,22,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -635,11 +763,16 @@
                                 </Style>
                             </Button.Style>
                         </Button>
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal">
+                        <Grid Grid.Column="1" VerticalAlignment="Center" Margin="0,0,16,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Text="{Binding [Shell.Conversations], Source={StaticResource Loc}}"
                                        FontFamily="{StaticResource DisplayFont}"
-                                       FontSize="17"
-                                       FontWeight="SemiBold">
+                                       FontSize="24"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource InkBrush}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Visibility" Value="Visible" />
@@ -653,8 +786,10 @@
                             </TextBlock>
                             <TextBlock Text="{Binding ConversationGroupTitle}"
                                        FontFamily="{StaticResource DisplayFont}"
-                                       FontSize="17"
-                                       FontWeight="SemiBold">
+                                       FontSize="24"
+                                       FontWeight="SemiBold"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{DynamicResource InkBrush}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Visibility" Value="Collapsed" />
@@ -667,16 +802,34 @@
                                 </TextBlock.Style>
                             </TextBlock>
                             <TextBlock Text="{Binding TaskCount}"
+                                       Grid.Column="1"
+                                       VerticalAlignment="Center"
                                        Foreground="{DynamicResource InkSubtleBrush}"
-                                       FontSize="11"
-                                       Margin="6,0,0,0" />
-                        </StackPanel>
+                                       FontSize="13"
+                                       Margin="10,0,0,0" />
+                        </Grid>
+                        <Button Grid.Column="2"
+                                x:Name="TaskDetailsToggleButton"
+                                Click="ToggleTaskInspector_Click"
+                                IsEnabled="{Binding HasSelectedTask}"
+                                AutomationProperties.AutomationId="TaskDetailsToggleButton"
+                                AutomationProperties.Name="{Binding [Workspace.Details], Source={StaticResource Loc}}"
+                                Style="{StaticResource WorkspaceQuietButtonStyle}"
+                                ToolTip="{Binding [Workspace.Details], Source={StaticResource Loc}}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE8A4;" FontFamily="{StaticResource IconFont}" Margin="0,0,7,0" />
+                                <TextBlock Text="{Binding [Workspace.Details], Source={StaticResource Loc}}" />
+                            </StackPanel>
+                        </Button>
                     </Grid>
 
                     <Grid x:Name="TasksSearchStage"
                           Grid.Row="1"
-                          Height="40"
-                          Margin="18,2,14,10"
+                          Height="36"
+                          Width="320"
+                          MaxWidth="420"
+                          HorizontalAlignment="Left"
+                          Margin="24,2,22,10"
                           VerticalAlignment="Center">
                         <TextBox Text="{Binding TaskSearchText, UpdateSourceTrigger=PropertyChanged}"
                                  AutomationProperties.AutomationId="ConversationSearchTextBox"
@@ -736,7 +889,10 @@
 
                     <Grid x:Name="TasksScopeStage"
                           Grid.Row="2"
-                          Margin="18,0,14,0"
+                          MaxWidth="420"
+                          HorizontalAlignment="Left"
+                          Width="{Binding ActualWidth, ElementName=TasksSearchStage}"
+                          Margin="24,0,22,0"
                           SizeChanged="OnTasksScopeStageSizeChanged">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -839,12 +995,13 @@
                              travel distance depends on the measured column width. -->
                         <Border x:Name="ConversationScopeIndicator"
                                 Grid.Column="0"
-                                Height="34"
-                                Margin="3,0"
-                                CornerRadius="10"
+                                Height="2"
+                                Margin="0,0,10,0"
+                                VerticalAlignment="Bottom"
+                                CornerRadius="0"
                                 Background="{DynamicResource PrimarySoftBrush}"
                                 BorderBrush="{DynamicResource PrimaryBrush}"
-                                BorderThickness="1"
+                                BorderThickness="0"
                                 IsHitTestVisible="False"
                                 RenderTransformOrigin="0.5,0.5">
                             <Border.RenderTransform>
@@ -925,7 +1082,8 @@
                     </Button>
 
                     <Grid x:Name="TasksListStage"
-                          Grid.Row="4">
+                          Grid.Row="4"
+                          Margin="14,4,14,8">
                         <Grid x:Name="ConversationNavigationStage">
                             <Grid.Style>
                                 <Style TargetType="Grid">
@@ -945,7 +1103,7 @@
                                      Background="Transparent"
                                      BorderThickness="0"
                                      Padding="0,8,0,12"
-                                     ItemContainerStyle="{StaticResource FlatListItemStyle}"
+                                     ItemContainerStyle="{StaticResource ConversationNavigationItemStyle}"
                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                                      ScrollViewer.CanContentScroll="True"
@@ -955,13 +1113,14 @@
                                      VirtualizingPanel.ScrollUnit="Pixel">
                                  <ListBox.ItemTemplate>
                                      <DataTemplate>
-                                         <Grid Margin="10,2,10,2" MinHeight="34">
+                                         <Grid Margin="10,5,10,5" MinHeight="34">
                                              <Grid.ColumnDefinitions>
                                                  <ColumnDefinition Width="*" />
                                                  <ColumnDefinition Width="Auto" />
+                                                 <ColumnDefinition Width="Auto" />
                                              </Grid.ColumnDefinitions>
                                              <Button x:Name="SectionEntry"
-                                                     Grid.ColumnSpan="2"
+                                                     Grid.ColumnSpan="3"
                                                      AutomationProperties.AutomationId="ConversationNavigationSection"
                                                      AutomationProperties.Name="{Binding Title}"
                                                      AutomationProperties.HelpText="{Binding [Tasks.ToggleSectionHint], Source={StaticResource Loc}}"
@@ -995,27 +1154,33 @@
 
                                              <Button x:Name="ConversationEntry"
                                                       Grid.Column="0"
+                                                     Click="OpenTaskInspector_Click"
                                                      AutomationProperties.AutomationId="ConversationNavigationConversationEntry"
                                                      AutomationProperties.Name="{Binding Title}"
                                                      Command="{Binding DataContext.OpenConversationGroupCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                      CommandParameter="{Binding}"
                                                      HorizontalContentAlignment="Stretch"
                                                      Style="{StaticResource ConversationButtonStyle}"
-                                                     Padding="10,7"
-                                                     Margin="0,2"
+                                                     Padding="16,13"
+                                                     Margin="0,2,8,2"
                                                      Background="{DynamicResource ConversationSurfaceBrush}"
-                                                     BorderBrush="{DynamicResource DangerBrush}"
-                                                      BorderThickness="1"
-                                                      MinHeight="58">
+                                                     BorderBrush="{DynamicResource GlassBorderBrush}"
+                                                     BorderThickness="1"
+                                                     MinHeight="78">
                                                  <Grid>
                                                      <Grid.ColumnDefinitions>
-                                                         <ColumnDefinition Width="4" />
-                                                         <ColumnDefinition Width="10" />
+                                                         <ColumnDefinition Width="8" />
+                                                         <ColumnDefinition Width="12" />
                                                          <ColumnDefinition Width="*" />
+                                                         <ColumnDefinition Width="Auto" />
+                                                         <ColumnDefinition Width="Auto" />
                                                      </Grid.ColumnDefinitions>
                                                      <Border x:Name="ConversationStatusSpine"
                                                              Grid.Column="0"
-                                                             CornerRadius="2"
+                                                             Width="6"
+                                                             Height="6"
+                                                             VerticalAlignment="Center"
+                                                             CornerRadius="3"
                                                              Background="{DynamicResource DangerBrush}" />
                                                      <StackPanel Grid.Column="2" VerticalAlignment="Center">
                                                          <Grid>
@@ -1057,19 +1222,59 @@
                                                              <TextBlock Grid.Column="1"
                                                                         Text="{Binding Title}"
                                                                         FontFamily="{StaticResource DisplayFont}"
-                                                                        FontSize="12.5"
+                                                                        FontSize="14"
                                                                         FontWeight="SemiBold"
                                                                         TextTrimming="CharacterEllipsis" />
                                                          </Grid>
                                                           <TextBlock Text="{Binding Detail}"
                                                                      Margin="0,3,0,0"
                                                                      Foreground="{DynamicResource InkMutedBrush}"
-                                                                     FontSize="10.5"
+                                                                     FontSize="12"
                                                                      TextWrapping="NoWrap"
                                                                      TextTrimming="CharacterEllipsis" />
                                                      </StackPanel>
+                                                     <StackPanel Grid.Column="3" Width="136" Margin="16,0,0,0" VerticalAlignment="Center">
+                                                         <StackPanel.Style>
+                                                             <Style TargetType="StackPanel">
+                                                                 <Style.Triggers>
+                                                                     <DataTrigger Binding="{Binding IsTaskInspectorOpen, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                                                         <Setter Property="Visibility" Value="Collapsed" />
+                                                                     </DataTrigger>
+                                                                 </Style.Triggers>
+                                                             </Style>
+                                                         </StackPanel.Style>
+                                                         <TextBlock Text="{Binding Task.HealthText}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                                         <TextBlock Text="{Binding Task.FollowUpQueueStatusText}" FontSize="11" Margin="0,4,0,0" Foreground="{DynamicResource InkMutedBrush}" TextTrimming="CharacterEllipsis" />
+                                                     </StackPanel>
+                                                     <TextBlock Grid.Column="4" Width="128" Margin="16,0,0,0"
+                                                                VerticalAlignment="Center" Text="{Binding Task.UpdatedText}"
+                                                                Foreground="{DynamicResource InkMutedBrush}" FontSize="12">
+                                                         <TextBlock.Style>
+                                                             <Style TargetType="TextBlock">
+                                                                 <Style.Triggers>
+                                                                     <DataTrigger Binding="{Binding IsTaskInspectorOpen, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                                                         <Setter Property="Visibility" Value="Collapsed" />
+                                                                     </DataTrigger>
+                                                                 </Style.Triggers>
+                                                             </Style>
+                                                         </TextBlock.Style>
+                                                     </TextBlock>
                                                  </Grid>
                                               </Button>
+
+                                             <Button Grid.Column="2" Margin="6,0,0,0" VerticalAlignment="Center"
+                                                     AutomationProperties.AutomationId="NavigationFollowUpEntryButton"
+                                                     AutomationProperties.Name="{Binding Task.FollowUpQueueActionText}"
+                                                     Command="{Binding DataContext.OpenFollowUpEditorCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                     CommandParameter="{Binding Task}"
+                                                     Visibility="{Binding IsConversation, Converter={StaticResource BoolToVisibility}}"
+                                                     ToolTip="{Binding Task.FollowUpQueueActionText}"
+                                                     Style="{StaticResource WorkspaceQuietButtonStyle}">
+                                                 <StackPanel Orientation="Horizontal">
+                                                     <TextBlock Text="&#xE8FD;" FontFamily="{StaticResource IconFont}" />
+                                                     <TextBlock Text="{Binding Task.FollowUpMessageCount}" FontSize="11" Margin="6,0,0,0" />
+                                                 </StackPanel>
+                                             </Button>
 
                                                <Grid x:Name="ArchivedNavigationActions"
                                                      Grid.Column="1"
@@ -1228,7 +1433,7 @@
                                                </Grid>
 
                                              <Button x:Name="ProjectEntry"
-                                                      Grid.ColumnSpan="2"
+                                                      Grid.ColumnSpan="3"
                                                      AutomationProperties.AutomationId="ConversationNavigationProjectEntry"
                                                      AutomationProperties.Name="{Binding Title}"
                                                      Command="{Binding DataContext.OpenConversationGroupCommand, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -1286,7 +1491,6 @@
                                                  <Setter TargetName="ProjectEntry" Property="Visibility" Value="Collapsed" />
                                              </DataTrigger>
                                              <DataTrigger Binding="{Binding IsHealthy}" Value="True">
-                                                 <Setter TargetName="ConversationEntry" Property="BorderBrush" Value="{DynamicResource GreenBrush}" />
                                                  <Setter TargetName="ConversationStatusSpine" Property="Background" Value="{DynamicResource GreenBrush}" />
                                              </DataTrigger>
                                              <DataTrigger Binding="{Binding IsProject}" Value="True">
@@ -1295,7 +1499,6 @@
                                                  <Setter TargetName="ProjectEntry" Property="Visibility" Value="Visible" />
                                              </DataTrigger>
                                              <DataTrigger Binding="{Binding Task.IsRunningNow}" Value="True">
-                                                 <Setter TargetName="ConversationEntry" Property="BorderBrush" Value="{DynamicResource YellowBrush}" />
                                                  <Setter TargetName="ConversationStatusSpine" Property="Background" Value="{DynamicResource YellowBrush}" />
                                              </DataTrigger>
                                          </DataTemplate.Triggers>
@@ -1304,6 +1507,7 @@
                             </ListBox>
                         </Grid>
                         <ListBox x:Name="TaskList"
+                                 MouseDoubleClick="OpenTaskInspector_Click"
                                  AutomationProperties.AutomationId="ConversationIndex"
                                  AutomationProperties.Name="{Binding [Shell.Conversations], Source={StaticResource Loc}}"
                                  PreviewMouseWheel="ConversationList_PreviewMouseWheel"
@@ -1794,12 +1998,18 @@
                 </Grid>
 
                 <!-- Conversation inspector -->
-                <Border x:Name="TasksWorkbenchPane"
+                <controls:GlassSurface x:Name="TasksWorkbenchPane"
                         Grid.Column="1"
-                        Background="Transparent"
-                        BorderBrush="{DynamicResource GlassBorderBrush}"
-                        BorderThickness="1,0,0,0">
-                    <Grid>
+                        Width="368"
+                        Margin="10,8,8,8"
+                        CornerRadius="18"
+                        Elevation="18"
+                        Visibility="{Binding IsTaskInspectorVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibility}}"
+                        Background="{DynamicResource GlassSurfaceStrongBrush}">
+                    <controls:GlassSurface.RenderTransform>
+                        <TranslateTransform x:Name="TaskInspectorOffset" />
+                    </controls:GlassSurface.RenderTransform>
+                    <Grid x:Name="TaskInspectorContentRoot">
                         <Grid>
                             <Grid.Style>
                                 <Style TargetType="Grid">
@@ -1812,23 +2022,25 @@
                                 </Style>
                             </Grid.Style>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="92" />
+                                <RowDefinition Height="84" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
                             <Border x:Name="TaskWorkbenchHeaderStage"
-                                    Background="{DynamicResource GlassSurfaceStrongBrush}"
+                                    Background="Transparent"
                                     BorderBrush="{DynamicResource GlassBorderBrush}"
                                     BorderThickness="0,0,0,1">
-                                <Grid Margin="26,0,22,0">
+                                <Grid Margin="22,0,16,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel VerticalAlignment="Center">
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
                                         <TextBlock Text="{Binding SelectedTask.Name}"
+                                                   ToolTip="{Binding SelectedTask.Name}"
                                                    FontFamily="{StaticResource DisplayFont}"
-                                                   FontSize="20"
+                                                   FontSize="18"
                                                    FontWeight="SemiBold"
                                                    TextTrimming="CharacterEllipsis" />
                                         <StackPanel Margin="0,8,0,0"
@@ -1899,7 +2111,7 @@
                                             AutomationProperties.Name="{Binding SelectedTask.FollowUpQueueActionText}"
                                             Command="{Binding OpenFollowUpEditorCommand}"
                                             CommandParameter="{Binding SelectedTask}"
-                                            MaxWidth="320"
+                                            MaxWidth="66"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource SecondaryButtonStyle}"
                                             ToolTip="{Binding [FollowUp.OpenQueueShort], Source={StaticResource Loc}}">
@@ -1910,8 +2122,9 @@
                                                        FontFamily="{StaticResource IconFont}"
                                                        FontSize="13"
                                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
-                                            <TextBlock Text="{Binding SelectedTask.FollowUpQueueActionText}"
-                                                       MaxWidth="240"
+                                            <TextBlock Text="{Binding [FollowUp.OpenQueueShort], Source={StaticResource Loc}}"
+                                                       Visibility="Collapsed"
+                                                       MaxWidth="132"
                                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                                        TextTrimming="CharacterEllipsis" />
                                             <Border MinWidth="18"
@@ -1943,11 +2156,20 @@
                                                 <TextBlock Text="{Binding SelectedTask.FollowUpMessageCount}"
                                                            HorizontalAlignment="Center"
                                                            VerticalAlignment="Center"
-                                                           Foreground="White"
-                                                           FontSize="10"
+                                                           Foreground="{DynamicResource CanvasBrush}"
+                                                           FontSize="11"
                                                            FontWeight="Bold" />
                                             </Border>
                                         </StackPanel>
+                                    </Button>
+                                    <Button Grid.Column="2"
+                                            Click="CloseTaskInspector_Click"
+                                            Margin="8,0,0,0"
+                                            AutomationProperties.AutomationId="CloseTaskInspectorButton"
+                                            AutomationProperties.Name="{Binding [Workspace.CloseDetails], Source={StaticResource Loc}}"
+                                            Style="{StaticResource CompactIconButtonStyle}"
+                                            ToolTip="{Binding [Workspace.CloseDetails], Source={StaticResource Loc}}">
+                                        <TextBlock Text="&#xE711;" FontFamily="{StaticResource IconFont}" />
                                     </Button>
                                 </Grid>
                             </Border>
@@ -1956,23 +2178,20 @@
                                           Grid.Row="1"
                                           VerticalScrollBarVisibility="Auto"
                                           HorizontalScrollBarVisibility="Disabled">
-                                <Grid Margin="26,22,24,28">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="7*" />
-                                        <ColumnDefinition Width="4*" />
-                                    </Grid.ColumnDefinitions>
+                                <Grid Margin="22,22,22,24">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
 
                                     <StackPanel>
-                                        <Border Padding="20"
-                                                Background="{DynamicResource GlassSurfaceBrush}"
-                                                BorderBrush="{DynamicResource GlassBorderBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="10">
+                                        <Border>
                                             <StackPanel>
                                                 <TextBlock Text="{Binding [Shell.CurrentState], Source={StaticResource Loc}}"
                                                            Style="{StaticResource SectionHeaderStyle}" />
                                                 <TextBlock Text="{Binding SelectedTask.StatusText}"
-                                                           Margin="0,13,0,0"
+                                                           Margin="0,8,0,0"
                                                            FontFamily="{StaticResource DisplayFont}"
                                                            FontSize="18"
                                                            FontWeight="SemiBold"
@@ -1982,7 +2201,7 @@
                                                      left bare under the status line: unlabelled, it read as part
                                                      of the state description instead of as quoted content. -->
                                                 <TextBlock Text="{Binding [Shell.LastReply], Source={StaticResource Loc}}"
-                                                           Margin="0,16,0,0"
+                                                           Margin="0,12,0,0"
                                                            Style="{StaticResource SectionHeaderStyle}" />
                                                 <Border Margin="0,7,0,0"
                                                         Padding="11,8"
@@ -1992,19 +2211,19 @@
                                                         CornerRadius="0,5,5,0">
                                                     <TextBlock Text="{Binding SelectedTask.Preview}"
                                                                Foreground="{DynamicResource InkMutedBrush}"
-                                                               FontSize="12"
-                                                               LineHeight="18"
-                                                               MaxHeight="54"
+                                                               FontSize="13"
+                                                               LineHeight="20"
+                                                               MaxHeight="60"
                                                                TextTrimming="CharacterEllipsis"
                                                                TextWrapping="Wrap" />
                                                 </Border>
                                             </StackPanel>
                                         </Border>
+                                    </StackPanel>
 
-                                        <Border Margin="0,24,0,0"
-                                                BorderBrush="{DynamicResource BorderBrush}"
-                                                BorderThickness="0,1,0,0">
-                                            <StackPanel Margin="0,18,0,0">
+                                    <StackPanel Grid.Row="2">
+                                        <Border Margin="0,20,0,0">
+                                            <StackPanel>
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
@@ -2031,7 +2250,7 @@
                                                                    Margin="5,0,0,1"
                                                                    VerticalAlignment="Bottom"
                                                                    Foreground="{DynamicResource InkMutedBrush}"
-                                                                   FontSize="10" />
+                                                                   FontSize="11" />
                                                     </StackPanel>
                                                 </Grid>
                                                 <Grid Margin="0,14,0,0">
@@ -2058,9 +2277,9 @@
                                                                    AutomationProperties.AutomationId="TaskRecoveryLedgerText"
                                                                    Text="{Binding SelectedTask.RecoveryLedgerText}"
                                                                    Foreground="{DynamicResource PrimaryBrush}"
-                                                                   FontSize="11"
+                                                                   FontSize="12"
                                                                    FontWeight="SemiBold"
-                                                                   LineHeight="17"
+                                                                   LineHeight="19"
                                                                    TextWrapping="Wrap">
                                                             <TextBlock.Visibility>
                                                                 <Binding Path="SelectedTask.HasRecoveryLedgerText">
@@ -2075,9 +2294,9 @@
                                                              than as "nothing has needed resending". -->
                                                         <TextBlock Text="{Binding [Shell.LedgerEmpty], Source={StaticResource Loc}}"
                                                                    Margin="0,7,0,0"
-                                                                   Foreground="{DynamicResource InkSubtleBrush}"
-                                                                   FontSize="11"
-                                                                   LineHeight="17"
+                                                                   Foreground="{DynamicResource InkMutedBrush}"
+                                                                   FontSize="12"
+                                                                   LineHeight="19"
                                                                    TextWrapping="Wrap">
                                                             <TextBlock.Style>
                                                                 <Style TargetType="TextBlock">
@@ -2093,8 +2312,8 @@
                                                         <TextBlock Text="{Binding SelectedTask.ObservationText}"
                                                                    Margin="0,8,0,0"
                                                                    Foreground="{DynamicResource InkMutedBrush}"
-                                                                   FontSize="11"
-                                                                   LineHeight="17"
+                                                                   FontSize="12"
+                                                                   LineHeight="19"
                                                                    MaxHeight="72"
                                                                    TextWrapping="Wrap" />
                                                     </StackPanel>
@@ -2102,15 +2321,14 @@
                                             </StackPanel>
                                         </Border>
 
-                                        <TextBlock Text="{Binding [Shell.Origin], Source={StaticResource Loc}}"
-                                                   Margin="0,26,0,0"
-                                                   Style="{StaticResource SectionHeaderStyle}" />
-                                        <Border Margin="0,10,0,0"
-                                                Padding="16"
-                                                Background="{DynamicResource SurfaceSubtleBrush}"
-                                                BorderBrush="{DynamicResource GlassBorderBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="8">
+                                        <Expander x:Name="TaskTechnicalDetailsExpander"
+                                                  AutomationProperties.AutomationId="TaskTechnicalDetailsExpander"
+                                                  AutomationProperties.Name="{Binding [Shell.TechnicalDetails], Source={StaticResource Loc}}"
+                                                  Header="{Binding [Shell.TechnicalDetails], Source={StaticResource Loc}}"
+                                                  Margin="0,20,0,0"
+                                                  IsExpanded="False"
+                                                  Style="{StaticResource WorkspaceExpanderStyle}">
+                                        <Border Padding="0,10,0,4">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
@@ -2123,49 +2341,58 @@
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Text="{Binding [Tasks.Source], Source={StaticResource Loc}}"
                                                            Foreground="{DynamicResource InkMutedBrush}"
-                                                           FontSize="10"
+                                                           FontSize="11"
                                                            FontWeight="SemiBold" />
                                                 <TextBlock Grid.Column="1"
                                                            Text="{Binding SelectedTask.Source}"
-                                                           FontSize="11"
+                                                           FontSize="12"
                                                            TextTrimming="CharacterEllipsis" />
                                                 <TextBlock Grid.Row="1"
                                                            Margin="0,10,0,0"
                                                            Text="{Binding [Tasks.WorkingDirectory], Source={StaticResource Loc}}"
                                                            Foreground="{DynamicResource InkMutedBrush}"
-                                                           FontSize="10"
+                                                           FontSize="11"
                                                            FontWeight="SemiBold" />
                                                 <TextBlock Grid.Row="1"
                                                            Grid.Column="1"
                                                            Margin="0,10,0,0"
                                                            Text="{Binding SelectedTask.Cwd}"
                                                            Style="{StaticResource MonoTextStyle}"
+                                                           FontSize="12"
+                                                           ToolTip="{Binding SelectedTask.Cwd}"
                                                            TextTrimming="CharacterEllipsis" />
                                                 <TextBlock Grid.Row="2"
                                                            Margin="0,10,0,0"
                                                            Text="{Binding [Tasks.LatestTurn], Source={StaticResource Loc}}"
                                                            Foreground="{DynamicResource InkMutedBrush}"
-                                                           FontSize="10"
+                                                           FontSize="11"
                                                            FontWeight="SemiBold" />
                                                 <TextBlock Grid.Row="2"
                                                            Grid.Column="1"
                                                            Margin="0,10,0,0"
                                                            Text="{Binding SelectedTask.LatestTurnText}"
                                                            Style="{StaticResource MonoTextStyle}"
+                                                           FontSize="12"
+                                                           ToolTip="{Binding SelectedTask.LatestTurnText}"
                                                            TextTrimming="CharacterEllipsis" />
                                             </Grid>
                                         </Border>
+                                        </Expander>
                                     </StackPanel>
 
-                                    <Border Grid.Column="1"
-                                            Margin="26,0,0,0"
-                                            Padding="18"
+                                    <Border Grid.Row="1"
+                                            Margin="0,20,0,0"
+                                            Padding="0,14"
                                             VerticalAlignment="Top"
-                                            Background="{DynamicResource GlassSurfaceStrongBrush}"
-                                            BorderBrush="{DynamicResource GlassBorderBrush}"
-                                            BorderThickness="1"
-                                        CornerRadius="10">
-                                        <StackPanel>
+                                            BorderBrush="{DynamicResource BorderBrush}"
+                                            BorderThickness="0,1,0,1">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                        <StackPanel Margin="0,0,0,16">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
@@ -2183,8 +2410,11 @@
                                                           Style="{StaticResource ToggleCheckStyle}"
                                                           ToolTip="{Binding [Mode.Title], Source={StaticResource Loc}}" />
                                             </Grid>
-                                            <StackPanel Margin="0,12,0,0"
-                                                        Orientation="Horizontal">
+                                            <Grid Margin="0,10,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="16" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
                                                 <Ellipse Width="8"
                                                          Height="8"
                                                          Margin="0,0,8,0"
@@ -2203,9 +2433,9 @@
                                                         </Style>
                                                     </Ellipse.Style>
                                                 </Ellipse>
-                                                <TextBlock Text="{Binding SelectedTask.ProtectionText}"
+                                                <TextBlock Grid.Column="1" Text="{Binding SelectedTask.ProtectionText}"
                                                            Foreground="{DynamicResource InkMutedBrush}"
-                                                           FontSize="11"
+                                                           FontSize="12"
                                                            MaxHeight="54"
                                                            VerticalAlignment="Center"
                                                            TextWrapping="Wrap">
@@ -2219,7 +2449,7 @@
                                                         </Style>
                                                     </TextBlock.Style>
                                                 </TextBlock>
-                                                <TextBlock Text="{Binding [Value.Ready], Source={StaticResource Loc}}"
+                                                <TextBlock Grid.Column="1" Text="{Binding [Value.Ready], Source={StaticResource Loc}}"
                                                            Foreground="{DynamicResource InkBrush}"
                                                            FontSize="12"
                                                            FontWeight="SemiBold"
@@ -2235,29 +2465,25 @@
                                                         </Style>
                                                     </TextBlock.Style>
                                                 </TextBlock>
-                                            </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
 
-                                            <Border Margin="0,18,0,0"
-                                                    BorderBrush="{DynamicResource BorderBrush}"
-                                                    BorderThickness="0,1,0,0" />
+                                        <StackPanel Grid.Row="1" Margin="0,0,0,16">
                                             <TextBlock Text="{Binding [Shell.MessageSequence], Source={StaticResource Loc}}"
-                                                       Margin="0,16,0,0"
                                                        Style="{StaticResource SectionHeaderStyle}" />
                                             <TextBlock Text="{Binding SelectedTask.FollowUpQueueStatusText}"
                                                        Margin="0,9,0,0"
                                                        Foreground="{DynamicResource InkMutedBrush}"
-                                                       FontSize="11"
-                                                       LineHeight="17"
-                                                       MaxHeight="54"
+                                                       FontSize="12"
+                                                       LineHeight="19"
+                                                       MaxHeight="57"
                                                        TextWrapping="Wrap" />
+                                        </StackPanel>
 
-                                            <Border Margin="0,18,0,0"
-                                                    BorderBrush="{DynamicResource BorderBrush}"
-                                                    BorderThickness="0,1,0,0" />
+                                        <StackPanel Grid.Row="2">
                                             <TextBlock Text="{Binding [Shell.GuardianAction], Source={StaticResource Loc}}"
-                                                       Margin="0,16,0,0"
                                                        Style="{StaticResource SectionHeaderStyle}" />
-                                            <Grid Margin="0,12,0,0">
+                                            <Grid Margin="0,9,0,0">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="Auto" />
@@ -2268,12 +2494,12 @@
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Text="{Binding [Tasks.NextAttempt], Source={StaticResource Loc}}"
                                                            Foreground="{DynamicResource InkMutedBrush}"
-                                                           FontSize="11" />
+                                                           FontSize="12" />
                                                 <TextBlock Grid.Column="1"
                                                            Margin="12,0,0,0"
                                                            Text="{Binding SelectedTask.NextAttemptText}"
                                                            FontFamily="Cascadia Mono, Consolas"
-                                                           FontSize="11"
+                                                           FontSize="12"
                                                            FontWeight="SemiBold"
                                                            TextTrimming="CharacterEllipsis" />
                                                 <!-- Zero-height on purpose: it must stay Visible so an
@@ -2287,27 +2513,28 @@
                                                            Foreground="Transparent"
                                                            FontSize="1" />
                                                 <TextBlock Grid.Row="1"
-                                                           Margin="0,11,0,0"
+                                                           Margin="0,6,0,0"
                                                            Text="{Binding [Tasks.Attempts], Source={StaticResource Loc}}"
                                                            Foreground="{DynamicResource InkMutedBrush}"
-                                                           FontSize="11" />
+                                                           FontSize="12" />
                                                 <StackPanel Grid.Row="1"
                                                             Grid.Column="1"
-                                                            Margin="12,11,0,0"
+                                                            Margin="12,6,0,0"
                                                             Orientation="Horizontal">
                                                     <TextBlock AutomationProperties.AutomationId="TaskAttemptsValue"
                                                                Text="{Binding SelectedTask.Attempts}"
                                                                FontFamily="Cascadia Mono, Consolas"
-                                                               FontSize="11"
+                                                               FontSize="12"
                                                                FontWeight="SemiBold" />
                                                     <TextBlock Text="{Binding [Tasks.AttemptsUnit], Source={StaticResource Loc}}"
                                                                Margin="4,0,0,0"
                                                                Foreground="{DynamicResource InkMutedBrush}"
-                                                               FontSize="10"
+                                                               FontSize="11"
                                                                VerticalAlignment="Bottom" />
                                                 </StackPanel>
                                             </Grid>
                                         </StackPanel>
+                                        </Grid>
                                     </Border>
                                 </Grid>
                             </ScrollViewer>
@@ -2339,7 +2566,7 @@
                                        FontWeight="SemiBold" />
                         </StackPanel>
                     </Grid>
-                </Border>
+                </controls:GlassSurface>
             </Grid>
 
             <!-- Preset-message second-level workspace -->
@@ -2359,7 +2586,7 @@
                     </Style>
                 </Grid.Style>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="58" />
+                    <RowDefinition Height="76" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
@@ -2391,7 +2618,7 @@
                                 VerticalAlignment="Center">
                         <TextBlock Text="{Binding SelectedTaskFollowUpTitle}"
                                    FontFamily="{StaticResource DisplayFont}"
-                                   FontSize="16"
+                                   FontSize="20"
                                    FontWeight="SemiBold"
                                    TextTrimming="CharacterEllipsis" />
                         <StackPanel Orientation="Horizontal"
@@ -2431,11 +2658,14 @@
                                 AutomationProperties.Name="{Binding [FollowUp.Add], Source={StaticResource Loc}}"
                                 Command="{Binding AddFollowUpMessageCommand}"
                                 Margin="10,0,0,0"
-                                Style="{StaticResource IconButtonStyle}"
+                                Style="{StaticResource SecondaryButtonStyle}"
                                 ToolTip="{Binding [FollowUp.Add], Source={StaticResource Loc}}">
-                            <TextBlock Text="&#xE710;"
-                                       FontFamily="{StaticResource IconFont}"
-                                       FontSize="15" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE710;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center"
+                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                                <TextBlock Text="{Binding [FollowUp.Add], Source={StaticResource Loc}}" Margin="7,0,0,0" VerticalAlignment="Center"
+                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                            </StackPanel>
                         </Button>
                         <Border x:Name="FollowUpSaveDock"
                                 AutomationProperties.AutomationId="FollowUpSaveDock"
@@ -2443,11 +2673,14 @@
                             <Button AutomationProperties.AutomationId="FollowUpSaveButton"
                                     AutomationProperties.Name="{Binding [FollowUp.Save], Source={StaticResource Loc}}"
                                     Command="{Binding SaveFollowUpMessagesCommand}"
-                                    Style="{StaticResource IconButtonStyle}"
+                                    Style="{StaticResource PrimaryButtonStyle}"
                                     ToolTip="{Binding [FollowUp.Save], Source={StaticResource Loc}}">
-                                <TextBlock Text="&#xE74E;"
-                                           FontFamily="{StaticResource IconFont}"
-                                           FontSize="15" />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE74E;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                                    <TextBlock Text="{Binding [FollowUp.Save], Source={StaticResource Loc}}" Margin="7,0,0,0" VerticalAlignment="Center"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                                </StackPanel>
                             </Button>
                         </Border>
                     </StackPanel>
@@ -2517,16 +2750,18 @@
                                         </Border.Style>
                                     </Border>
 
-                                    <Border AutomationProperties.AutomationId="FollowUpMessageCardSurface"
-                                            MinHeight="64"
-                                            Margin="0,3"
-                                            Padding="8"
+                                    <controls:GlassSurface AutomationProperties.AutomationId="FollowUpMessageCardSurface"
+                                            MinHeight="78"
+                                            Margin="3,6"
+                                            Padding="12"
                                             BorderThickness="1"
-                                            CornerRadius="8">
-                                        <Border.Style>
-                                            <Style TargetType="Border">
-                                                <Setter Property="Background" Value="{DynamicResource GlassSurfaceBrush}" />
-                                                <Setter Property="BorderBrush" Value="{DynamicResource BorderStrongBrush}" />
+                                            CornerRadius="16"
+                                            Elevation="8">
+                                        <controls:GlassSurface.Style>
+                                            <Style TargetType="{x:Type controls:GlassSurface}" BasedOn="{StaticResource {x:Type controls:GlassSurface}}">
+                                                <Setter Property="IsInteractive" Value="True" />
+                                                <Setter Property="Background" Value="{DynamicResource ConversationSurfaceBrush}" />
+                                                <Setter Property="BorderBrush" Value="{DynamicResource GlassBorderBrush}" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=IsMouseOver}" Value="True">
                                                         <Setter Property="Background" Value="{DynamicResource ControlHoverBrush}" />
@@ -2536,15 +2771,17 @@
                                                         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                                        <Setter Property="IsInteractive" Value="False" />
                                                         <Setter Property="Background" Value="{DynamicResource SurfaceSubtleBrush}" />
                                                         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding IsDragSource}" Value="True">
+                                                        <Setter Property="IsInteractive" Value="False" />
                                                         <Setter Property="Opacity" Value="0" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
-                                        </Border.Style>
+                                        </controls:GlassSurface.Style>
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
@@ -3753,7 +3990,7 @@
                                             </Grid>
 
                                         </Grid>
-                                    </Border>
+                                    </controls:GlassSurface>
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -3794,7 +4031,7 @@
 
             <!-- Activity -->
             <Grid x:Name="ActivityPageRoot"
-                  Margin="16,0,16,16"
+                  Margin="24,0,24,20"
                   Visibility="Collapsed">
                 <Grid.Style>
                     <Style TargetType="Grid">
@@ -3815,7 +4052,7 @@
                     <StackPanel VerticalAlignment="Center">
                         <TextBlock Text="{Binding [Shell.Activity], Source={StaticResource Loc}}"
                                    FontFamily="{StaticResource DisplayFont}"
-                                   FontSize="17"
+                                   FontSize="24"
                                    FontWeight="SemiBold" />
                     </StackPanel>
                     <Border
@@ -3866,7 +4103,9 @@
                         </Grid>
                         <Border Grid.Row="1"
                                 Style="{StaticResource SurfaceStyle}"
-                                Padding="4">
+                                Padding="4"
+                                CornerRadius="6"
+                                BorderThickness="0,1,0,0">
                             <Grid>
                                 <ListBox x:Name="ActivityList"
                                          AutomationProperties.AutomationId="ActivityEventList"
@@ -4006,7 +4245,9 @@
                         </Grid>
                         <Border Grid.Row="1"
                                 Style="{StaticResource SurfaceStyle}"
-                                Padding="6,4">
+                                Padding="6,4"
+                                CornerRadius="6"
+                                BorderThickness="0,1,0,0">
                             <Grid>
                                 <ListBox x:Name="WorkflowLineageList"
                                          AutomationProperties.AutomationId="WorkflowLineageEntryList"
@@ -4236,7 +4477,7 @@
 
             <!-- Guardrails -->
             <Grid x:Name="GuardrailsPageRoot"
-                  Margin="16,0,16,16"
+                  Margin="24,0,24,20"
                   Visibility="Collapsed">
                 <Grid.Style>
                     <Style TargetType="Grid">
@@ -4257,7 +4498,7 @@
                             VerticalAlignment="Center">
                     <TextBlock Text="{Binding [Shell.Guardrails], Source={StaticResource Loc}}"
                                FontFamily="{StaticResource DisplayFont}"
-                               FontSize="15"
+                               FontSize="24"
                                FontWeight="SemiBold" />
                 </StackPanel>
                 <Border VerticalAlignment="Bottom"
@@ -4460,7 +4701,7 @@
 
             <!-- Keep-alive -->
             <Grid x:Name="KeepAlivePageRoot"
-                  Margin="16,0,16,16"
+                  Margin="24,0,24,20"
                   Visibility="Collapsed">
                 <Grid.Style>
                     <Style TargetType="Grid">
@@ -4479,13 +4720,17 @@
                 <StackPanel x:Name="KeepAliveHeaderStage" Margin="4,0" VerticalAlignment="Center">
                     <TextBlock Text="{Binding [KeepAlive.Title], Source={StaticResource Loc}}"
                                FontFamily="{StaticResource DisplayFont}"
-                               FontSize="15"
+                               FontSize="24"
                                FontWeight="SemiBold" />
                     <TextBlock Text="{Binding KeepAliveStatusText}"
                                Margin="0,3,0,0"
                                Foreground="{DynamicResource InkMutedBrush}"
                                FontSize="11" />
                 </StackPanel>
+                <Border VerticalAlignment="Bottom"
+                        Height="1"
+                        Margin="4,0"
+                        Background="{DynamicResource BorderBrush}" />
                 <!-- Two columns because the conversation list is capped, and on a wide window the cap left
                      the right half of the page empty. The list keeps its cap for the reason below; what
                      changed is that the width it does not want is now spent on the runtime panel rather
@@ -4582,7 +4827,7 @@
                             Background="{DynamicResource GlassSurfaceStrongBrush}"
                             BorderBrush="{DynamicResource BorderBrush}"
                             BorderThickness="1"
-                            CornerRadius="10"
+                            CornerRadius="6"
                             ClipToBounds="True">
                         <Border.Style>
                             <Style TargetType="Border">
@@ -4848,7 +5093,7 @@
                                             Background="{DynamicResource ConversationSurfaceBrush}"
                                             BorderBrush="{DynamicResource BorderBrush}"
                                             BorderThickness="1"
-                                            CornerRadius="10"
+                                            CornerRadius="6"
                                             SnapsToDevicePixels="True">
                                       <Grid>
                                         <!-- Hover is a veil faded by Opacity, not a ColorAnimation on the
@@ -4998,7 +5243,7 @@
                             Background="{DynamicResource GlassSurfaceBrush}"
                             BorderBrush="{DynamicResource GlassBorderBrush}"
                             BorderThickness="1"
-                            CornerRadius="10">
+                            CornerRadius="6">
                         <StackPanel>
                             <TextBlock Text="{Binding [KeepAlive.RuntimeTitle], Source={StaticResource Loc}}"
                                        Style="{StaticResource SectionHeaderStyle}" />
@@ -5159,7 +5404,7 @@
 
             <!-- Preferences -->
             <Grid x:Name="PreferencesPageRoot"
-                  Margin="16,0,16,16"
+                  Margin="24,0,24,20"
                   Visibility="Collapsed">
                 <Grid.Style>
                     <Style TargetType="Grid">
@@ -5180,7 +5425,7 @@
                             VerticalAlignment="Center">
                     <TextBlock Text="{Binding [Shell.Preferences], Source={StaticResource Loc}}"
                                FontFamily="{StaticResource DisplayFont}"
-                               FontSize="15"
+                               FontSize="24"
                                FontWeight="SemiBold" />
                 </StackPanel>
                 <Border VerticalAlignment="Bottom"
@@ -5192,14 +5437,54 @@
                               VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled">
                     <Grid Margin="4,20,4,8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="1" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
+                        <!-- Settings uses a persistent category rail, while each category remains a
+                             single readable form. TabControl keeps the selection local to this page and
+                             does not add business state to the ViewModel. -->
+                        <TabControl x:Name="PreferencesCategoryTabs"
+                                    TabStripPlacement="Left"
+                                    BorderThickness="0"
+                                    Background="Transparent"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch">
+                            <TabControl.Resources>
+                                <Style TargetType="TabItem">
+                                    <Setter Property="Foreground" Value="{DynamicResource InkMutedBrush}" />
+                                    <Setter Property="FontSize" Value="13" />
+                                    <Setter Property="MinWidth" Value="156" />
+                                    <Setter Property="Padding" Value="12,10" />
+                                    <Setter Property="Margin" Value="0,0,14,4" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="TabItem">
+                                                <Border x:Name="TabSurface"
+                                                        Padding="{TemplateBinding Padding}"
+                                                        Background="Transparent"
+                                                        CornerRadius="5">
+                                                    <ContentPresenter ContentSource="Header"
+                                                                      HorizontalAlignment="Left"
+                                                                      VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter TargetName="TabSurface" Property="Background" Value="{DynamicResource PrimarySoftBrush}" />
+                                                        <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}" />
+                                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="TabSurface" Property="Background" Value="{DynamicResource SurfaceSubtleBrush}" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </TabControl.Resources>
+
+                            <TabItem Header="{Binding [Settings.GeneralCategory], Source={StaticResource Loc}}">
 
                         <StackPanel x:Name="PreferencesInterfaceStage"
-                                    Margin="0,0,28,0">
+                                    Margin="14,0,8,0">
                             <TextBlock Text="{Binding [Settings.InterfaceTitle], Source={StaticResource Loc}}"
                                        Style="{StaticResource SectionHeaderStyle}" />
                             <ComboBox AutomationProperties.Name="{Binding [Settings.InterfaceTitle], Source={StaticResource Loc}}"
@@ -5268,12 +5553,13 @@
                                     </StackPanel>
                                 </Button>
                             </Grid>
+                        </StackPanel>
+                            </TabItem>
 
-                            <Border Margin="0,22,0,0"
-                                    BorderBrush="{DynamicResource BorderBrush}"
-                                    BorderThickness="0,1,0,0" />
+                            <TabItem Header="{Binding [Settings.DataCategory], Source={StaticResource Loc}}">
+                        <StackPanel x:Name="PreferencesDataStage"
+                                    Margin="14,0,8,0">
                             <TextBlock Text="{Binding [Settings.DataTitle], Source={StaticResource Loc}}"
-                                       Margin="0,18,0,0"
                                        Style="{StaticResource SectionHeaderStyle}" />
 
                             <Button Command="{Binding OpenDataFolderCommand}"
@@ -5297,10 +5583,6 @@
                             <TextBlock Text="{Binding [Settings.UserGuideTitle], Source={StaticResource Loc}}"
                                        Margin="0,18,0,0"
                                        Style="{StaticResource SectionHeaderStyle}" />
-                            <TextBlock Text="{Binding [Settings.UserGuideHint], Source={StaticResource Loc}}"
-                                       Margin="0,4,0,0"
-                                       Opacity="0.6"
-                                       FontSize="12" />
                             <Button Command="{Binding OpenUserGuideCommand}"
                                     AutomationProperties.Name="{Binding [Settings.UserGuideTitle], Source={StaticResource Loc}}"
                                     Margin="0,10,0,0"
@@ -5316,13 +5598,12 @@
                                 </StackPanel>
                             </Button>
                         </StackPanel>
+                            </TabItem>
 
-                        <Border Grid.Column="1"
-                                Background="{DynamicResource BorderBrush}" />
+                            <TabItem Header="{Binding [Settings.StartupCategory], Source={StaticResource Loc}}">
 
                         <StackPanel x:Name="PreferencesBehaviorStage"
-                                    Grid.Column="2"
-                                    Margin="28,0,0,0">
+                                    Margin="14,0,8,0">
                             <TextBlock Text="{Binding [Settings.StartupTitle], Source={StaticResource Loc}}"
                                        Style="{StaticResource SectionHeaderStyle}" />
 
@@ -5422,10 +5703,13 @@
                                 </Button>
                             </Grid>
 
-                            <Border BorderBrush="{DynamicResource BorderBrush}"
-                                    BorderThickness="0,1,0,0" />
+                        </StackPanel>
+                            </TabItem>
+
+                            <TabItem Header="{Binding [Settings.DiscoveryTitle], Source={StaticResource Loc}}">
+                        <StackPanel x:Name="PreferencesDiscoveryStage"
+                                    Margin="14,0,8,0">
                             <TextBlock Text="{Binding [Settings.DiscoveryTitle], Source={StaticResource Loc}}"
-                                       Margin="0,18,0,0"
                                        Style="{StaticResource SectionHeaderStyle}" />
                             <Grid Margin="0,14,0,0">
                                 <Grid.ColumnDefinitions>
@@ -5482,6 +5766,8 @@
                                        Margin="0,8,0,0"
                                        Style="{StaticResource FieldHintStyle}" />
                         </StackPanel>
+                            </TabItem>
+                        </TabControl>
                     </Grid>
                 </ScrollViewer>
             </Grid>
@@ -5504,5 +5790,6 @@
                 </Frame.Style>
             </Frame>
         </Grid>
+        </controls:GlassSurface>
     </Grid>
 </Window>

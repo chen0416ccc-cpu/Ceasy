@@ -16,6 +16,10 @@ internal static class AutomaticRecoveryExistingConversationLiveGateOfflineTests
     {
         ArgumentNullException.ThrowIfNull(assert);
         await RunCaseAsync(
+            "in-place live readback requires exact payload and one replacement, not an append client id",
+            TestInPlaceReadbackAsync,
+            assert);
+        await RunCaseAsync(
             "automatic recovery live gate requires one exact two-phase argument matrix",
             TestArgumentMatrixAsync,
             assert);
@@ -43,6 +47,35 @@ internal static class AutomaticRecoveryExistingConversationLiveGateOfflineTests
             "automatic recovery live gate stays tests-only prepare-safe and owner-bound",
             TestSourceContractAsync,
             assert);
+    }
+
+    private static Task TestInPlaceReadbackAsync()
+    {
+        var fixture = CreatePlanFixture();
+        var plan = AutomaticRecoveryExistingConversationLiveGate.BuildPlan(
+            fixture.Options, fixture.Thread, fixture.Turn, fixture.Decision, fixture.Settings,
+            fixture.SettingsSha256, fixture.PreparedAtUtc);
+        var replacement = fixture.Turn with { Id = Guid.NewGuid().ToString("D"), UserMessageClientIds = [] };
+        var prior = fixture.Turn with { Id = Guid.NewGuid().ToString("D") };
+        Ensure(AutomaticRecoveryExistingConversationLiveGate.MatchesInPlaceReadback(plan, replacement, replacement.Id),
+            "the owner replacement incorrectly required a journal-only client id");
+        Ensure(!AutomaticRecoveryExistingConversationLiveGate.MatchesInPlaceReadback(
+                plan, replacement with { UserText = "different input" }, replacement.Id) &&
+            !AutomaticRecoveryExistingConversationLiveGate.MatchesInPlaceReadback(
+                plan, replacement with { HasAmbiguousActivity = true }, replacement.Id) &&
+            !AutomaticRecoveryExistingConversationLiveGate.MatchesInPlaceReadback(
+                plan, replacement with { HasAttachments = true }, replacement.Id),
+            "changed or incomplete input was accepted as the owner replacement");
+        Ensure(AutomaticRecoveryExistingConversationLiveGate.HasExpectedTurnTransition(
+                plan, [fixture.Turn, prior], [replacement, prior], replacement.Id) &&
+            !AutomaticRecoveryExistingConversationLiveGate.HasExpectedTurnTransition(
+                plan, [fixture.Turn, prior], [replacement, fixture.Turn, prior], replacement.Id) &&
+            !AutomaticRecoveryExistingConversationLiveGate.HasExpectedTurnTransition(
+                plan, [fixture.Turn, prior], [replacement], replacement.Id) &&
+            !AutomaticRecoveryExistingConversationLiveGate.HasExpectedTurnTransition(
+                plan, [fixture.Turn, prior], [replacement, replacement, prior], replacement.Id),
+            "in-place verification accepted an append, missing prior history, or duplicate turn");
+        return Task.CompletedTask;
     }
 
     private static Task TestArgumentMatrixAsync()

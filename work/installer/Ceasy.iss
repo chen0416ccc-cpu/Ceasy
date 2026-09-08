@@ -139,6 +139,14 @@ Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Comment: "{cm:Short
 Name: "{group}\{cm:UninstallProgram,{#AppName}}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Comment: "{cm:ShortcutComment}"; Tasks: desktopicon; AppUserModelID: "Ceasy.CodexGuardian"
 
+[InstallDelete]
+; 旧安装器把 Broker 合并到主程序目录。只清理这四个旧入口文件，
+; 共享 DLL 留给主程序，用户配置目录不在安装清理范围内。
+Type: files; Name: "{app}\CodexGuardian.Broker.exe"
+Type: files; Name: "{app}\CodexGuardian.Broker.dll"
+Type: files; Name: "{app}\CodexGuardian.Broker.deps.json"
+Type: files; Name: "{app}\CodexGuardian.Broker.runtimeconfig.json"
+
 [Registry]
 ; 只在卸载时清理开机自启项。应用自己通过 StartupService 写这个值，安装器不主动创建，
 ; 但必须负责删除——否则卸载后会残留一个指向已删除 exe 的死启动项。

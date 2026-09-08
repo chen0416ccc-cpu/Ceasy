@@ -177,7 +177,7 @@ internal static class WorkflowExistingConversationLiveGate
     internal const string DataDirectoryArgument = "--data-directory";
     internal const string DataRoot = @"D:\CodexData\CodexGuardian";
     internal const string TempRoot = @"D:\CodexTemp\CodexGuardian";
-    internal const string MessagePrefix = "CodexFree bounded workflow live gate ";
+    internal const string MessagePrefix = "Ceasy \u6536\u53d1\u9a8c\u8bc1 ";
     private static readonly TimeSpan DirectExecutionTimeout = TimeSpan.FromMinutes(5);
     private static readonly TimeSpan ScheduledHostMinimumPrepareLead = TimeSpan.FromMinutes(2);
     private static readonly TimeSpan ScheduledHostMinimumArmLead = TimeSpan.FromSeconds(45);
@@ -331,14 +331,17 @@ internal static class WorkflowExistingConversationLiveGate
         var settings = new AppSettings
         {
             MonitoringEnabled = false,
-            MonitorOnly = false,
-            GlobalProtectionEnabled = false,
+            // Preset authorization is independent of automatic recovery in the current product policy.
+            MonitorOnly = true,
+            AutomaticRecoveryEnabled = false,
+            GlobalProtectionEnabled = true,
             IncludeSubAgents = false,
             ProtectNewThreadsByDefault = false,
             MinimizeToTray = false,
             StartWithWindows = false
         };
         settings.ThreadEnabled[options.TargetThreadId] = true;
+        settings.ThreadProtectionEnabled[options.TargetThreadId] = true;
         settings.ThreadFollowUps[options.TargetThreadId] = new ThreadFollowUpSettings
         {
             IsEnabled = true,
@@ -371,7 +374,7 @@ internal static class WorkflowExistingConversationLiveGate
 
     internal static string BuildMessage(string ruleId) =>
         MessagePrefix + NormalizeId(ruleId, nameof(ruleId)) +
-        ". Reply with one short acknowledgement.";
+        "\u3002\u53ea\u56de\u590d\u201c\u6536\u5230\u201d\uff0c\u4e0d\u8981\u8c03\u7528\u5de5\u5177\u6216\u4fee\u6539\u6587\u4ef6\u3002";
 
     internal static async Task<int> RunAsync(string[] arguments)
     {
@@ -1191,7 +1194,12 @@ internal static class WorkflowExistingConversationLiveGate
         AppSettings expected,
         WorkflowRuleDefinition rule)
     {
-        if (actual.MonitoringEnabled || actual.MonitorOnly || actual.GlobalProtectionEnabled ||
+        if (actual.MonitoringEnabled || !actual.MonitorOnly || actual.AutomaticRecoveryEnabled ||
+            !actual.GlobalProtectionEnabled || actual.ThreadProtectionEnabled.Count != 1 ||
+            !actual.ThreadProtectionEnabled.TryGetValue(rule.OwnerConversationId, out var protectedTarget) ||
+            !protectedTarget ||
+            actual.KeepAliveEnabled || actual.KeepAliveSentinelEnabled ||
+            actual.MinimizeToTray || actual.StartWithWindows ||
             actual.IncludeSubAgents || actual.ProtectNewThreadsByDefault ||
             actual.ThreadEnabled.Count != 1 || actual.ThreadFollowUps.Count != 1 ||
             !actual.ThreadEnabled.TryGetValue(rule.OwnerConversationId, out var enabled) || !enabled ||

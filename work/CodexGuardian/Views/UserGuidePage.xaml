@@ -1,355 +1,186 @@
 <Page x:Class="CodexGuardian.Views.UserGuidePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Background="Transparent">
-    <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  Padding="32,24,32,32">
-        <StackPanel MaxWidth="720">
-            <TextBlock Text="使用说明"
-                       FontSize="28"
+      Background="Transparent"
+      UseLayoutRounding="True"
+      SnapsToDevicePixels="True"
+      Loaded="UserGuidePage_Loaded"
+      AutomationProperties.Name="{Binding [Guide.Title], Source={StaticResource Loc}}">
+    <Page.Resources>
+        <Style x:Key="GuideBodyStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource BodyFont}" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{DynamicResource InkMutedBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="LineHeight" Value="21" />
+        </Style>
+        <Style x:Key="GuideSectionHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource SectionHeaderStyle}">
+            <Setter Property="Margin" Value="0,0,20,0" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style x:Key="GuideSectionStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="Padding" Value="0,20,0,20" />
+        </Style>
+    </Page.Resources>
+    <Grid Margin="20,0,20,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="58" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="UserGuideBackButton"
+                    Width="34"
+                    Height="34"
+                    Margin="0,0,12,0"
+                    Style="{StaticResource IconButtonStyle}"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="Settings"
+                    AutomationProperties.AutomationId="UserGuideBackButton"
+                    AutomationProperties.Name="{Binding [Guide.Back], Source={StaticResource Loc}}"
+                    ToolTip="{Binding [Guide.Back], Source={StaticResource Loc}}">
+                <TextBlock Text="&#xE72B;"
+                           FontFamily="{StaticResource IconFont}"
+                           FontSize="14"
+                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+            </Button>
+            <TextBlock Grid.Column="1"
+                       Text="{Binding [Guide.Title], Source={StaticResource Loc}}"
+                       FontFamily="{StaticResource DisplayFont}"
+                       FontSize="17"
                        FontWeight="SemiBold"
                        Foreground="{DynamicResource InkBrush}"
-                       Margin="0,0,0,24" />
-
-            <!-- 软件是干什么的 -->
-            <Border Background="{DynamicResource Surface2Brush}"
-                    BorderBrush="{DynamicResource DividerBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="20"
-                    Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="这个软件是干什么的？"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,12" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22">
-                        <Run Text="Codex 跟 Claude 聊天时，有时会卡住报错（429、500、网络断了）。" />
-                        <LineBreak />
-                        <Run Text="这个软件自动帮你重发消息，让对话继续下去，不用你手动点重试。" />
-                    </TextBlock>
-                </StackPanel>
-            </Border>
-
-            <!-- 主界面说明 -->
-            <Border Background="{DynamicResource Surface2Brush}"
-                    BorderBrush="{DynamicResource DividerBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="20"
-                    Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="主界面都是啥？"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,12" />
-
-                    <TextBlock Text="左边工具栏（从上到下）："
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22"
-                               Margin="0,0,0,12">
-                        <Run Text="• 第一个按钮：看总览（有多少任务在跑，恢复了多少次）" />
-                        <LineBreak />
-                        <Run Text="• 第二个按钮：会话列表（看每个对话的状态）" />
-                        <LineBreak />
-                        <Run Text="• 第三个按钮：恢复规则（设置什么情况下自动重发）" />
-                        <LineBreak />
-                        <Run Text="• 第四个按钮：哨兵功能（占位置防止会话被挤掉）" />
-                        <LineBreak />
-                        <Run Text="• 第五个按钮：偏好设置（语言、主题、启动方式）" />
-                    </TextBlock>
-
-                    <TextBlock Text="右上角："
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22">
-                        <Run Text="• 胶囊按钮：切换黑白主题" />
-                        <LineBreak />
-                        <Run Text="• 最小化按钮：缩小到托盘（右下角通知区域）" />
-                    </TextBlock>
-                </StackPanel>
-            </Border>
-
-            <!-- 自动恢复怎么用 -->
-            <Border Background="{DynamicResource Surface2Brush}"
-                    BorderBrush="{DynamicResource DividerBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="20"
-                    Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="自动恢复怎么用？"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,12" />
-
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22"
-                               Margin="0,0,0,12">
-                        <Run Text="软件启动后自动开始监控，什么都不用管。" />
-                        <LineBreak />
-                        <Run Text="你在 Codex 里正常聊天，遇到错误时软件自动帮你重发。" />
-                    </TextBlock>
-
-                    <TextBlock Text="什么时候会自动重发？"
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22"
-                               Margin="0,0,0,12">
-                        <Run Text="• 429 错误（请求太多）：等几秒自动重发" />
-                        <LineBreak />
-                        <Run Text="• 500 错误（服务器出问题）：自动重发" />
-                        <LineBreak />
-                        <Run Text="• 网络断了：等网络好了自动重发" />
-                        <LineBreak />
-                        <Run Text="• overloaded（服务器忙）：等一会儿自动重发" />
-                    </TextBlock>
-
-                    <TextBlock Text="重要提示："
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource AccentBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22">
-                        <Run Text="• 软件只帮你重发已经失败的消息，不会乱发新东西" />
-                        <LineBreak />
-                        <Run Text="• 如果对话正常（没报错），软件不会动" />
-                        <LineBreak />
-                        <Run Text="• 可以在「恢复规则」页面关闭自动重发，改成只监控" />
-                    </TextBlock>
-                </StackPanel>
-            </Border>
-
-            <!-- 哨兵功能 -->
-            <Border Background="{DynamicResource Surface2Brush}"
-                    BorderBrush="{DynamicResource DividerBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="20"
-                    Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="哨兵功能是什么？"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,12" />
-
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22"
-                               Margin="0,0,0,12">
-                        <Run Text="Codex 服务器人多的时候,连接位置有限,你可能得等别人不用了才能连上。" />
-                        <LineBreak />
-                        <Run Text="哨兵功能就是每隔一段时间自动发个消息,让你的对话一直占着连接位置,不用排队等。" />
-                    </TextBlock>
-
-                    <TextBlock Text="怎么用？"
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22">
-                        <Run Text="1. 点左边工具栏第四个按钮（哨兵）" />
-                        <LineBreak />
-                        <Run Text="2. 设置要驻守几个会话（比如 3 个）" />
-                        <LineBreak />
-                        <Run Text="3. 设置多久发一次消息（比如 10 分钟）" />
-                        <LineBreak />
-                        <Run Text="4. 点「启动哨兵」，软件会自动选最老的 3 个会话，每 10 分钟发个消息让它们保持活跃" />
-                    </TextBlock>
-                </StackPanel>
-            </Border>
-
-            <!-- 常见场景 -->
-            <Border Background="{DynamicResource Surface2Brush}"
-                    BorderBrush="{DynamicResource DividerBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="20"
-                    Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="常见使用场景"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,12" />
-
-                    <TextBlock Text="场景 1：我刚开始用，不知道怎么设置"
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22"
-                               Margin="0,0,0,16">
-                        <Run Text="→ 什么都不用改，软件默认就会帮你自动重发失败消息。" />
-                        <LineBreak />
-                        <Run Text="   只管用 Codex 聊天，遇到错误软件会自己处理。" />
-                    </TextBlock>
-
-                    <TextBlock Text="场景 2：我只想知道哪些对话出错了，不要自动重发"
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22"
-                               Margin="0,0,0,16">
-                        <Run Text="→ 点左边工具栏第三个按钮（恢复规则）" />
-                        <LineBreak />
-                        <Run Text="   把「守护策略」改成「只读监控」" />
-                        <LineBreak />
-                        <Run Text="   这样软件只记录错误，不会自动重发" />
-                    </TextBlock>
-
-                    <TextBlock Text="场景 3：服务器经常满，我想一直保持连接"
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22"
-                               Margin="0,0,0,16">
-                        <Run Text="→ 点左边工具栏第四个按钮（哨兵）" />
-                        <LineBreak />
-                        <Run Text="   设置「驻守会话数量」为 1 或更多" />
-                        <LineBreak />
-                        <Run Text="   设置「哨位间隔」为 10 分钟" />
-                        <LineBreak />
-                        <Run Text="   点「启动哨兵」，软件会定时发消息保持你的对话连接不断" />
-                    </TextBlock>
-
-                    <TextBlock Text="场景 4：429 错误太频繁了，我想等久一点再重发"
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22"
-                               Margin="0,0,0,16">
-                        <Run Text="→ 点左边工具栏第三个按钮（恢复规则）" />
-                        <LineBreak />
-                        <Run Text="   找到「429 恢复设置」" />
-                        <LineBreak />
-                        <Run Text="   把等待时间调大一点（比如 30 秒）" />
-                    </TextBlock>
-
-                    <TextBlock Text="场景 5：软件缩到托盘后，我怎么打开？"
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22"
-                               Margin="0,0,0,16">
-                        <Run Text="→ 看电脑右下角通知区域（时钟旁边）" />
-                        <LineBreak />
-                        <Run Text="   找到软件图标，单击一下就打开了" />
-                        <LineBreak />
-                        <Run Text="   右键图标可以选「退出」彻底关闭软件" />
-                    </TextBlock>
-
-                    <TextBlock Text="场景 6：我想换个主题（黑色/白色）"
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22"
-                               Margin="0,0,0,16">
-                        <Run Text="→ 点右上角的胶囊按钮（圆形开关）" />
-                        <LineBreak />
-                        <Run Text="   一点就换，立刻生效" />
-                    </TextBlock>
-
-                    <TextBlock Text="场景 7：我想看软件处理了哪些会话"
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22">
-                        <Run Text="→ 点左边工具栏第二个按钮（会话列表）" />
-                        <LineBreak />
-                        <Run Text="   能看到每个对话的标题、状态、最后活动时间" />
-                        <LineBreak />
-                        <Run Text="   点具体的会话，能看到详细的恢复记录" />
-                    </TextBlock>
-                </StackPanel>
-            </Border>
-
-            <!-- 托盘功能 -->
-            <Border Background="{DynamicResource Surface2Brush}"
-                    BorderBrush="{DynamicResource DividerBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="20">
-                <StackPanel>
-                    <TextBlock Text="托盘功能"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"
-                               Margin="0,0,0,12" />
-
-                    <TextBlock TextWrapping="Wrap"
-                               FontSize="14"
-                               Foreground="{DynamicResource InkDimBrush}"
-                               LineHeight="22">
-                        <Run Text="• 点窗口右上角的「—」按钮，软件会缩小到托盘（右下角通知区域）" />
-                        <LineBreak />
-                        <Run Text="• 缩到托盘后，软件继续在后台监控和恢复，不会停" />
-                        <LineBreak />
-                        <Run Text="• 单击托盘图标可以重新打开窗口" />
-                        <LineBreak />
-                        <Run Text="• 右键托盘图标，选「退出」可以彻底关闭软件" />
-                    </TextBlock>
-                </StackPanel>
-            </Border>
-        </StackPanel>
-    </ScrollViewer>
+                       VerticalAlignment="Center" />
+        </Grid>
+        <ScrollViewer Grid.Row="1"
+                      AutomationProperties.AutomationId="UserGuideScrollViewer"
+                      AutomationProperties.Name="{Binding [Guide.Title], Source={StaticResource Loc}}"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Padding="0,0,16,24">
+            <StackPanel MaxWidth="840" HorizontalAlignment="Stretch">
+                <TextBlock Text="{Binding [Guide.IntroBody], Source={StaticResource Loc}}"
+                           Style="{StaticResource GuideBodyStyle}"
+                           Margin="0,2,0,20" />
+                <Border Style="{StaticResource GuideSectionStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="152" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding [Guide.PrinciplesTitle], Source={StaticResource Loc}}"
+                                   Style="{StaticResource GuideSectionHeaderStyle}" />
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{Binding [Guide.MonitoringBody], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}" />
+                            <TextBlock Text="{Binding [Guide.DefaultBody], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}"
+                                       Margin="0,8,0,0" />
+                            <TextBlock Text="{Binding [Guide.AuthorizationBody], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}"
+                                       Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Style="{StaticResource GuideSectionStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="152" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding [Guide.NavigationTitle], Source={StaticResource Loc}}"
+                                   Style="{StaticResource GuideSectionHeaderStyle}" />
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{Binding [Guide.NavigationConversations], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}" />
+                            <TextBlock Text="{Binding [Guide.NavigationActivity], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}"
+                                       Margin="0,8,0,0" />
+                            <TextBlock Text="{Binding [Guide.NavigationGuardrails], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}"
+                                       Margin="0,8,0,0" />
+                            <TextBlock Text="{Binding [Guide.NavigationKeepAlive], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}"
+                                       Margin="0,8,0,0" />
+                            <TextBlock Text="{Binding [Guide.NavigationPreferences], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}"
+                                       Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Style="{StaticResource GuideSectionStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="152" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding [Guide.PresetTitle], Source={StaticResource Loc}}"
+                                   Style="{StaticResource GuideSectionHeaderStyle}" />
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{Binding [Guide.PresetBody], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}" />
+                            <TextBlock Text="{Binding [Guide.PresetAuthorization], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}"
+                                       Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Style="{StaticResource GuideSectionStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="152" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding [Guide.RecoveryTitle], Source={StaticResource Loc}}"
+                                   Style="{StaticResource GuideSectionHeaderStyle}" />
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{Binding [Guide.RecoveryEligible], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}" />
+                            <TextBlock Text="{Binding [Guide.RecoveryBlocked], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}"
+                                       Margin="0,8,0,0" />
+                            <TextBlock Text="{Binding [Guide.RecoveryEvidence], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}"
+                                       Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Style="{StaticResource GuideSectionStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="152" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding [Guide.KeepAliveTitle], Source={StaticResource Loc}}"
+                                   Style="{StaticResource GuideSectionHeaderStyle}" />
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{Binding [Guide.KeepAliveBody], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}" />
+                            <TextBlock Text="{Binding [Guide.KeepAliveAuthorization], Source={StaticResource Loc}}"
+                                       Style="{StaticResource GuideBodyStyle}"
+                                       Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Style="{StaticResource GuideSectionStyle}" Padding="0,20,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="152" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding [Guide.TrayTitle], Source={StaticResource Loc}}"
+                                   Style="{StaticResource GuideSectionHeaderStyle}" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding [Guide.TrayBody], Source={StaticResource Loc}}"
+                                   Style="{StaticResource GuideBodyStyle}" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </Page>

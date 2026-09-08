@@ -103,7 +103,7 @@ internal sealed class CodexStructuredInputAsarException : IOException
     internal bool IsCompatibilityFailure { get; }
 }
 
-internal static class CodexStructuredInputAsarInspector
+internal static partial class CodexStructuredInputAsarInspector
 {
     private const string PackageJsonPath = "package.json";
     private const string WebviewIndexPath = "webview/index.html";
@@ -591,7 +591,7 @@ internal static class CodexStructuredInputAsarInspector
         }
         else
         {
-            return false;
+            return TryInspectEnvelopeOwnerSemantics(source, out shape);
         }
 
         var inputKinds = InspectInputKinds(source);

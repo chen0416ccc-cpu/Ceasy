@@ -616,4 +616,35 @@
   <data name="Activity.NextAwaitTrigger" xml:space="preserve"><value>Await downstream trigger</value></data>
   <data name="Activity.NextStopped" xml:space="preserve"><value>No automatic action</value></data>
   <data name="Activity.AutomationLineageName" xml:space="preserve"><value>{0}, {1}, {2}, {3}, {4}, {5}, {6}</value></data>
+  <data name="Guide.Title" xml:space="preserve"><value>User guide</value></data>
+  <data name="Guide.Back" xml:space="preserve"><value>Back to preferences</value></data>
+  <data name="Guide.IntroBody" xml:space="preserve"><value>Ceasy observes Codex Desktop tasks locally and brings interruptions that need attention into one workspace.</value></data>
+  <data name="Guide.PrinciplesTitle" xml:space="preserve"><value>Monitoring and permission</value></data>
+  <data name="Guide.MonitoringBody" xml:space="preserve"><value>Monitoring begins when Ceasy opens. It only reads task state and does not rewrite the Codex installation, state databases, or conversation records.</value></data>
+  <data name="Guide.DefaultBody" xml:space="preserve"><value>New settings start in monitor-only mode with automatic recovery off. Upgrading older settings also turns automatic recovery off. Until you enable it, Ceasy reports failures without automatically continuing failed turns.</value></data>
+  <data name="Guide.AuthorizationBody" xml:space="preserve"><value>The title-bar Automatic recovery switch controls recovery permission; per-conversation protection controls task scope. Preset messages are authorized separately. Turning automatic recovery off does not pause an authorized preset queue.</value></data>
+  <data name="Guide.NavigationTitle" xml:space="preserve"><value>Workspaces</value></data>
+  <data name="Guide.NavigationConversations" xml:space="preserve"><value>Conversations: search and filter tasks, then inspect current state, the latest reply, and recovery history. The message entry opens presets for that conversation.</value></data>
+  <data name="Guide.NavigationActivity" xml:space="preserve"><value>Activity: review recent monitoring events and workflow execution records.</value></data>
+  <data name="Guide.NavigationGuardrails" xml:space="preserve"><value>Guardrails: check recovery permission and configure attempt budgets, counting, and follow-up backoff. Changing these values does not remove a safety lock.</value></data>
+  <data name="Guide.NavigationKeepAlive" xml:space="preserve"><value>Keep-alive: choose held conversations or a sentinel destination, configure the interval and message, and review actual sends.</value></data>
+  <data name="Guide.NavigationPreferences" xml:space="preserve"><value>Preferences: adjust language, appearance, startup, update checks, and task discovery; open the local data folder or this guide.</value></data>
+  <data name="Guide.PresetTitle" xml:space="preserve"><value>Preset messages</value></data>
+  <data name="Guide.PresetBody" xml:space="preserve"><value>Open presets from the target conversation, add content, and choose after normal completion or a local scheduled time. Drag the left grip to reorder. Edits and ordering remain drafts until you save.</value></data>
+  <data name="Guide.PresetAuthorization" xml:space="preserve"><value>Sending requires explicit permission from the corresponding queue, message, or workflow rule, plus conversation-protection, target, Desktop channel, composer-state, and duplicate-prevention checks. Pause the corresponding queue or rule to stop it. An uncertain send is not automatically repeated.</value></data>
+  <data name="Guide.RecoveryTitle" xml:space="preserve"><value>Recovery limits</value></data>
+  <data name="Guide.RecoveryEligible" xml:space="preserve"><value>Enabling recovery still requires a verified latest failed turn and an available Desktop channel. A task interrupted after useful output may qualify to continue; a failure with no output does not by itself allow a resend.</value></data>
+  <data name="Guide.RecoveryBlocked" xml:space="preserve"><value>User stops, 401/403, authentication failures, exhausted credit, content policy, and context limits never trigger automatic recovery. An error code without complete terminal-state evidence does not authorize a send.</value></data>
+  <data name="Guide.RecoveryEvidence" xml:space="preserve"><value>For a safety lock, missing evidence, or an uncertain result, inspect the conversation state and activity first. Ceasy does not append duplicate messages to bypass resend limits or modify Codex to support an unknown version.</value></data>
+  <data name="Guide.KeepAliveTitle" xml:space="preserve"><value>Keep-alive and sentinel</value></data>
+  <data name="Guide.KeepAliveBody" xml:space="preserve"><value>Keep-alive sends configured messages to explicitly selected held conversations. Sentinel mode uses a chosen destination after any conversation receives a reply. It does not guarantee server capacity, queue priority, or a continuous connection.</value></data>
+  <data name="Guide.KeepAliveAuthorization" xml:space="preserve"><value>Choose conversations and review the interval and message on the Keep-alive page before explicitly enabling its master switch. Monitor-only mode blocks keep-alive sends. Sending remains guarded; runtime state and send records show the actual result.</value></data>
+  <data name="Guide.TrayTitle" xml:space="preserve"><value>Window and background</value></data>
+  <data name="Guide.TrayBody" xml:space="preserve"><value>With Close to tray enabled, closing the window keeps monitoring and authorized behavior running in the background. Click the Ceasy notification-area icon to reopen it. Right-click the icon and choose Exit to stop the application.</value></data>
+  <data name="Shell.TechnicalDetails" xml:space="preserve"><value>Technical details</value></data>
+  <data name="Settings.GeneralCategory" xml:space="preserve"><value>General</value></data>
+  <data name="Settings.DataCategory" xml:space="preserve"><value>Data &amp; help</value></data>
+  <data name="Settings.StartupCategory" xml:space="preserve"><value>Startup &amp; updates</value></data>
+  <data name="Workspace.Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Workspace.CloseDetails" xml:space="preserve"><value>Close details</value></data>
 </root>

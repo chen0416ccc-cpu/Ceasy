@@ -585,6 +585,9 @@ public sealed class AppServerClient : IAsyncDisposable
         }
 
         await _idleDisconnect.DisposeAsync().ConfigureAwait(false);
+        _sendGate.Dispose();
+        _connectGate.Dispose();
+        _sessionGate.Dispose();
         _lifetime.Dispose();
     }
 

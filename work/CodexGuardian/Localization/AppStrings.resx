@@ -616,4 +616,35 @@
   <data name="Activity.NextAwaitTrigger" xml:space="preserve"><value>等待后续触发</value></data>
   <data name="Activity.NextStopped" xml:space="preserve"><value>无自动动作</value></data>
   <data name="Activity.AutomationLineageName" xml:space="preserve"><value>{0}，{1}，{2}，{3}，{4}，{5}，{6}</value></data>
+  <data name="Guide.Title" xml:space="preserve"><value>使用说明</value></data>
+  <data name="Guide.Back" xml:space="preserve"><value>返回偏好</value></data>
+  <data name="Guide.IntroBody" xml:space="preserve"><value>Ceasy 在本机持续观察 Codex Desktop 的任务状态，并把需要处理的中断集中展示。</value></data>
+  <data name="Guide.PrinciplesTitle" xml:space="preserve"><value>监测与授权</value></data>
+  <data name="Guide.MonitoringBody" xml:space="preserve"><value>打开 Ceasy 即开始监测，不需要另行启动。监测只读取任务状态，不改写 Codex 的安装文件、状态数据库或会话记录。</value></data>
+  <data name="Guide.DefaultBody" xml:space="preserve"><value>首次使用默认仅监测，自动恢复关闭；升级旧配置也会关闭自动恢复。未主动启用自动恢复时，Ceasy 只展示异常，不自动续发失败轮次。</value></data>
+  <data name="Guide.AuthorizationBody" xml:space="preserve"><value>标题栏的“自动恢复”与单个会话的保护开关分别控制恢复授权和任务范围。预制消息另行授权；关闭自动恢复不会暂停已授权的预制消息队列。</value></data>
+  <data name="Guide.NavigationTitle" xml:space="preserve"><value>工作区</value></data>
+  <data name="Guide.NavigationConversations" xml:space="preserve"><value>会话：搜索与筛选任务，查看当前状态、最近回复和恢复记录。会话中的消息入口打开该会话的预制消息。</value></data>
+  <data name="Guide.NavigationActivity" xml:space="preserve"><value>活动：查看最近的监测事件和工作流执行记录。</value></data>
+  <data name="Guide.NavigationGuardrails" xml:space="preserve"><value>守护策略：查看自动恢复权限，设置尝试预算、计数方式与追问退避。安全锁定状态不会因调整参数而解除。</value></data>
+  <data name="Guide.NavigationKeepAlive" xml:space="preserve"><value>保活：选择驻守会话或哨兵驻点，设置哨位间隔与消息，并查看实际发送记录。</value></data>
+  <data name="Guide.NavigationPreferences" xml:space="preserve"><value>偏好：调整语言、外观、启动方式、更新检查和任务发现范围；打开本地数据目录或本说明页。</value></data>
+  <data name="Guide.PresetTitle" xml:space="preserve"><value>预制消息</value></data>
+  <data name="Guide.PresetBody" xml:space="preserve"><value>从目标会话进入预制消息，添加内容并选择正常完成后发送或指定本地时间。拖拽左侧握柄调整顺序；编辑和排序先保留为草稿，点击保存后才生效。</value></data>
+  <data name="Guide.PresetAuthorization" xml:space="preserve"><value>发送须有对应队列、消息或工作流规则的明确授权，并通过对话保护、目标、桌面端通道、输入框状态和防重复校验。需要暂停时关闭对应队列或规则；发送结果待核对时不会自动重复发送。</value></data>
+  <data name="Guide.RecoveryTitle" xml:space="preserve"><value>恢复边界</value></data>
+  <data name="Guide.RecoveryEligible" xml:space="preserve"><value>自动恢复开启后，仍须确认最新失败轮次与桌面端通道可用。已有有效输出后异常结束的任务可按判定继续；没有输出的失败不等于可以直接重发。</value></data>
+  <data name="Guide.RecoveryBlocked" xml:space="preserve"><value>用户主动停止、401/403、认证失败、额度不足、内容策略和上下文超限都不自动恢复。只有错误码，没有完整终态证据，也不会触发发送。</value></data>
+  <data name="Guide.RecoveryEvidence" xml:space="preserve"><value>安全锁定、证据不足或结果待核对时，请先查看会话状态和活动记录。Ceasy 不通过追加相同消息来绕过重发限制，也不会为兼容未知版本而修改 Codex。</value></data>
+  <data name="Guide.KeepAliveTitle" xml:space="preserve"><value>保活与哨兵</value></data>
+  <data name="Guide.KeepAliveBody" xml:space="preserve"><value>保活会向明确选定的驻守会话发送哨位消息。哨兵模式使用指定驻点，等待任意会话获得回复后工作；它不保证服务器容量、排队优先级或持续连接。</value></data>
+  <data name="Guide.KeepAliveAuthorization" xml:space="preserve"><value>在保活页选择会话并核对间隔和消息，再显式开启保活总开关。仅监测状态下保活不发送；开启后仍需通过发送门禁，实际结果以运行状态和发送记录为准。</value></data>
+  <data name="Guide.TrayTitle" xml:space="preserve"><value>窗口与后台</value></data>
+  <data name="Guide.TrayBody" xml:space="preserve"><value>启用“关闭窗口时进入托盘”后，关闭窗口会保留后台监测及已授权行为。单击通知区域的 Ceasy 图标重新打开窗口；右键图标并选择“退出”才会结束程序。</value></data>
+  <data name="Shell.TechnicalDetails" xml:space="preserve"><value>技术信息</value></data>
+  <data name="Settings.GeneralCategory" xml:space="preserve"><value>常规</value></data>
+  <data name="Settings.DataCategory" xml:space="preserve"><value>数据与帮助</value></data>
+  <data name="Settings.StartupCategory" xml:space="preserve"><value>启动与更新</value></data>
+  <data name="Workspace.Details" xml:space="preserve"><value>详情</value></data>
+  <data name="Workspace.CloseDetails" xml:space="preserve"><value>关闭详情</value></data>
 </root>

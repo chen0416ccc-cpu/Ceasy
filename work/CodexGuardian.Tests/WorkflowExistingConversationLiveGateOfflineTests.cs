@@ -88,8 +88,15 @@ internal static class WorkflowExistingConversationLiveGateOfflineTests
             !configuration.Preset.RetryIndefinitely &&
             configuration.Preset.Attachments.Count == 0 &&
             !configuration.Settings.MonitoringEnabled &&
-            !configuration.Settings.MonitorOnly &&
-            !configuration.Settings.GlobalProtectionEnabled &&
+            configuration.Settings.MonitorOnly &&
+            !configuration.Settings.AutomaticRecoveryEnabled &&
+            configuration.Settings.GlobalProtectionEnabled &&
+            configuration.Settings.ThreadProtectionEnabled.Count == 1 &&
+            configuration.Settings.ThreadProtectionEnabled[options.TargetThreadId] &&
+            !configuration.Settings.KeepAliveEnabled &&
+            !configuration.Settings.KeepAliveSentinelEnabled &&
+            !configuration.Settings.MinimizeToTray &&
+            !configuration.Settings.StartWithWindows &&
             !configuration.Settings.ProtectNewThreadsByDefault &&
             configuration.Settings.ThreadEnabled.Count == 1 &&
             configuration.Settings.ThreadEnabled[options.TargetThreadId] &&

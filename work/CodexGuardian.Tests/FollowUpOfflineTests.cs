@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Threading;
 using System.Xml.Linq;
+using WpfColor = System.Windows.Media.Color;
 
 internal static class FollowUpOfflineTests
 {
@@ -2775,12 +2776,9 @@ internal static class FollowUpOfflineTests
              !conversationStudio.Contains("Text=\"{Binding TaskFilterSummaryText}\"", StringComparison.Ordinal) &&
              !conversationStudio.Contains("Text=\"{Binding ConversationScopeText}\"", StringComparison.Ordinal),
             "the Focus Workspace shell, crisp typography, or temporary inner-page contract drifted");
+        VerifyThemePaletteContract(appXaml);
         Ensure(
             new AppSettings().UiTheme == UiThemes.Dark &&
-            // Single-accent means SignatureBrush stays an alias of PrimaryBrush. The accent itself now comes
-            // from the Ceasy mark's teal; assert the alias rather than pinning one brand colour forever.
-            appXaml.Contains("<SolidColorBrush x:Key=\"PrimaryBrush\" Color=\"#7FD3D5\" />", StringComparison.Ordinal) &&
-            appXaml.Contains("<SolidColorBrush x:Key=\"SignatureBrush\" Color=\"#7FD3D5\" />", StringComparison.Ordinal) &&
             appXaml.Contains("x:Key=\"GlassSurfaceBrush\"", StringComparison.Ordinal) &&
             appXaml.Contains("x:Key=\"GlassSurfaceStrongBrush\"", StringComparison.Ordinal) &&
             appXaml.Contains("x:Key=\"GlassBorderBrush\"", StringComparison.Ordinal) &&
@@ -2793,8 +2791,6 @@ internal static class FollowUpOfflineTests
             xaml.Contains("Background=\"{DynamicResource GlassSurfaceStrongBrush}\"", StringComparison.Ordinal) &&
             xaml.Contains("BorderBrush=\"{DynamicResource GlassBorderBrush}\"", StringComparison.Ordinal) &&
             !xaml.Contains("<BlurEffect", StringComparison.Ordinal) &&
-            window.Contains("[\"GlassSurfaceBrush\"] = \"#F0F7F3EB\"", StringComparison.Ordinal) &&
-            window.Contains("[\"GlassSurfaceBrush\"] = \"#C7141B29\"", StringComparison.Ordinal) &&
             !xaml.Contains("EngineState", StringComparison.Ordinal) &&
             !xaml.Contains("ScanNowCommand", StringComparison.Ordinal),
             "the dark-first single-accent glass foundation or engineering-entry removal drifted");
@@ -3797,6 +3793,94 @@ internal static class FollowUpOfflineTests
         }
 
         return values;
+    }
+
+    private static void VerifyThemePaletteContract(string appXaml)
+    {
+        var light = ReadThemePalette("LightThemePalette");
+        var dark = ReadThemePalette("DarkThemePalette");
+        string[] surfaces =
+        [
+            "CanvasBrush", "PaperBrush", "SurfaceSubtleBrush", "GlassSurfaceBrush",
+            "GlassSurfaceStrongBrush", "ConversationSurfaceBrush", "ConversationHoverBrush",
+            "ConversationSelectedBrush", "ControlSurfaceBrush", "ControlHoverBrush", "FieldSurfaceBrush"
+        ];
+        string[] required =
+        [
+            .. surfaces, "InkBrush", "InkMutedBrush", "InkSubtleBrush", "PrimaryBrush", "SignatureBrush",
+            "GlassBorderBrush", "BorderBrush", "BorderStrongBrush", "DisabledInkBrush",
+            "DisabledSurfaceBrush", "GreenBrush", "OrangeBrush", "YellowBrush", "DangerBrush"
+        ];
+        Ensure(new HashSet<string>(light.Keys, StringComparer.Ordinal).SetEquals(dark.Keys) &&
+            required.All(key => light.ContainsKey(key) && dark.ContainsKey(key)),
+            "light and dark theme palettes lost required semantic roles or key parity");
+        Ensure(surfaces.All(key => light[key] != dark[key]) && light["InkBrush"] != dark["InkBrush"] &&
+            RelativeLuminance(light["CanvasBrush"]) > RelativeLuminance(dark["CanvasBrush"]),
+            "light and dark themes must have independently tuned surfaces and primary text");
+
+        foreach (var (name, palette) in new[] { ("light", light), ("dark", dark) })
+        {
+            Ensure(palette["PrimaryBrush"] == palette["SignatureBrush"],
+                name + " theme split the primary and signature accent roles");
+            var canvas = palette["CanvasBrush"];
+            Ensure(canvas.A == byte.MaxValue, name + " theme canvas must define an opaque contrast backdrop");
+            foreach (var role in surfaces)
+            {
+                var surface = CompositeOver(palette[role], canvas);
+                var ink = CompositeOver(palette["InkBrush"], surface);
+                var inkLuminance = RelativeLuminance(ink);
+                var surfaceLuminance = RelativeLuminance(surface);
+                var ratio = (Math.Max(inkLuminance, surfaceLuminance) + 0.05) /
+                    (Math.Min(inkLuminance, surfaceLuminance) + 0.05);
+                Ensure(ratio >= 4.5,
+                    $"{name} primary text contrast against {role} is {ratio:F2}:1, below 4.5:1");
+            }
+        }
+
+        var app = XDocument.Parse(appXaml);
+        XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var bootstrapAccents = new[] { "PrimaryBrush", "SignatureBrush" }.Select(key =>
+            ParseThemeColor((string?)app.Descendants().Single(element =>
+                (string?)element.Attribute(xamlNamespace + "Key") == key).Attribute("Color") ??
+                throw new InvalidOperationException("Missing bootstrap accent color: " + key))).ToArray();
+        Ensure(bootstrapAccents.All(color => color == dark["PrimaryBrush"]),
+            "the dark-first bootstrap colors do not preserve the runtime primary/signature alias");
+    }
+
+    private static Dictionary<string, WpfColor> ReadThemePalette(string fieldName)
+    {
+        // Read the production palette without constructing a Window or starting the Application.
+        var palette = typeof(MainWindow).GetField(
+                fieldName,
+                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)?.GetValue(null)
+            as IReadOnlyDictionary<string, string> ??
+            throw new InvalidOperationException("Missing production theme palette: " + fieldName);
+        return palette.ToDictionary(pair => pair.Key, pair => ParseThemeColor(pair.Value), StringComparer.Ordinal);
+    }
+
+    private static WpfColor ParseThemeColor(string value) =>
+        System.Windows.Media.ColorConverter.ConvertFromString(value) is WpfColor color
+            ? color
+            : throw new InvalidOperationException("Invalid theme color: " + value);
+
+    private static WpfColor CompositeOver(WpfColor foreground, WpfColor background)
+    {
+        var alpha = foreground.A / 255d;
+        return WpfColor.FromRgb(
+            (byte)Math.Round(foreground.R * alpha + background.R * (1 - alpha)),
+            (byte)Math.Round(foreground.G * alpha + background.G * (1 - alpha)),
+            (byte)Math.Round(foreground.B * alpha + background.B * (1 - alpha)));
+    }
+
+    private static double RelativeLuminance(WpfColor color)
+    {
+        static double Linear(byte channel)
+        {
+            var value = channel / 255d;
+            return value <= 0.04045 ? value / 12.92 : Math.Pow((value + 0.055) / 1.055, 2.4);
+        }
+
+        return 0.2126 * Linear(color.R) + 0.7152 * Linear(color.G) + 0.0722 * Linear(color.B);
     }
 
     // Collects the key named by every {DynamicResource X} / {StaticResource X} markup extension.

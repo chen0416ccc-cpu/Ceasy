@@ -40,6 +40,31 @@ public partial class MainWindow : Window
     public static readonly DependencyProperty IsAttachmentImportInProgressProperty =
         IsAttachmentImportInProgressPropertyKey.DependencyProperty;
 
+    public static readonly DependencyProperty IsTaskInspectorOpenProperty =
+        DependencyProperty.Register(
+            nameof(IsTaskInspectorOpen),
+            typeof(bool),
+            typeof(MainWindow),
+            new PropertyMetadata(false, OnTaskInspectorOpenChanged));
+
+    public bool IsTaskInspectorOpen
+    {
+        get => (bool)GetValue(IsTaskInspectorOpenProperty);
+        set => SetValue(IsTaskInspectorOpenProperty, value);
+    }
+
+    public static readonly DependencyProperty IsTaskInspectorVisibleProperty =
+        DependencyProperty.Register(nameof(IsTaskInspectorVisible), typeof(bool), typeof(MainWindow),
+            new PropertyMetadata(false));
+
+    public bool IsTaskInspectorVisible
+    {
+        get => (bool)GetValue(IsTaskInspectorVisibleProperty);
+        private set => SetValue(IsTaskInspectorVisibleProperty, value);
+    }
+
+    private int _inspectorTransitionVersion;
+
     private const string FollowUpDetailPage = "FollowUpDetail";
     private const int GwlExStyle = -20;
     private const int WsExTransparent = 0x00000020;
@@ -57,51 +82,55 @@ public partial class MainWindow : Window
     private static readonly IReadOnlyDictionary<string, string> LightThemePalette =
         new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            ["CanvasBrush"] = "#FFF2EFE7",
-            ["PaperBrush"] = "#F7F8F4EC",
-            ["SurfaceSubtleBrush"] = "#EDE9E3D8",
-            ["BorderBrush"] = "#5AD2C9BA",
-            ["BorderStrongBrush"] = "#8AC1B7A7",
-            ["GlassSurfaceBrush"] = "#F0F7F3EB",
-            ["GlassSurfaceStrongBrush"] = "#FAFBF8F1",
-            ["GlassBorderBrush"] = "#78CEC4B5",
+            ["CanvasBrush"] = "#FFE2ECF1",
+            ["WindowBackdropBrush"] = "#9AE1EBF1",
+            ["GlassReflectionBrush"] = "#B3FFFFFF",
+            ["AmbientCoolBrush"] = "#8081B8EB",
+            ["AmbientWarmBrush"] = "#909CDACA",
+            ["PaperBrush"] = "#B8FFFFFF",
+            ["SurfaceSubtleBrush"] = "#707EABC4",
+            ["BorderBrush"] = "#407899AF",
+            ["BorderStrongBrush"] = "#7893ADBB",
+            ["GlassSurfaceBrush"] = "#9CFFFFFF",
+            ["GlassSurfaceStrongBrush"] = "#D8F5FAFD",
+            ["GlassBorderBrush"] = "#DDFFFFFF",
             // The hover veil sits above the lit layer so a switch keeps answering the pointer once it is
             // on, which means this brush has to tint rather than cover: at 94% white it repainted an
             // enabled switch's green fill and outline into near-white the moment the pointer arrived. The
             // light theme darkens on hover everywhere else (see ConversationHoverBrush, ControlHoverBrush),
             // so tint with ink at the same alpha the dark theme lifts with white.
-            ["GlassHighlightBrush"] = "#1F28251F",
-            ["AmbientGlowBrush"] = "#2E2E9EA2",
-            ["WindowEdgeBrush"] = "#665FB0B2",
-            ["ConversationSurfaceBrush"] = "#F7FBF8F1",
-            ["ConversationHoverBrush"] = "#FFF3EEE4",
-            ["ConversationSelectedBrush"] = "#F2DFEFEE",
-            ["ConversationPlaceholderBrush"] = "#B8E8E2D7",
-            ["FloatingShadowBrush"] = "#59443E35",
-            ["ControlSurfaceBrush"] = "#FFF3EFE6",
-            ["ControlHoverBrush"] = "#FFE8E1D5",
-            ["FieldSurfaceBrush"] = "#FFFBF8F1",
-            ["DisabledSurfaceBrush"] = "#FFE7E1D6",
-            ["DisabledBorderBrush"] = "#FFD1C8B8",
-            ["DisabledInkBrush"] = "#FF777067",
-            ["InkBrush"] = "#FF28251F",
-            ["InkDimBrush"] = "#FF5E5A52",
-            ["InkMutedBrush"] = "#FF5E5A52",
-            ["InkSubtleBrush"] = "#FF777168",
-            ["ToggleThumbBrush"] = "#FFFFFCF5",
-            ["PrimaryBrush"] = "#FF0F7A7E",
-            ["PrimaryHoverBrush"] = "#FF0C6467",
-            ["PrimarySoftBrush"] = "#330F7A7E",
-            ["SignatureBrush"] = "#FF0F7A7E",
-            ["SignatureSoftBrush"] = "#330F7A7E",
+            ["GlassHighlightBrush"] = "#0F18232C",
+            ["AmbientGlowBrush"] = "#5070A1D0",
+            ["WindowEdgeBrush"] = "#C8FFFFFF",
+            ["ConversationSurfaceBrush"] = "#B8FFFFFF",
+            ["ConversationHoverBrush"] = "#E8F8FDFF",
+            ["ConversationSelectedBrush"] = "#B8C8E7EC",
+            ["ConversationPlaceholderBrush"] = "#608DB8C4",
+            ["FloatingShadowBrush"] = "#2517171A",
+            ["ControlSurfaceBrush"] = "#B0FFFFFF",
+            ["ControlHoverBrush"] = "#DDEAF5FA",
+            ["FieldSurfaceBrush"] = "#9EFFFFFF",
+            ["DisabledSurfaceBrush"] = "#FFF4F4F5",
+            ["DisabledBorderBrush"] = "#FFE4E4E7",
+            ["DisabledInkBrush"] = "#FFA1A1AA",
+            ["InkBrush"] = "#FF153348",
+            ["InkDimBrush"] = "#FF3E596B",
+            ["InkMutedBrush"] = "#FF486474",
+            ["InkSubtleBrush"] = "#FF607B8B",
+            ["ToggleThumbBrush"] = "#FFFFFFFF",
+            ["PrimaryBrush"] = "#FF3568C0",
+            ["PrimaryHoverBrush"] = "#FF28539D",
+            ["PrimarySoftBrush"] = "#263568C0",
+            ["SignatureBrush"] = "#FF3568C0",
+            ["SignatureSoftBrush"] = "#263568C0",
             ["GreenBrush"] = "#FF2C7A45",
             ["GreenSoftBrush"] = "#D9DEEDE0",
             ["OrangeBrush"] = "#FFA85F17",
             ["OrangeSoftBrush"] = "#D9FBE6CD",
             ["YellowBrush"] = "#FF8A6B1B",
             ["YellowSoftBrush"] = "#D9F7EBCE",
-            ["BlueBrush"] = "#FF0F7A7E",
-            ["BlueSoftBrush"] = "#330F7A7E",
+            ["BlueBrush"] = "#FF3568C0",
+            ["BlueSoftBrush"] = "#263568C0",
             ["DangerBrush"] = "#FFB34555",
             ["DangerSoftBrush"] = "#D9F3DEE1"
         };
@@ -109,46 +138,50 @@ public partial class MainWindow : Window
     private static readonly IReadOnlyDictionary<string, string> DarkThemePalette =
         new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            ["CanvasBrush"] = "#FF070B14",
-            ["PaperBrush"] = "#E6151C2A",
-            ["SurfaceSubtleBrush"] = "#B31B2638",
-            ["BorderBrush"] = "#2EFFFFFF",
-            ["BorderStrongBrush"] = "#47FFFFFF",
-            ["GlassSurfaceBrush"] = "#C7141B29",
-            ["GlassSurfaceStrongBrush"] = "#E61A2232",
-            ["GlassBorderBrush"] = "#33FFFFFF",
-            ["GlassHighlightBrush"] = "#1FFFFFFF",
-            ["AmbientGlowBrush"] = "#667FD3D5",
-            ["WindowEdgeBrush"] = "#497FD3D5",
-            ["ConversationSurfaceBrush"] = "#E61A2232",
-            ["ConversationHoverBrush"] = "#F0212C3D",
-            ["ConversationSelectedBrush"] = "#D91E4247",
-            ["ConversationPlaceholderBrush"] = "#8F172235",
-            ["FloatingShadowBrush"] = "#A6000000",
-            ["ControlSurfaceBrush"] = "#CC1B2433",
-            ["ControlHoverBrush"] = "#E6233042",
-            ["FieldSurfaceBrush"] = "#E61C2534",
-            ["DisabledSurfaceBrush"] = "#99202835",
-            ["DisabledBorderBrush"] = "#26FFFFFF",
-            ["DisabledInkBrush"] = "#77869A",
-            ["InkBrush"] = "#F7FAFF",
-            ["InkDimBrush"] = "#A0AFBF",
-            ["InkMutedBrush"] = "#B8C4D5",
-            ["InkSubtleBrush"] = "#8796AB",
+            ["CanvasBrush"] = "#FF102330",
+            ["WindowBackdropBrush"] = "#C40B1C29",
+            ["GlassReflectionBrush"] = "#32FFFFFF",
+            ["AmbientCoolBrush"] = "#806EADE1",
+            ["AmbientWarmBrush"] = "#6069C3B0",
+            ["PaperBrush"] = "#B3203748",
+            ["SurfaceSubtleBrush"] = "#553E596C",
+            ["BorderBrush"] = "#284E7A96",
+            ["BorderStrongBrush"] = "#6086A9BC",
+            ["GlassSurfaceBrush"] = "#88253C4C",
+            ["GlassSurfaceStrongBrush"] = "#D0203544",
+            ["GlassBorderBrush"] = "#508DB1C6",
+            ["GlassHighlightBrush"] = "#16FFFFFF",
+            ["AmbientGlowBrush"] = "#60799DC7",
+            ["WindowEdgeBrush"] = "#6684A7BC",
+            ["ConversationSurfaceBrush"] = "#8A385366",
+            ["ConversationHoverBrush"] = "#B4486C83",
+            ["ConversationSelectedBrush"] = "#A5447186",
+            ["ConversationPlaceholderBrush"] = "#50304B5C",
+            ["FloatingShadowBrush"] = "#8A000000",
+            ["ControlSurfaceBrush"] = "#80354E60",
+            ["ControlHoverBrush"] = "#B84B7088",
+            ["FieldSurfaceBrush"] = "#66132430",
+            ["DisabledSurfaceBrush"] = "#FF27272A",
+            ["DisabledBorderBrush"] = "#FF3F3F46",
+            ["DisabledInkBrush"] = "#FF71717A",
+            ["InkBrush"] = "#FFFAFAFA",
+            ["InkDimBrush"] = "#FFD0E2EC",
+            ["InkMutedBrush"] = "#FFB8CEDC",
+            ["InkSubtleBrush"] = "#FF92AFBF",
             ["ToggleThumbBrush"] = "#FFF7FAFF",
-            ["PrimaryBrush"] = "#7FD3D5",
-            ["PrimaryHoverBrush"] = "#A6E3E2",
-            ["PrimarySoftBrush"] = "#332C7C80",
-            ["SignatureBrush"] = "#7FD3D5",
-            ["SignatureSoftBrush"] = "#332C7C80",
+            ["PrimaryBrush"] = "#8DB2F6",
+            ["PrimaryHoverBrush"] = "#B0C9FA",
+            ["PrimarySoftBrush"] = "#338DB2F6",
+            ["SignatureBrush"] = "#8DB2F6",
+            ["SignatureSoftBrush"] = "#338DB2F6",
             ["GreenBrush"] = "#7BD98C",
             ["GreenSoftBrush"] = "#B31B3D24",
             ["OrangeBrush"] = "#FDB674",
             ["OrangeSoftBrush"] = "#B34A3016",
             ["YellowBrush"] = "#F0CE7E",
             ["YellowSoftBrush"] = "#B3453A1C",
-            ["BlueBrush"] = "#7FD3D5",
-            ["BlueSoftBrush"] = "#B31E4247",
+            ["BlueBrush"] = "#8DB2F6",
+            ["BlueSoftBrush"] = "#332D4B7A",
             ["DangerBrush"] = "#FF8192",
             ["DangerSoftBrush"] = "#B346242E"
         };
@@ -261,10 +294,9 @@ public partial class MainWindow : Window
     private readonly List<UIElement> _conversationContentRevealElements = new();
     private DependencyObject? _suppressedToolTipOwner;
     private object _suppressedToolTipIsEnabledLocalValue = DependencyProperty.UnsetValue;
-    private UIElement? _activeRouteRoot;
     private int _themeTransitionVersion;
-    private System.Windows.Media.EllipseGeometry? _themeTransitionEllipse;
-    private System.Windows.Media.CombinedGeometry? _themeTransitionClip;
+    private ClockGroup? _themeTransitionClock;
+    private readonly List<System.Windows.Media.SolidColorBrush> _themeTransitionBrushes = new();
     private int _activated;
     private int _deactivated;
 
@@ -599,7 +631,7 @@ public partial class MainWindow : Window
 
     private void ApplyWindowComposition(string theme)
     {
-        if (PresentationSource.FromVisual(this) is null)
+        if (PresentationSource.FromVisual(this) is not System.Windows.Interop.HwndSource source)
         {
             return;
         }
@@ -617,18 +649,40 @@ public partial class MainWindow : Window
                 ref cornerPreference,
                 sizeof(int));
 
-            var edgeColor = string.Equals(theme, UiThemes.Dark, StringComparison.Ordinal)
-                ? System.Windows.Media.Color.FromRgb(0x42, 0x58, 0x7A)
-                : System.Windows.Media.Color.FromRgb(0xB8, 0xAE, 0x9E);
+            var isDark = string.Equals(theme, UiThemes.Dark, StringComparison.Ordinal);
+            var edgeColor = isDark
+                ? System.Windows.Media.Color.FromRgb(0x51, 0x73, 0x88)
+                : System.Windows.Media.Color.FromRgb(0xD8, 0xE8, 0xF0);
             var borderColor = ToColorRef(edgeColor);
             _ = DwmSetWindowAttribute(handle, DwmwaBorderColor, ref borderColor, sizeof(int));
 
-            var margins = new DwmMargins(1, 1, 1, 1);
+            var darkMode = isDark ? 1 : 0;
+            _ = DwmSetWindowAttribute(handle, 20, ref darkMode, sizeof(int));
+            var backdropType = !SystemParameters.HighContrast && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22621)
+                ? 3 // DWMSBT_TRANSIENTWINDOW: the native desktop acrylic material.
+                : 1;
+            var hasBackdrop = DwmSetWindowAttribute(handle, 38, ref backdropType, sizeof(int)) == 0 &&
+                backdropType == 3;
+            var canvas = (System.Windows.Media.SolidColorBrush)Application.Current.Resources["CanvasBrush"];
+            source.CompositionTarget.BackgroundColor = hasBackdrop
+                ? System.Windows.Media.Colors.Transparent
+                : canvas.Color;
+            Background = hasBackdrop ? System.Windows.Media.Brushes.Transparent : canvas;
+            ShellRoot.SetResourceReference(System.Windows.Controls.Panel.BackgroundProperty,
+                hasBackdrop ? "WindowBackdropBrush" : "CanvasBrush");
+            var chrome = System.Windows.Shell.WindowChrome.GetWindowChrome(this);
+            if (chrome is not null)
+            {
+                chrome.GlassFrameThickness = new Thickness(hasBackdrop ? -1 : 1);
+            }
+
+            var margins = hasBackdrop ? new DwmMargins(-1, -1, -1, -1) : new DwmMargins(1, 1, 1, 1);
             _ = DwmExtendFrameIntoClientArea(handle, ref margins);
         }
         catch (Exception)
         {
-            // Native shadow, rounded corners, and border tint are best-effort shell details.
+            // Older systems retain a fully painted, readable material fallback.
+            ShellRoot.SetResourceReference(System.Windows.Controls.Panel.BackgroundProperty, "CanvasBrush");
         }
     }
 
@@ -748,10 +802,9 @@ public partial class MainWindow : Window
         ScheduleSelectedAttachmentThumbnailLoad();
     }
 
-    // Rail buttons are 40 tall with a 5 margin on each side, so slot n starts at n * 50.
-    // The 20-tall indicator is centred in its slot, hence the 15 inset.
-    private const double RailIndicatorStride = 50d;
-    private const double RailIndicatorInset = 15d;
+    // Floating navigation rows are 48 high with 4px vertical margins.
+    private const double RailIndicatorStride = 56d;
+    private const double RailIndicatorInset = 18d;
 
     private int _railIndicatorSlot = -1;
 
@@ -1049,7 +1102,6 @@ public partial class MainWindow : Window
         var version = Interlocked.Increment(ref _workspaceTransitionVersion);
         CancelConversationContentTransition();
         CancelRouteRevealAnimations();
-        var previousRoot = _activeRouteRoot ?? GetRouteRoot(previousPage);
         var nextRoot = GetRouteRoot(selectedPage);
         if (nextRoot is null)
         {
@@ -1065,41 +1117,22 @@ public partial class MainWindow : Window
         foreach (var page in RoutePages)
         {
             var root = GetRouteRoot(page);
-            if (root is not null && !ReferenceEquals(root, previousRoot) && !ReferenceEquals(root, nextRoot))
+            if (root is not null && !ReferenceEquals(root, nextRoot))
             {
                 root.Visibility = Visibility.Collapsed;
             }
         }
-        if (previousRoot is not null && !ReferenceEquals(previousRoot, nextRoot))
-        {
-            previousRoot.Visibility = Visibility.Visible;
-            previousRoot.IsHitTestVisible = false;
-        }
         nextRoot.Visibility = Visibility.Visible;
-        // Input is no longer withheld for the length of the reveal. The stages animate Opacity and a
-        // TranslateTransform only, so every hit region is already where it will end up - the 12px
-        // offset is gone within a frame or two - while blocking input until the completion timer
-        // fired meant a click on the page the user had just navigated to was swallowed for ~460ms,
-        // and the timer runs at Background priority so that was a floor, not a ceiling. Nothing was
-        // busy during that window; it was the single largest source of the app feeling slow.
+        // One content layer enters; glass backgrounds and the shell remain stationary.
         nextRoot.IsHitTestVisible = true;
-        PrepareRouteReveal(nextRoot, selectedPage);
-        _activeRouteRoot = nextRoot;
-        // Run inline instead of posting at Render priority. The yield used to give the newly visible
-        // page a frame to lay itself out, but PrepareRouteReveal has already set every stage to
-        // Opacity 0 by that point, so the frame that got composed was an empty page - the flash that
-        // read as a stutter on every route change. The layout work is the same either way; doing it
-        // here just keeps a blank frame from reaching the screen. Re-entrancy stays covered by the
-        // version check, which is what it was there for.
-        AnimateWorkspaceTransition(version, previousRoot, nextRoot, selectedPage, fromY);
+        PrepareRouteReveal(nextRoot, selectedPage, fromY);
+        AnimateWorkspaceTransition(version, nextRoot, selectedPage);
     }
 
     private void AnimateWorkspaceTransition(
         int version,
-        UIElement? previousRoot,
         UIElement nextRoot,
-        string selectedPage,
-        double fromY)
+        string selectedPage)
     {
         if (version != Volatile.Read(ref _workspaceTransitionVersion))
         {
@@ -1112,13 +1145,6 @@ public partial class MainWindow : Window
             null,
             System.Windows.Media.Animation.HandoffBehavior.SnapshotAndReplace);
         WorkspaceViewportTransform.Y = 0;
-        if (previousRoot is not null && !ReferenceEquals(previousRoot, nextRoot))
-        {
-            previousRoot.Visibility = Visibility.Visible;
-            previousRoot.IsHitTestVisible = false;
-            AnimateRouteExit(previousRoot, fromY, version);
-        }
-
         AnimateRouteReveal(nextRoot, selectedPage, version);
     }
 
@@ -1146,7 +1172,6 @@ public partial class MainWindow : Window
             ResetRouteReveal(root, page);
         }
 
-        _activeRouteRoot = selectedRoot;
         if (immediate)
         {
             FocusRouteEntry(selectedPage);
@@ -1202,30 +1227,26 @@ public partial class MainWindow : Window
             KeepAliveThreadStage,
             KeepAliveRuntimeStage
         },
-        "Settings" => new UIElement[] { PreferencesHeaderStage, PreferencesInterfaceStage, PreferencesBehaviorStage },
+        "Settings" => new UIElement[]
+        {
+            PreferencesHeaderStage,
+            PreferencesInterfaceStage,
+            PreferencesBehaviorStage,
+            PreferencesDataStage,
+            PreferencesDiscoveryStage
+        },
         "UserGuide" => Array.Empty<UIElement>(),
         FollowUpDetailPage => new UIElement[] { FollowUpRouteHeader, FollowUpMessageTimeline },
         _ => Array.Empty<UIElement>()
     };
 
-    private void PrepareRouteReveal(UIElement root, string page)
+    private void PrepareRouteReveal(UIElement root, string page, double fromY)
     {
         ResetRouteReveal(root, page);
         ResetRouteElement(root);
-        foreach (var element in GetRouteStages(page))
-        {
-            if (element.Visibility != Visibility.Visible)
-            {
-                continue;
-            }
-
-            var transform = EnsureRouteTransform(element);
-            element.BeginAnimation(UIElement.OpacityProperty, null, HandoffBehavior.SnapshotAndReplace);
-            transform.BeginAnimation(TranslateTransform.YProperty, null, HandoffBehavior.SnapshotAndReplace);
-            element.Opacity = 0;
-            transform.Y = 12;
-            _routeRevealElements.Add(element);
-        }
+        root.Opacity = 0.72;
+        EnsureRouteTransform(root).Y = Math.Clamp(fromY, -10, 10);
+        _routeRevealElements.Add(root);
     }
 
     private void AnimateRouteReveal(UIElement root, string page, int version)
@@ -1235,29 +1256,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        var stages = GetRouteStages(page).Where(static element => element.Visibility == Visibility.Visible).ToList();
-        // The whole reveal has to read as one movement. At 36ms apart over 210ms each, the six stages
-        // on the Tasks page finished 410ms after the click and the list rows kept arriving until
-        // ~440ms - long enough that a viewer counts the arrivals instead of seeing a page appear, and
-        // long enough to be read as the page struggling to draw. Halving the offsets and shortening
-        // the travel keeps the same top-to-bottom order inside a window that still registers as a
-        // single response.
-        var stageDuration = TimeSpan.FromMilliseconds(150);
-        for (var index = 0; index < stages.Count; index++)
-        {
-            AnimateRouteElement(stages[index], 12 + index * 18, stageDuration);
-        }
+        AnimateRouteElement(root, 0, TimeSpan.FromMilliseconds(260));
 
-        AnimateVisibleListItems(
-            page,
-            version,
-            page == "Tasks" ? 58 : 46);
-
-        // Only clears the animation handles now that hit-testing is restored up front, so it is timed
-        // to the last frame of the longest stage rather than padded past it.
         _routeRevealCompletionTimer = new DispatcherTimer(DispatcherPriority.Background)
         {
-            Interval = TimeSpan.FromMilliseconds(300)
+            Interval = TimeSpan.FromMilliseconds(280)
         };
         _routeRevealCompletionTimer.Tick += (_, _) =>
         {
@@ -1270,51 +1273,6 @@ public partial class MainWindow : Window
             CompleteRouteReveal(root, page);
         };
         _routeRevealCompletionTimer.Start();
-    }
-
-    private void AnimateVisibleListItems(string page, int version, int initialDelay)
-    {
-        if (version != Volatile.Read(ref _workspaceTransitionVersion))
-        {
-            return;
-        }
-
-        var list = page switch
-        {
-            "Tasks" => _viewModel.IsConversationNavigationRoot
-                ? ConversationNavigationList
-                : TaskList,
-            "Overview" => ActivityList,
-            FollowUpDetailPage => FollowUpMessageList,
-            _ => null
-        };
-        if (list is null)
-        {
-            return;
-        }
-
-        list.UpdateLayout();
-        var visibleItems = new List<UIElement>();
-        for (var index = 0; index < list.Items.Count && visibleItems.Count < 6; index++)
-        {
-            if (list.ItemContainerGenerator.ContainerFromIndex(index) is ListBoxItem container &&
-                container.ActualHeight > 0)
-            {
-                visibleItems.Add(container);
-            }
-        }
-
-        for (var index = 0; index < visibleItems.Count; index++)
-        {
-            var element = visibleItems[index];
-            var transform = EnsureRouteTransform(element);
-            element.BeginAnimation(UIElement.OpacityProperty, null, HandoffBehavior.SnapshotAndReplace);
-            transform.BeginAnimation(TranslateTransform.YProperty, null, HandoffBehavior.SnapshotAndReplace);
-            element.Opacity = 0;
-            transform.Y = 9;
-            _routeRevealElements.Add(element);
-            AnimateRouteElement(element, initialDelay + index * 14, TimeSpan.FromMilliseconds(140));
-        }
     }
 
     private void ScheduleConversationContentTransition()
@@ -1361,29 +1319,18 @@ public partial class MainWindow : Window
     private void AnimateTaskWorkbenchTransition(int version)
     {
         if (version != Volatile.Read(ref _conversationContentTransitionVersion) ||
-            !_viewModel.IsTasksPage)
+            !_viewModel.IsTasksPage || !IsTaskInspectorVisible ||
+            TaskInspectorOffset.HasAnimatedProperties || _routeRevealElements.Count > 0)
         {
             return;
         }
 
-        var elements = new UIElement[] { TaskWorkbenchHeaderStage, TaskWorkbenchContentStage }
-            .Where(static element => element.Visibility == Visibility.Visible)
-            .ToArray();
-        for (var index = 0; index < elements.Length; index++)
-        {
-            var element = elements[index];
-            var transform = EnsureRouteTransform(element);
-            element.BeginAnimation(UIElement.OpacityProperty, null, HandoffBehavior.SnapshotAndReplace);
-            transform.BeginAnimation(TranslateTransform.YProperty, null, HandoffBehavior.SnapshotAndReplace);
-            element.Opacity = 0;
-            transform.Y = 10;
-            _conversationContentRevealElements.Add(element);
-            AnimateRouteElement(
-                element,
-                index * 20,
-                TimeSpan.FromMilliseconds(150));
-        }
-
+        var content = TaskInspectorContentRoot;
+        ResetRouteElement(content);
+        content.Opacity = 0.8;
+        EnsureRouteTransform(content).Y = 6;
+        _conversationContentRevealElements.Add(content);
+        AnimateRouteElement(content, 0, TimeSpan.FromMilliseconds(220));
         StartConversationContentCompletionTimer(version, 240);
     }
 
@@ -1391,7 +1338,7 @@ public partial class MainWindow : Window
     {
         if (version != Volatile.Read(ref _conversationContentTransitionVersion) ||
             !_viewModel.IsTasksPage ||
-            TasksListStage.Visibility != Visibility.Visible)
+            TasksListStage.Visibility != Visibility.Visible || _routeRevealElements.Count > 0)
         {
             return;
         }
@@ -1400,33 +1347,11 @@ public partial class MainWindow : Window
         var transform = EnsureRouteTransform(stage);
         stage.BeginAnimation(UIElement.OpacityProperty, null, HandoffBehavior.SnapshotAndReplace);
         transform.BeginAnimation(TranslateTransform.YProperty, null, HandoffBehavior.SnapshotAndReplace);
-        stage.Opacity = 0;
-        transform.Y = 9;
+        stage.Opacity = 0.8;
+        transform.Y = 6;
         _conversationContentRevealElements.Add(stage);
-        AnimateRouteElement(stage, 0, TimeSpan.FromMilliseconds(140));
-
-        var list = _viewModel.IsConversationNavigationRoot
-            ? ConversationNavigationList
-            : TaskList;
-        list.UpdateLayout();
-        for (var index = 0; index < list.Items.Count && index < 6; index++)
-        {
-            if (list.ItemContainerGenerator.ContainerFromIndex(index) is not ListBoxItem container ||
-                container.ActualHeight <= 0)
-            {
-                continue;
-            }
-
-            var itemTransform = EnsureRouteTransform(container);
-            container.BeginAnimation(UIElement.OpacityProperty, null, HandoffBehavior.SnapshotAndReplace);
-            itemTransform.BeginAnimation(TranslateTransform.YProperty, null, HandoffBehavior.SnapshotAndReplace);
-            container.Opacity = 0;
-            itemTransform.Y = 7;
-            _conversationContentRevealElements.Add(container);
-            AnimateRouteElement(container, 20 + index * 14, TimeSpan.FromMilliseconds(130));
-        }
-
-        StartConversationContentCompletionTimer(version, 280);
+        AnimateRouteElement(stage, 0, TimeSpan.FromMilliseconds(220));
+        StartConversationContentCompletionTimer(version, 240);
     }
 
     private void StartConversationContentCompletionTimer(int version, int milliseconds)
@@ -1454,11 +1379,7 @@ public partial class MainWindow : Window
     private void AnimateRouteElement(UIElement element, int delay, TimeSpan duration)
     {
         var transform = EnsureRouteTransform(element);
-        // Cubic rather than quintic. A quintic ease-out is 99.8% done at 70% of its duration, so the
-        // last third of every stage was a clock running with nothing visible left to move - harmless
-        // alone, but it stretched the perceived length of the reveal well past its real one and made
-        // the staggered stages read as trailing rather than settling.
-        var opacity = new DoubleAnimation(0, 1, duration)
+        var opacity = new DoubleAnimation(element.Opacity, 1, duration)
         {
             BeginTime = TimeSpan.FromMilliseconds(delay),
             EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
@@ -1469,29 +1390,6 @@ public partial class MainWindow : Window
             EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
         };
         element.BeginAnimation(UIElement.OpacityProperty, opacity, HandoffBehavior.SnapshotAndReplace);
-        transform.BeginAnimation(TranslateTransform.YProperty, slide, HandoffBehavior.SnapshotAndReplace);
-    }
-
-    private void AnimateRouteExit(UIElement root, double fromY, int version)
-    {
-        var transform = EnsureRouteTransform(root);
-        var opacity = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(110))
-        {
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
-        };
-        var slide = new DoubleAnimation(0, -Math.Abs(fromY), TimeSpan.FromMilliseconds(110))
-        {
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
-        };
-        opacity.Completed += (_, _) =>
-        {
-            if (version == Volatile.Read(ref _workspaceTransitionVersion))
-            {
-                root.Visibility = Visibility.Collapsed;
-                ResetRouteElement(root);
-            }
-        };
-        root.BeginAnimation(UIElement.OpacityProperty, opacity, HandoffBehavior.SnapshotAndReplace);
         transform.BeginAnimation(TranslateTransform.YProperty, slide, HandoffBehavior.SnapshotAndReplace);
     }
 
@@ -3259,6 +3157,95 @@ public partial class MainWindow : Window
         eventArgs.Handled = handled;
     }
 
+    private void OpenTaskInspector_Click(object sender, RoutedEventArgs eventArgs)
+    {
+        // Button.Click precedes the bound selection command. Reveal its committed selection.
+        _ = Dispatcher.BeginInvoke(DispatcherPriority.Input, new Action(() =>
+        {
+            if (_viewModel.IsTasksPage && _viewModel.HasSelectedTask)
+            {
+                IsTaskInspectorOpen = true;
+            }
+        }));
+    }
+
+    private void ToggleTaskInspector_Click(object sender, RoutedEventArgs eventArgs)
+    {
+        IsTaskInspectorOpen = !IsTaskInspectorOpen && _viewModel.HasSelectedTask;
+    }
+
+    private void CloseTaskInspector_Click(object sender, RoutedEventArgs eventArgs)
+    {
+        IsTaskInspectorOpen = false;
+        TaskDetailsToggleButton.Focus();
+    }
+
+    private static void OnTaskInspectorOpenChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        var window = (MainWindow)sender;
+        window.AnimateTaskInspector((bool)args.NewValue);
+    }
+
+    private void AnimateTaskInspector(bool open)
+    {
+        var version = ++_inspectorTransitionVersion;
+        if (TasksWorkbenchPane is null || TaskInspectorOffset is null)
+        {
+            IsTaskInspectorVisible = open;
+            return;
+        }
+
+        var wasVisible = IsTaskInspectorVisible;
+        if (open)
+        {
+            IsTaskInspectorVisible = true;
+        }
+
+        var fromOpacity = wasVisible ? TasksWorkbenchPane.Opacity : 0;
+        var fromX = wasVisible ? TaskInspectorOffset.X : 38;
+        TasksWorkbenchPane.BeginAnimation(UIElement.OpacityProperty, null);
+        TaskInspectorOffset.BeginAnimation(TranslateTransform.XProperty, null);
+        TasksWorkbenchPane.IsHitTestVisible = open;
+
+        if (!IsLoaded || !SystemParameters.ClientAreaAnimation)
+        {
+            TasksWorkbenchPane.Opacity = 1;
+            TaskInspectorOffset.X = 0;
+            IsTaskInspectorVisible = open;
+            return;
+        }
+
+        TasksWorkbenchPane.Opacity = open ? 1 : 0;
+        TaskInspectorOffset.X = 0;
+        var duration = TimeSpan.FromMilliseconds(open ? 420 : 170);
+        var slide = new DoubleAnimation(fromX, open ? 0 : 30, duration)
+        {
+            EasingFunction = open
+                ? new Controls.SpringEase()
+                : new CubicEase { EasingMode = EasingMode.EaseIn }
+        };
+        var fade = new DoubleAnimation(fromOpacity, open ? 1 : 0,
+            TimeSpan.FromMilliseconds(open ? 180 : 170))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        };
+        slide.Completed += (_, _) =>
+        {
+            if (version != _inspectorTransitionVersion)
+            {
+                return;
+            }
+
+            IsTaskInspectorVisible = open;
+            TasksWorkbenchPane.BeginAnimation(UIElement.OpacityProperty, null);
+            TaskInspectorOffset.BeginAnimation(TranslateTransform.XProperty, null);
+            TasksWorkbenchPane.Opacity = 1;
+            TaskInspectorOffset.X = 0;
+        };
+        TasksWorkbenchPane.BeginAnimation(UIElement.OpacityProperty, fade, HandoffBehavior.SnapshotAndReplace);
+        TaskInspectorOffset.BeginAnimation(TranslateTransform.XProperty, slide, HandoffBehavior.SnapshotAndReplace);
+    }
+
     private void FollowUpAttachmentDragGrip_PreviewMouseLeftButtonDown(
         object sender,
         MouseButtonEventArgs eventArgs)
@@ -4549,137 +4536,77 @@ public partial class MainWindow : Window
 
     private void StartThemeTransition(string theme)
     {
-        CancelThemeTransition();
+        CancelThemeTransition(keepCurrentColors: true);
         var version = Interlocked.Increment(ref _themeTransitionVersion);
-        ThemeTransitionOverlay.Visibility = Visibility.Collapsed;
-        ThemeTransitionSnapshot.Source = null;
-        UpdateLayout();
-
-        System.Windows.Media.Imaging.BitmapSource? snapshot;
-        try
+        var palette = string.Equals(theme, UiThemes.Dark, StringComparison.Ordinal)
+            ? DarkThemePalette
+            : LightThemePalette;
+        var resources = Application.Current.Resources;
+        var duration = new Duration(TimeSpan.FromMilliseconds(320));
+        var timeline = new ParallelTimeline
         {
-            snapshot = CaptureShellSnapshot();
-        }
-        catch
-        {
-            ApplyTheme(theme);
-            return;
-        }
-
-        ApplyTheme(theme);
-        if (snapshot is null ||
-            ShellRoot.ActualWidth <= 0 ||
-            ShellRoot.ActualHeight <= 0 ||
-            version != Volatile.Read(ref _themeTransitionVersion))
-        {
-            return;
-        }
-
-        ThemeTransitionSnapshot.Source = snapshot;
-        var origin = ThemeUtilityButton.TranslatePoint(
-            new System.Windows.Point(
-                ThemeUtilityButton.ActualWidth / 2,
-                ThemeUtilityButton.ActualHeight / 2),
-            ShellRoot);
-        var width = ShellRoot.ActualWidth;
-        var height = ShellRoot.ActualHeight;
-        var farthestCorner = Math.Max(
-            Math.Max(
-                Distance(origin, new System.Windows.Point(0, 0)),
-                Distance(origin, new System.Windows.Point(width, 0))),
-            Math.Max(
-                Distance(origin, new System.Windows.Point(0, height)),
-                Distance(origin, new System.Windows.Point(width, height)))) + 8;
-        var ellipse = new System.Windows.Media.EllipseGeometry(origin, 0, 0);
-        var windowRect = new System.Windows.Media.RectangleGeometry(
-            new System.Windows.Rect(0, 0, width, height));
-        var clip = new System.Windows.Media.CombinedGeometry(
-            System.Windows.Media.GeometryCombineMode.Exclude,
-            windowRect,
-            ellipse);
-        _themeTransitionEllipse = ellipse;
-        _themeTransitionClip = clip;
-        ThemeTransitionOverlay.Clip = clip;
-        ThemeTransitionOverlay.Visibility = Visibility.Visible;
-
-        var duration = new Duration(TimeSpan.FromMilliseconds(260));
-        var radiusX = new DoubleAnimation(0, farthestCorner, duration)
-        {
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            Duration = duration,
+            FillBehavior = FillBehavior.Stop
         };
-        var radiusY = new DoubleAnimation(0, farthestCorner, duration)
+
+        foreach (var pair in palette)
         {
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
-        };
-        radiusX.Completed += (_, _) =>
+            var brush = (System.Windows.Media.SolidColorBrush)resources[pair.Key];
+            if (brush.IsFrozen)
+            {
+                brush = brush.CloneCurrentValue();
+                resources[pair.Key] = brush;
+            }
+
+            var from = brush.Color;
+            var target = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(pair.Value);
+            brush.Color = target;
+            _themeTransitionBrushes.Add(brush);
+            timeline.Children.Add(new ColorAnimation(from, target, duration)
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut },
+                FillBehavior = FillBehavior.Stop
+            });
+        }
+
+        // A shared clock changes every material and text color together, without an old-image overlay.
+        var clock = (ClockGroup)timeline.CreateClock(true);
+        _themeTransitionClock = clock;
+        for (var index = 0; index < _themeTransitionBrushes.Count; index++)
+        {
+            _themeTransitionBrushes[index].ApplyAnimationClock(
+                System.Windows.Media.SolidColorBrush.ColorProperty,
+                (AnimationClock)clock.Children[index],
+                HandoffBehavior.SnapshotAndReplace);
+        }
+
+        clock.Completed += (_, _) =>
         {
             if (version == Volatile.Read(ref _themeTransitionVersion))
             {
-                CompleteThemeTransition();
+                CancelThemeTransition();
             }
         };
-        ellipse.BeginAnimation(
-            System.Windows.Media.EllipseGeometry.RadiusXProperty,
-            radiusX,
-            System.Windows.Media.Animation.HandoffBehavior.SnapshotAndReplace);
-        ellipse.BeginAnimation(
-            System.Windows.Media.EllipseGeometry.RadiusYProperty,
-            radiusY,
-            System.Windows.Media.Animation.HandoffBehavior.SnapshotAndReplace);
+        ApplyWindowComposition(theme);
     }
 
-    private static double Distance(System.Windows.Point first, System.Windows.Point second)
-    {
-        var dx = first.X - second.X;
-        var dy = first.Y - second.Y;
-        return Math.Sqrt(dx * dx + dy * dy);
-    }
-
-    private System.Windows.Media.Imaging.BitmapSource? CaptureShellSnapshot()
-    {
-        var width = Math.Max(1, (int)Math.Ceiling(ShellRoot.ActualWidth));
-        var height = Math.Max(1, (int)Math.Ceiling(ShellRoot.ActualHeight));
-        var dpi = VisualTreeHelper.GetDpi(ShellRoot);
-        var bitmap = new System.Windows.Media.Imaging.RenderTargetBitmap(
-            Math.Max(1, (int)Math.Ceiling(width * dpi.DpiScaleX)),
-            Math.Max(1, (int)Math.Ceiling(height * dpi.DpiScaleY)),
-            dpi.PixelsPerInchX,
-            dpi.PixelsPerInchY,
-            System.Windows.Media.PixelFormats.Pbgra32);
-        bitmap.Render(ShellRoot);
-        bitmap.Freeze();
-        return bitmap;
-    }
-
-    private void CancelThemeTransition()
+    private void CancelThemeTransition(bool keepCurrentColors = false)
     {
         Interlocked.Increment(ref _themeTransitionVersion);
-        if (_themeTransitionEllipse is not null)
+        var clock = _themeTransitionClock;
+        _themeTransitionClock = null;
+        foreach (var brush in _themeTransitionBrushes)
         {
-            _themeTransitionEllipse.BeginAnimation(
-                System.Windows.Media.EllipseGeometry.RadiusXProperty,
-                null,
-                System.Windows.Media.Animation.HandoffBehavior.SnapshotAndReplace);
-            _themeTransitionEllipse.BeginAnimation(
-                System.Windows.Media.EllipseGeometry.RadiusYProperty,
-                null,
-                System.Windows.Media.Animation.HandoffBehavior.SnapshotAndReplace);
+            var current = brush.Color;
+            brush.BeginAnimation(System.Windows.Media.SolidColorBrush.ColorProperty, null);
+            if (keepCurrentColors)
+            {
+                brush.Color = current;
+            }
         }
 
-        ThemeTransitionOverlay.Clip = null;
-        ThemeTransitionOverlay.Visibility = Visibility.Collapsed;
-        ThemeTransitionSnapshot.Source = null;
-        _themeTransitionEllipse = null;
-        _themeTransitionClip = null;
-    }
-
-    private void CompleteThemeTransition()
-    {
-        ThemeTransitionOverlay.Clip = null;
-        ThemeTransitionOverlay.Visibility = Visibility.Collapsed;
-        ThemeTransitionSnapshot.Source = null;
-        _themeTransitionEllipse = null;
-        _themeTransitionClip = null;
+        _themeTransitionBrushes.Clear();
+        clock?.Controller?.Remove();
     }
 
     private void ApplyTheme(string theme)

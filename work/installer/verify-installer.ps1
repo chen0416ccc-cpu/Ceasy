@@ -1,424 +1,280 @@
 ﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
-    Ceasy 安装包实机验证：install → 启动 → 覆盖升级 → 降级拦截 → uninstall 全链路。
-
+    默认只读检查安装包；只有空白一次性环境可执行安装生命周期验证。
 .DESCRIPTION
-    必须在真实用户会话里跑（会读写 HKCU、开始菜单、桌面），结束时恢复到验证前的状态，
-    不留安装痕迹。会短暂真正安装并启动程序，所以不要在 Ceasy 正在使用时执行。
-
-    默认从 work\build-installer.ps1 的输出目录挑最新的 Ceasy-*-Setup.exe。
-
-    覆盖不到的部分：交互式向导的中文界面（含许可页的排版）、向导品牌图片、以及
-    「升级时跳过目录选择页」。静默安装不显示任何页面，那三项只能人眼过。
-
-.PARAMETER SetupExe
-    要验证的安装包路径。缺省时在 -OutputDir 里按修改时间取最新的 Ceasy-*-Setup.exe。
-
-.PARAMETER OutputDir
-    安装包所在目录，需与 build-installer.ps1 的 -OutputDir 一致。
-
-.PARAMETER LogDir
-    安装器/卸载器日志的落地目录，默认 <StagingRoot>\verify。
-
+    默认不创建目录、不启动程序、不修改注册表、不安装或卸载。
+    -Execute 必须同时指定 -DisposableEnvironment，通过所有真实环境检查。
+    现有安装、用户数据、快捷方式、自启项、Guardian 进程都会阻止执行。
+    运行只用 D 盘独立目录和 --safe-preview，失败保留现场，不自动卸载或删除。
+    不验证默认用户数据迁移、自启迁移、真实监控、交互向导或 DPI。
+.PARAMETER OlderSetupExe
+    执行模式必需的真实旧版安装包，不再篡改注册表版本模拟降级。
 .EXAMPLE
-    powershell -ExecutionPolicy Bypass -File work\installer\verify-installer.ps1
+    pwsh -File work\installer\verify-installer.ps1 -SetupExe D:\CodexData\CodexGuardian\candidate\output\Ceasy-2.1.0-Setup.exe
 #>
 [CmdletBinding()]
 param(
     [string]$SetupExe,
     [string]$OutputDir = 'D:\CodexData\CodexGuardian\installer-staging\output',
-    [string]$LogDir = 'D:\CodexData\CodexGuardian\installer-staging\verify'
+    [string]$LogDir = 'D:\CodexData\CodexGuardian\installer-validation',
+    [string]$TempRoot = 'D:\CodexTemp\CodexGuardian\installer-validation',
+    [string]$OlderSetupExe,
+    [switch]$Execute,
+    [switch]$DisposableEnvironment
 )
-
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
-
-if (-not $SetupExe) {
-    if (-not (Test-Path -LiteralPath $OutputDir)) {
-        throw "安装包输出目录不存在：$OutputDir（先跑 work\build-installer.ps1）"
-    }
-    $candidate = Get-ChildItem -LiteralPath $OutputDir -Filter 'Ceasy-*-Setup.exe' -File |
-        Sort-Object LastWriteTime -Descending |
-        Select-Object -First 1
-    if (-not $candidate) {
-        throw "在 $OutputDir 里找不到 Ceasy-*-Setup.exe（先跑 work\build-installer.ps1）"
-    }
-    $SetupExe = $candidate.FullName
+$RepositoryRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+$Comparison = [StringComparison]::OrdinalIgnoreCase
+function Assert-Check {
+    param([string]$Message, [bool]$Condition)
+    if (-not $Condition) { throw $Message }
 }
-
-$AppDir = Join-Path $env:LOCALAPPDATA 'Programs\Ceasy'
-$DataDir = Join-Path $env:LOCALAPPDATA 'CodexGuardian'
-$RunKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
-$RunValueName = 'CodexGuardian'
+function Resolve-PhasePath {
+    param([string]$Path, [string]$AllowedRoot)
+    Assert-Check "路径必须为绝对路径：$Path" ([IO.Path]::IsPathRooted($Path))
+    $full = [IO.Path]::GetFullPath($Path).TrimEnd('\')
+    Assert-Check "路径必须位于指定 D 盘根的子目录：$Path" (
+        $full.StartsWith($AllowedRoot.TrimEnd('\') + '\', $Comparison))
+    Assert-Check "产物不能位于源码树：$Path" (
+        -not $full.StartsWith($RepositoryRoot.TrimEnd('\') + '\', $Comparison))
+    $cursor = $full
+    while ($cursor) {
+        if (Test-Path -LiteralPath $cursor) {
+            Assert-Check "路径包含重解析点：$cursor" (
+                -not ((Get-Item -LiteralPath $cursor -Force).Attributes -band [IO.FileAttributes]::ReparsePoint))
+        }
+        $parent = [IO.Directory]::GetParent($cursor)
+        $cursor = if ($parent) { $parent.FullName } else { $null }
+    }
+    return $full
+}
+function Get-PackageIdentity {
+    param([string]$Path)
+    $full = Resolve-PhasePath $Path 'D:\CodexData\CodexGuardian'
+    $file = Get-Item -LiteralPath $full
+    Assert-Check "安装包不是文件：$full" (-not $file.PSIsContainer)
+    Assert-Check "安装包产品名不是 Ceasy：$full" ($file.VersionInfo.ProductName.Trim() -eq 'Ceasy')
+    foreach ($field in @('CompanyName', 'FileDescription', 'LegalCopyright')) {
+        Assert-Check "安装包缺少属性：$field" (-not [string]::IsNullOrWhiteSpace($file.VersionInfo.$field))
+    }
+    [pscustomobject]@{
+        Path = $full; Length = $file.Length; LastWriteTimeUtc = $file.LastWriteTimeUtc
+        Sha256 = (Get-FileHash -LiteralPath $full -Algorithm SHA256).Hash
+        Version = $file.VersionInfo.ProductVersion.Trim()
+        Signature = [string](Get-AuthenticodeSignature -LiteralPath $full).Status
+    }
+}
+function Get-UninstallEntries {
+    $id = '{8F3A1C9E-7D42-4B58-A6E1-2C5B9D0F4A73}_is1'
+    foreach ($hive in @('HKCU:', 'HKLM:')) {
+        foreach ($branch in @('SOFTWARE', 'SOFTWARE\WOW6432Node')) {
+            $root = "$hive\$branch\Microsoft\Windows\CurrentVersion\Uninstall"
+            if (-not (Test-Path -LiteralPath $root)) { continue }
+            foreach ($key in Get-ChildItem -LiteralPath $root) {
+                $value = Get-ItemProperty -LiteralPath $key.PSPath
+                $name = $value.PSObject.Properties['DisplayName']
+                if ($key.PSChildName -eq $id -or ($name -and [string]$name.Value -eq 'Ceasy')) { $value }
+            }
+        }
+    }
+}
+function Get-GuardianProcesses {
+    @(Get-CimInstance Win32_Process -Filter "Name='CodexGuardian.exe' OR Name='CodexGuardian.Broker.exe'")
+}
+$LogDir = Resolve-PhasePath $LogDir 'D:\CodexData\CodexGuardian'
+$TempRoot = Resolve-PhasePath $TempRoot 'D:\CodexTemp\CodexGuardian'
+$AppDir = Resolve-PhasePath (Join-Path $LogDir 'app') 'D:\CodexData\CodexGuardian'
+$DataDir = Resolve-PhasePath (Join-Path $LogDir 'test-data') 'D:\CodexData\CodexGuardian'
+$LiveDataDir = Join-Path $env:LOCALAPPDATA 'CodexGuardian'
 $StartMenuDir = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Ceasy'
 $DesktopLink = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Ceasy.lnk'
-
-$script:Failures = 0
-function Step { param([string]$m) Write-Host "`n== $m" -ForegroundColor Cyan }
-function Ok { param([string]$m) Write-Host "   [OK]   $m" -ForegroundColor Green }
-function Bad { param([string]$m) Write-Host "   [FAIL] $m" -ForegroundColor Red; $script:Failures++ }
-function Info { param([string]$m) Write-Host "   ....   $m" -ForegroundColor DarkGray }
-
-function Check {
-    param([string]$Label, [bool]$Condition)
-    if ($Condition) { Ok $Label } else { Bad $Label }
+$RunKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
+if (-not $SetupExe) {
+    $candidate = Get-ChildItem -LiteralPath $OutputDir -Filter 'Ceasy-*-Setup.exe' -File |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    Assert-Check "在 $OutputDir 找不到安装包。" ($null -ne $candidate)
+    $SetupExe = $candidate.FullName
 }
-
-# 只终止本次验证自己装出来的那份实例。用户可能同时在跑开发构建或绿色版守护实例，
-# 那些进程不属于本脚本，宁可中止验证也不能替用户杀掉——守护进程被静默终止会丢监控。
-function Stop-Guardian {
-    $procs = @(Get-Process -Name 'CodexGuardian', 'CodexGuardian.Broker' -ErrorAction SilentlyContinue)
-    if ($procs.Count -eq 0) { return }
-
-    $foreign = @()
-    $mine = @()
-    foreach ($p in $procs) {
-        $path = $null
-        try { $path = $p.Path } catch { $path = $null }
-        if ($path -and $path.StartsWith($AppDir, [StringComparison]::OrdinalIgnoreCase)) {
-            $mine += $p
+$package = Get-PackageIdentity $SetupExe
+[xml]$project = Get-Content -LiteralPath (Join-Path $RepositoryRoot 'work\CodexGuardian\CodexGuardian.csproj') -Raw
+$expectedVersion = [string]$project.SelectSingleNode('/Project/PropertyGroup/Version').InnerText
+Assert-Check "安装包版本 $($package.Version) 与当前项目 $expectedVersion 不一致。" ($package.Version -eq $expectedVersion)
+$olderPackage = if ($OlderSetupExe) { Get-PackageIdentity $OlderSetupExe } else { $null }
+if ($olderPackage) {
+    Assert-Check '降级检查必须提供版本确实更低的真实安装包。' ([version]$olderPackage.Version -lt [version]$package.Version)
+}
+$blockers = [Collections.Generic.List[string]]::new()
+if (@(Get-UninstallEntries).Count -ne 0) { $blockers.Add('检测到现有 Ceasy 卸载注册项；不会升级或卸载用户安装。') }
+foreach ($path in @($LiveDataDir, $StartMenuDir, $DesktopLink,
+        (Join-Path $env:LOCALAPPDATA 'Programs\Ceasy'), 'D:\Ceasy', $LogDir, $TempRoot)) {
+    if (Test-Path -LiteralPath $path) { $blockers.Add("保护已有路径，不覆盖：$path") }
+}
+$run = Get-ItemProperty -LiteralPath $RunKey -ErrorAction SilentlyContinue
+if ($run -and $run.PSObject.Properties['CodexGuardian']) { $blockers.Add('检测到现有自启项；不会改写。') }
+if (@(Get-GuardianProcesses).Count -ne 0) { $blockers.Add('检测到 Guardian 进程；不会终止任何既有实例。') }
+if ((Get-PSDrive D).Free -lt 1GB) { $blockers.Add('D 盘可用空间不足 1 GiB。') }
+[pscustomobject]@{
+    Mode = if ($Execute) { 'ExecuteRequested' } else { 'ReadOnly' }
+    Package = $package; ExpectedVersion = $expectedVersion; OlderPackage = $olderPackage
+    ArtifactRoot = $LogDir; TempRoot = $TempRoot
+    InstallDirectory = $AppDir; IsolatedDataDirectory = $DataDir
+    OsIntegrationPaths = @($StartMenuDir, $DesktopLink, $RunKey,
+        'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall')
+    EnvironmentBlockers = $blockers.ToArray()
+    ExecuteAllowed = ($blockers.Count -eq 0 -and $DisposableEnvironment -and $null -ne $olderPackage)
+    LifecycleVerified = $false
+} | ConvertTo-Json -Depth 5
+if (-not $Execute) {
+    Write-Host '只读检查完成；没有安装、卸载、启动应用、创建目录或修改配置。'
+    return
+}
+Assert-Check '必须显式指定 -DisposableEnvironment，在空白一次性测试环境执行。' $DisposableEnvironment
+Assert-Check ('安装生命周期验证已拒绝：' + ($blockers -join [Environment]::NewLine)) ($blockers.Count -eq 0)
+Assert-Check '执行模式必须提供 -OlderSetupExe，不能伪造降级版本。' ($null -ne $olderPackage)
+$env:WINDIR = 'C:\Windows'; $env:SystemRoot = 'C:\Windows'
+$env:TEMP = $TempRoot; $env:TMP = $TempRoot
+New-Item -ItemType Directory -Path $LogDir, $TempRoot, $DataDir | Out-Null
+$steps = [Collections.Generic.List[object]]::new()
+$script:owned = $null
+function Save-Report {
+    param([string]$Status, [string]$Failure)
+    $report = [ordered]@{
+        Status = $Status; Failure = $Failure; Package = $package; OlderPackage = $olderPackage
+        ArtifactRoot = $LogDir; TempRoot = $TempRoot; Steps = $steps.ToArray()
+        DefaultUserDataMigrationVerified = $false; StartupMigrationVerified = $false
+        LiveMonitoringVerified = $false; VisualMatrixVerified = $false; EvidenceRetained = $true
+    }
+    $pending = Join-Path $LogDir 'result.pending.json'
+    $report | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $pending -Encoding UTF8
+    Move-Item -LiteralPath $pending -Destination (Join-Path $LogDir 'result.json') -Force
+}
+function Invoke-Setup {
+    param($Identity, [string]$LogName)
+    Assert-Check '测试期间出现 Guardian 进程，已停止安装操作。' (@(Get-GuardianProcesses).Count -eq 0)
+    Assert-Check '安装包字节在验证后变化，已停止。' (
+        (Get-FileHash -LiteralPath $Identity.Path -Algorithm SHA256).Hash -eq $Identity.Sha256)
+    $p = Start-Process -FilePath $Identity.Path -ArgumentList @(
+        '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/TASKS=desktopicon',
+        ('/DIR="{0}"' -f $AppDir), ('/LOG="{0}"' -f (Join-Path $LogDir $LogName))
+    ) -WindowStyle Hidden -Wait -PassThru
+    $steps.Add([pscustomobject]@{ Step = $LogName; ExitCode = $p.ExitCode })
+    return $p.ExitCode
+}
+function Get-InstalledManifest {
+    @(Get-ChildItem -LiteralPath $AppDir -File -Recurse | Sort-Object FullName | ForEach-Object {
+        '{0}|{1}|{2}' -f $_.FullName.Substring($AppDir.Length), $_.Length,
+            (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash
+    })
+}
+function Assert-OwnedInstall {
+    $entries = @(Get-UninstallEntries)
+    Assert-Check '卸载注册项数量不是 1。' ($entries.Count -eq 1)
+    $entry = $entries[0]
+    Assert-Check '卸载项不属于当前用户或测试安装目录。' (
+        $entry.PSPath -like '*HKEY_CURRENT_USER*' -and
+        [string]$entry.'Inno Setup: App Path' -eq $AppDir -and [string]$entry.DisplayVersion -eq $package.Version)
+}
+function Stop-OwnedPreview {
+    if (-not $script:owned) { return }
+    $current = Get-CimInstance Win32_Process -Filter "ProcessId=$($script:owned.ProcessId)"
+    if (-not $current) {
+        $script:owned = $null
+        throw '预览在正常关闭检查前已经退出，不能计为正常退出验收。'
+    }
+    Assert-Check '预览进程身份变化；拒绝终止。' (
+        $current.ExecutablePath -eq $script:owned.ExecutablePath -and
+        $current.CreationDate -eq $script:owned.CreationDate -and $current.CommandLine -eq $script:owned.CommandLine)
+    $p = Get-Process -Id $current.ProcessId
+    $closed = $p.CloseMainWindow() -and $p.WaitForExit(10000)
+    if (-not $closed) {
+        # 等待后重新校验创建时间、路径和命令行，PID 本身不是实例身份。
+        $again = Get-CimInstance Win32_Process -Filter "ProcessId=$($script:owned.ProcessId)"
+        if ($again) {
+            Assert-Check '等待退出期间进程身份变化；拒绝终止。' (
+                $again.CreationDate -eq $script:owned.CreationDate -and
+                $again.ExecutablePath -eq $script:owned.ExecutablePath -and $again.CommandLine -eq $script:owned.CommandLine)
+            Stop-Process -Id $again.ProcessId -Force
+            Assert-Check '预览进程未在限定时间内退出。' ($p.WaitForExit(10000))
         }
-        else {
-            $foreign += [pscustomobject]@{ Id = $p.Id; Name = $p.ProcessName; Path = $path }
-        }
     }
-
-    if ($foreign.Count -gt 0) {
-        $desc = ($foreign | ForEach-Object { "PID $($_.Id) $($_.Name) [$($_.Path)]" }) -join '; '
-        throw @"
-检测到不属于本次验证的 Guardian 进程，已中止：
-    $desc
-这些可能是你正在用的守护实例或开发构建。本脚本不会替你终止它们。
-请自行关闭后重跑；安装器本身也需要独占单实例 Mutex。
-"@
+    $steps.Add([pscustomobject]@{ Step = 'preview-exit'; GracefulWindowExit = [bool]$closed })
+    $script:owned = $null
+    Assert-Check '预览未正常关闭；受控终止不计为正常退出验收。' ([bool]$closed)
+}
+try {
+    Assert-Check '首次安装失败。' ((Invoke-Setup $package 'install.log') -eq 0)
+    Assert-OwnedInstall
+    $exe = Join-Path $AppDir 'CodexGuardian.exe'
+    foreach ($name in @('CodexGuardian.exe', 'Broker\CodexGuardian.Broker.exe',
+            'Broker\System.Security.Cryptography.Pkcs.dll', 'Broker\hostfxr.dll', 'wpfgfx_cor3.dll',
+            'hostfxr.dll', 'LICENSE.txt', 'THIRD-PARTY-NOTICES.md', 'unins000.exe')) {
+        Assert-Check "安装缺少必需文件：$name" (Test-Path -LiteralPath (Join-Path $AppDir $name) -PathType Leaf)
     }
-
-    Info ("终止本次验证装出的实例：PID " + (($mine | ForEach-Object { $_.Id }) -join ', '))
-    $mine | Stop-Process -Force
-    Start-Sleep -Seconds 2
+    Assert-Check '安装后仍存在旧的根目录 Broker 入口。' (
+        -not (Test-Path -LiteralPath (Join-Path $AppDir 'CodexGuardian.Broker.exe')))
+    Assert-Check '安装仍带已废弃帮助文件。' (-not (Test-Path -LiteralPath (Join-Path $AppDir 'UserGuide.md')))
+    Assert-Check '英文卫星资源缺失。' (Test-Path -LiteralPath (Join-Path $AppDir 'en'))
+    Assert-Check '桌面或开始菜单快捷方式缺失。' (
+        (Test-Path -LiteralPath $DesktopLink) -and (Test-Path -LiteralPath (Join-Path $StartMenuDir 'Ceasy.lnk')))
+    $arguments = '--safe-preview --follow-up-preview-fixture --data-directory "{0}"' -f $DataDir
+    $p = Start-Process -FilePath $exe -WorkingDirectory $AppDir -ArgumentList $arguments -WindowStyle Hidden -PassThru
+    $script:owned = Get-CimInstance Win32_Process -Filter "ProcessId=$($p.Id)"
+    Assert-Check '未能记录测试预览进程身份。' ($null -ne $script:owned)
+    Assert-Check '测试进程不符合隔离约定。' (
+        $script:owned.ExecutablePath -eq $exe -and $script:owned.CommandLine.Contains($arguments))
+    Start-Sleep -Seconds 12
+    Assert-Check '隔离预览未持续运行 12 秒。' (-not $p.HasExited)
+    Stop-OwnedPreview
+    Assert-Check '隔离预览意外创建默认用户数据目录。' (-not (Test-Path -LiteralPath $LiveDataDir))
+    $dataBefore = @(Get-ChildItem -LiteralPath $DataDir -Recurse -File | Sort-Object FullName | ForEach-Object {
+        '{0}|{1}' -f $_.FullName, (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash
+    })
+    Assert-Check '预览没有生成可验证的隔离数据。' ($dataBefore.Count -gt 0)
+    $before = @(Get-InstalledManifest)
+    Assert-Check '同版本覆盖安装失败。' ((Invoke-Setup $package 'overinstall.log') -eq 0)
+    Assert-OwnedInstall
+    Assert-Check '覆盖安装改变了文件清单。' (
+        -not (Compare-Object @($before | ForEach-Object { ($_ -split '\|')[0] }) @(
+            Get-InstalledManifest | ForEach-Object { ($_ -split '\|')[0] })))
+    # Inno 会更新自己的卸载账本，其余负载必须逐字节保持一致。
+    $payloadBefore = @($before | Where-Object { $_ -notmatch '^\\unins\d+\.' })
+    $payloadAfter = @(Get-InstalledManifest | Where-Object { $_ -notmatch '^\\unins\d+\.' })
+    Assert-Check '覆盖安装改变了产品负载字节。' (-not (Compare-Object $payloadBefore $payloadAfter))
+    $beforeDowngrade = @(Get-InstalledManifest)
+    Assert-Check '真实旧版本安装没有被拒绝。' ((Invoke-Setup $olderPackage 'downgrade.log') -ne 0)
+    $downgradeLog = Get-Content -LiteralPath (Join-Path $LogDir 'downgrade.log') -Raw
+    Assert-Check '降级退出由安装脚本错误导致，不能计为保护通过。' (
+        $downgradeLog -notmatch '(?i)runtime error|unknown custom message|internal error')
+    Assert-OwnedInstall
+    Assert-Check '降级尝试改变了安装文件。' (-not (Compare-Object $beforeDowngrade @(Get-InstalledManifest)))
+    Assert-Check '卸载前出现 Guardian 进程，拒绝卸载。' (@(Get-GuardianProcesses).Count -eq 0)
+    Assert-OwnedInstall
+    $null = Resolve-PhasePath $AppDir 'D:\CodexData\CodexGuardian'
+    $u = Start-Process -FilePath (Join-Path $AppDir 'unins000.exe') -ArgumentList @(
+        '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART',
+        ('/LOG="{0}"' -f (Join-Path $LogDir 'uninstall.log'))
+    ) -WindowStyle Hidden -Wait -PassThru
+    $steps.Add([pscustomobject]@{ Step = 'uninstall'; ExitCode = $u.ExitCode })
+    Assert-Check '卸载器退出码不是 0。' ($u.ExitCode -eq 0)
+    $deadline = (Get-Date).AddSeconds(90)
+    while ((Test-Path -LiteralPath $AppDir) -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 500 }
+    Assert-Check '卸载后的安装目录仍存在。' (-not (Test-Path -LiteralPath $AppDir))
+    Assert-Check '卸载后仍存在注册项或快捷方式。' (
+        @(Get-UninstallEntries).Count -eq 0 -and -not (Test-Path -LiteralPath $StartMenuDir) -and
+        -not (Test-Path -LiteralPath $DesktopLink))
+    $dataAfter = @(Get-ChildItem -LiteralPath $DataDir -Recurse -File | Sort-Object FullName | ForEach-Object {
+        '{0}|{1}' -f $_.FullName, (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash
+    })
+    Assert-Check '卸载改变了隔离数据。' (-not (Compare-Object $dataBefore $dataAfter))
+    Assert-Check '生命周期验证意外创建默认用户数据目录。' (-not (Test-Path -LiteralPath $LiveDataDir))
+    Save-Report 'Passed' ''
+    Write-Host '一次性环境的安装、隔离预览、同版本覆盖、真实旧包降级拦截和卸载通过；证据保留。'
 }
-
-function Wait-Gone {
-    param([string]$Path, [int]$TimeoutSeconds = 60)
-    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
-    while ((Test-Path -LiteralPath $Path) -and (Get-Date) -lt $deadline) {
-        Start-Sleep -Milliseconds 500
-    }
-    return -not (Test-Path -LiteralPath $Path)
-}
-
-# StrictMode 下直接点属性名取不存在的注册表值会抛 PropertyNotFoundStrict，
-# 所以走 PSObject.Properties 判定。
-function Get-RunValue {
-    $item = Get-ItemProperty -Path $RunKey -ErrorAction SilentlyContinue
-    if ($null -eq $item) { return $null }
-    $prop = $item.PSObject.Properties[$RunValueName]
-    if ($null -eq $prop) { return $null }
-    return [string]$prop.Value
-}
-
-# 同理：卸载项集合里多数条目没有 DisplayName，StrictMode 下不能直接点属性。
-function Get-CeasyUninstallEntries {
-    return @(Get-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*' -ErrorAction SilentlyContinue |
-        Where-Object {
-            $p = $_.PSObject.Properties['DisplayName']
-            $null -ne $p -and ([string]$p.Value) -eq 'Ceasy'
-        })
-}
-
-function Get-Prop {
-    param($Object, [string]$Name)
-    if ($null -eq $Object) { return $null }
-    $p = $Object.PSObject.Properties[$Name]
-    if ($null -eq $p) { return $null }
-    return $p.Value
-}
-
-# 快捷方式的鼠标悬停提示存在 .lnk 的 Description 字段里，只能通过 Shell COM 读。
-function Get-ShortcutComment {
-    param([string]$LinkPath)
-    $shell = New-Object -ComObject WScript.Shell
-    try {
-        return [string]$shell.CreateShortcut($LinkPath).Description
-    }
-    finally {
-        [System.Runtime.InteropServices.Marshal]::ReleaseComObject($shell) | Out-Null
-    }
-}
-
-New-Item -ItemType Directory -Path $LogDir -Force | Out-Null
-
-Step '0. 记录验证前状态'
-
-if (-not (Test-Path -LiteralPath $SetupExe)) { throw "找不到安装包：$SetupExe" }
-Info ("安装包：{0}（{1:N1} MB）" -f $SetupExe, ((Get-Item $SetupExe).Length / 1MB))
-
-# setup.exe 自身的文件属性。缺了这些，用户右键看「详细信息」是一片空白，
-# 企业软件清点与部分杀软的信誉判定也读它们。不需要安装就能验。
-# Inno 在版本资源里给每个字段留了固定长度并用空格补齐（实测 ProductName 60 字符、
-# LegalCopyright 100 字符），读出来全带尾随空格，所以比较前一律 Trim。
-$SetupInfo = (Get-Item -LiteralPath $SetupExe).VersionInfo
-$SetupProductName    = ([string]$SetupInfo.ProductName).Trim()
-$SetupProductVersion = ([string]$SetupInfo.ProductVersion).Trim()
-$SetupCompanyName    = ([string]$SetupInfo.CompanyName).Trim()
-$SetupFileDesc       = ([string]$SetupInfo.FileDescription).Trim()
-$SetupCopyright      = ([string]$SetupInfo.LegalCopyright).Trim()
-Info ("安装包属性：ProductName={0} / ProductVersion={1} / Company={2}" -f `
-    $SetupProductName, $SetupProductVersion, $SetupCompanyName)
-Info ("            FileDescription={0} / LegalCopyright={1}" -f $SetupFileDesc, $SetupCopyright)
-Check 'setup.exe 的 ProductName 为 Ceasy' ($SetupProductName -eq 'Ceasy')
-Check 'setup.exe 带 CompanyName' (-not [string]::IsNullOrWhiteSpace($SetupCompanyName))
-Check 'setup.exe 带 FileDescription' (-not [string]::IsNullOrWhiteSpace($SetupFileDesc))
-Check 'setup.exe 带 LegalCopyright' (-not [string]::IsNullOrWhiteSpace($SetupCopyright))
-Check 'setup.exe 的 ProductVersion 为 2.0.0' ($SetupProductVersion -eq '2.0.0')
-
-# 代码签名状态如实记录，不作为通过/失败判定——当前没有代码签名证书。
-$SetupSignature = Get-AuthenticodeSignature -LiteralPath $SetupExe
-Info ("代码签名：{0}（未签名时用户首次运行会看到 SmartScreen 未知发布者警告）" -f $SetupSignature.Status)
-
-# 外来实例检查必须排在任何副作用（临时数据目录、临时 Run 值）之前：
-# Stop-Guardian 在这里 throw 就走不到第 8 步的恢复逻辑，不能留下需要清理的痕迹。
-Stop-Guardian
-
-$PreDataExists = Test-Path -LiteralPath $DataDir
-$CreatedTestData = $false
-$SentinelFile = Join-Path $DataDir 'installer-verify-sentinel.txt'
-$PreDataCount = 0
-if ($PreDataExists) {
-    $PreDataCount = (Get-ChildItem -LiteralPath $DataDir -Recurse -File -ErrorAction SilentlyContinue).Count
-    Info "数据目录已存在，含 $PreDataCount 个文件（卸载后必须仍然存在）"
-}
-else {
-    # 造一个带标记文件的数据目录，用来真正验证"静默卸载不删用户数据"这条路径。
-    New-Item -ItemType Directory -Path $DataDir -Force | Out-Null
-    Set-Content -LiteralPath $SentinelFile -Value 'installer verification sentinel' -Encoding ASCII
-    $CreatedTestData = $true
-    $PreDataCount = 1
-    Info "数据目录原本不存在，已创建含 1 个标记文件的临时数据目录用于验证卸载不删数据"
-}
-
-# 记录并模拟"用户开过开机自启"，用于验证安装期路径刷新与卸载期清理
-$PreRunValue = Get-RunValue
-if ($PreRunValue) {
-    Info "开机自启项原值：$PreRunValue"
-}
-else {
-    Info '开机自启项原本不存在，临时写入一个旧路径值以验证安装期刷新与卸载期清理'
-    Set-ItemProperty -Path $RunKey -Name $RunValueName -Value '"D:\stale\path\CodexGuardian.exe" --background'
-}
-
-Check '验证开始前系统中没有已安装的 Ceasy' (-not (Test-Path -LiteralPath $AppDir))
-
-# ---------------------------------------------------------------------------
-Step '1. 首次静默安装'
-
-$installLog = Join-Path $LogDir 'install-1.log'
-$p = Start-Process -FilePath $SetupExe -ArgumentList @(
-    '/SILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/TASKS=desktopicon', "/LOG=$installLog"
-) -Wait -PassThru
-Check "安装器退出码为 0（实际 $($p.ExitCode)）" ($p.ExitCode -eq 0)
-
-# ---------------------------------------------------------------------------
-Step '2. 校验安装结果'
-
-Check "安装目录存在：$AppDir" (Test-Path -LiteralPath $AppDir)
-$installedExe = Join-Path $AppDir 'CodexGuardian.exe'
-$brokerExe = Join-Path $AppDir 'CodexGuardian.Broker.exe'
-$uninstExe = Join-Path $AppDir 'unins000.exe'
-Check '主程序 CodexGuardian.exe 已安装' (Test-Path -LiteralPath $installedExe)
-Check '辅助进程 CodexGuardian.Broker.exe 已安装' (Test-Path -LiteralPath $brokerExe)
-Check '卸载程序 unins000.exe 已生成' (Test-Path -LiteralPath $uninstExe)
-Check 'WPF 原生库 wpfgfx_cor3.dll 已安装（self-contained 完整性）' `
-    (Test-Path -LiteralPath (Join-Path $AppDir 'wpfgfx_cor3.dll'))
-Check '运行时宿主 hostfxr.dll 已安装' (Test-Path -LiteralPath (Join-Path $AppDir 'hostfxr.dll'))
-Check '中文资源为内嵌默认语言，附带 en 卫星目录' (Test-Path -LiteralPath (Join-Path $AppDir 'en'))
-Check '已废弃的 UserGuide.md 未被安装' (-not (Test-Path -LiteralPath (Join-Path $AppDir 'UserGuide.md')))
-# MIT 要求在所有副本中保留许可声明，安装目录就是一份副本。这两个文件由 Ceasy.iss 的
-# [Files] 从仓库根引用，不在发布产物里，所以只有装完才能验证它们真的落地了。
-Check 'MIT 许可副本 LICENSE.txt 已安装' (Test-Path -LiteralPath (Join-Path $AppDir 'LICENSE.txt'))
-Check '第三方声明 THIRD-PARTY-NOTICES.md 已安装' `
-    (Test-Path -LiteralPath (Join-Path $AppDir 'THIRD-PARTY-NOTICES.md'))
-
-$installedCount = (Get-ChildItem -LiteralPath $AppDir -Recurse -File).Count
-$installedBytes = (Get-ChildItem -LiteralPath $AppDir -Recurse -File | Measure-Object Length -Sum).Sum
-Info ("安装后文件数 {0}，占用 {1:N1} MB" -f $installedCount, ($installedBytes / 1MB))
-
-Check '开始菜单程序组已创建' (Test-Path -LiteralPath $StartMenuDir)
-$StartMenuLink = Join-Path $StartMenuDir 'Ceasy.lnk'
-Check '开始菜单主快捷方式存在' (Test-Path -LiteralPath $StartMenuLink)
-Check '桌面快捷方式存在（/TASKS=desktopicon）' (Test-Path -LiteralPath $DesktopLink)
-
-if (Test-Path -LiteralPath $StartMenuLink) {
-    $linkComment = Get-ShortcutComment -LinkPath $StartMenuLink
-    Info "快捷方式悬停提示：$linkComment"
-    Check '快捷方式带鼠标悬停提示（[Icons] 的 Comment）' (-not [string]::IsNullOrWhiteSpace($linkComment))
-}
-
-$uninstallEntries = @(Get-CeasyUninstallEntries)
-$uninstallEntry = $uninstallEntries | Select-Object -First 1
-Check '控制面板卸载项已注册到 HKCU' ($null -ne $uninstallEntry)
-if ($uninstallEntry) {
-    $dv = [string](Get-Prop $uninstallEntry 'DisplayVersion')
-    $il = [string](Get-Prop $uninstallEntry 'InstallLocation')
-    Info "DisplayName    : $(Get-Prop $uninstallEntry 'DisplayName')"
-    Info "DisplayVersion : $dv"
-    Info "InstallLocation: $il"
-    Check '卸载项版本号为 2.0.0' ($dv -eq '2.0.0')
-    Check '卸载项写在 HKCU（per-user 安装，无需管理员）' `
-        ([string]$uninstallEntry.PSPath -like '*HKEY_CURRENT_USER*')
-    # 这个值是 UsePreviousAppDir 的依据，「升级时跳过目录页」和降级检测都读它。
-    $appPathValue = [string](Get-Prop $uninstallEntry 'Inno Setup: App Path')
-    Info "App Path       : $appPathValue"
-    Check '卸载项记录了安装目录（升级跳过目录页与降级检测都依赖它）' ($appPathValue -eq $AppDir)
-    Check '卸载项带 Publisher' (-not [string]::IsNullOrWhiteSpace([string](Get-Prop $uninstallEntry 'Publisher')))
-    Check '卸载项带 DisplayIcon' (-not [string]::IsNullOrWhiteSpace([string](Get-Prop $uninstallEntry 'DisplayIcon')))
-}
-
-$postRunValue = Get-RunValue
-Info "安装后开机自启项：$postRunValue"
-Check '开机自启项已被刷新到新安装路径' ($postRunValue -like "*$AppDir*")
-
-# ---------------------------------------------------------------------------
-Step '3. 启动安装后的程序'
-
-# 用 --background 启动：这正是开机自启走的那条路径，同时避免抢占用户前台窗口。
-$launched = Start-Process -FilePath $installedExe -ArgumentList '--background' -PassThru
-Start-Sleep -Seconds 12
-$alive = Get-Process -Id $launched.Id -ErrorAction SilentlyContinue
-Check '安装后的程序能启动并持续运行 12 秒（未崩溃、无缺失依赖）' ($null -ne $alive)
-if ($alive) {
-    Info ("进程 PID {0}，工作集 {1:N0} MB" -f $alive.Id, ($alive.WorkingSet64 / 1MB))
-    Check '进程主模块指向安装目录' ($alive.Path -eq $installedExe)
-}
-else {
-    Info '进程已退出，读取事件日志中的 .NET 运行时错误：'
-    Get-EventLog -LogName Application -Newest 40 -ErrorAction SilentlyContinue |
-        Where-Object { $_.Source -like '*NET Runtime*' -or $_.Message -like '*CodexGuardian*' } |
-        Select-Object -First 3 |
-        ForEach-Object { Info ($_.Message -split "`n")[0] }
-}
-
-Stop-Guardian
-
-# ---------------------------------------------------------------------------
-Step '4. 覆盖升级（在已安装状态下再次运行同一安装包）'
-
-$upgradeLog = Join-Path $LogDir 'install-2-upgrade.log'
-$p2 = Start-Process -FilePath $SetupExe -ArgumentList @(
-    '/SILENT', '/SUPPRESSMSGBOXES', '/NORESTART', "/LOG=$upgradeLog"
-) -Wait -PassThru
-Check "覆盖安装退出码为 0（实际 $($p2.ExitCode)）" ($p2.ExitCode -eq 0)
-Check '覆盖后主程序仍存在' (Test-Path -LiteralPath $installedExe)
-
-$upgradeCount = (Get-ChildItem -LiteralPath $AppDir -Recurse -File).Count
-Check "覆盖后文件数未膨胀（$installedCount → $upgradeCount）" ($upgradeCount -eq $installedCount)
-
-$entriesAfterUpgrade = @(Get-CeasyUninstallEntries)
-Check "覆盖后卸载项仍只有 1 条（实际 $($entriesAfterUpgrade.Count) 条，AppId 稳定）" ($entriesAfterUpgrade.Count -eq 1)
-
-# ---------------------------------------------------------------------------
-Step '5. 降级保护（拿旧包覆盖更新的版本必须被拦住）'
-
-# 把卸载项的 DisplayVersion 临时抬到 99.0.0，再静默装同一个包，就等价于「用旧包
-# 覆盖新版」。Ceasy.iss 的 InitializeSetup 应该在静默模式下取默认的 No 并中止。
-# 这一项同时验证了 DowngradeWarning 这条 CustomMessage 在 InitializeSetup 阶段确实
-# 可用——语言初始化如果晚于 InitializeSetup，CustomMessage() 会让安装器直接报错，
-# 而那种崩溃同样是非 0 退出码，所以下面还要查日志排除它。
-$entryForDowngrade = @(Get-CeasyUninstallEntries) | Select-Object -First 1
-if ($null -eq $entryForDowngrade) {
-    Bad '降级保护：找不到卸载项，无法构造降级场景'
-}
-else {
-    $downgradeKeyPath = [string]$entryForDowngrade.PSPath
-    $realVersion = [string](Get-Prop $entryForDowngrade 'DisplayVersion')
-    $downgradeLog = Join-Path $LogDir 'install-3-downgrade-blocked.log'
-    try {
-        Set-ItemProperty -Path $downgradeKeyPath -Name 'DisplayVersion' -Value '99.0.0'
-        Info "已把 DisplayVersion 临时改为 99.0.0（原值 $realVersion）"
-
-        $p4 = Start-Process -FilePath $SetupExe -ArgumentList @(
-            '/SILENT', '/SUPPRESSMSGBOXES', '/NORESTART', "/LOG=$downgradeLog"
-        ) -Wait -PassThru
-        Check "降级安装被拒绝（退出码 $($p4.ExitCode)，0 表示没拦住）" ($p4.ExitCode -ne 0)
-        Check '降级被拒后原有安装仍然完好' (Test-Path -LiteralPath $installedExe)
-
-        # 排除「因为脚本自身报错才非 0」这种假通过。日志里 match 的是英文关键词，
-        # 所以不受 Get-Content 默认按 ANSI 解码中文的影响。
-        $downgradeLogText = ''
-        if (Test-Path -LiteralPath $downgradeLog) {
-            $downgradeLogText = [string](Get-Content -LiteralPath $downgradeLog -Raw -ErrorAction SilentlyContinue)
-        }
-        Check '拦截来自降级检查本身，不是 Pascal 脚本运行时错误' `
-            ($downgradeLogText -notmatch 'Runtime [Ee]rror' -and
-             $downgradeLogText -notmatch 'Unknown custom message' -and
-             $downgradeLogText -notmatch 'Internal error')
-    }
-    finally {
-        Set-ItemProperty -Path $downgradeKeyPath -Name 'DisplayVersion' -Value $realVersion
-        Info "已恢复 DisplayVersion 为 $realVersion"
-    }
-}
-
-# ---------------------------------------------------------------------------
-Step '6. 静默卸载'
-
-# /SUPPRESSMSGBOXES 下"是否删除用户数据"的询问会取默认按钮（No），即保留数据。
-$uninstallLog = Join-Path $LogDir 'uninstall.log'
-$p3 = Start-Process -FilePath $uninstExe -ArgumentList @(
-    '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', "/LOG=$uninstallLog"
-) -Wait -PassThru
-Info "卸载器退出码 $($p3.ExitCode)"
-Check '安装目录已被完全移除' (Wait-Gone -Path $AppDir -TimeoutSeconds 90)
-
-# ---------------------------------------------------------------------------
-Step '7. 校验卸载后的清理与数据保留'
-
-Check '开始菜单程序组已移除' (-not (Test-Path -LiteralPath $StartMenuDir))
-Check '桌面快捷方式已移除' (-not (Test-Path -LiteralPath $DesktopLink))
-
-$entriesAfterUninstall = @(Get-CeasyUninstallEntries)
-Check '控制面板卸载项已移除' ($entriesAfterUninstall.Count -eq 0)
-
-$finalRunValue = Get-RunValue
-Check '开机自启项已清理，未留下指向已删除 exe 的死启动项' ($null -eq $finalRunValue)
-if ($finalRunValue) { Info "残留值：$finalRunValue" }
-
-Check "用户数据目录在静默卸载后保留（$DataDir）" (Test-Path -LiteralPath $DataDir)
-$postDataCount = 0
-if (Test-Path -LiteralPath $DataDir) {
-    $postDataCount = (Get-ChildItem -LiteralPath $DataDir -Recurse -File -ErrorAction SilentlyContinue).Count
-}
-Check "数据目录文件数未减少（$PreDataCount → $postDataCount）" ($postDataCount -ge $PreDataCount)
-if ($CreatedTestData) {
-    Check '标记文件在卸载后仍然存在' (Test-Path -LiteralPath $SentinelFile)
-}
-
-# ---------------------------------------------------------------------------
-Step '8. 恢复验证前状态'
-
-if ($PreRunValue) {
-    Set-ItemProperty -Path $RunKey -Name $RunValueName -Value $PreRunValue
-    Info '已恢复原有的开机自启项'
-}
-else {
-    Remove-ItemProperty -Path $RunKey -Name $RunValueName -ErrorAction SilentlyContinue
-    Info '已移除测试用的临时开机自启项'
-}
-
-if ($CreatedTestData -and (Test-Path -LiteralPath $DataDir)) {
-    Remove-Item -LiteralPath $DataDir -Recurse -Force -ErrorAction SilentlyContinue
-    Info '已移除验证用的临时数据目录'
-}
-
-Step '汇总'
-if ($script:Failures -eq 0) {
-    Write-Host '   全部检查项通过：install / 启动 / upgrade / 降级拦截 / uninstall 五条路径均已实机验证。' -ForegroundColor Green
-    Write-Host '   注意：交互式向导的中文界面（含许可页排版）、品牌图片和「升级时跳过目录页」只能人眼验证，' -ForegroundColor DarkGray
-    Write-Host '   静默安装不显示任何页面，本脚本覆盖不到。' -ForegroundColor DarkGray
-    exit 0
-}
-else {
-    Write-Host "   有 $($script:Failures) 项检查失败，见上面的 [FAIL] 行。" -ForegroundColor Red
-    exit 1
+catch {
+    $failure = $_.Exception.Message
+    try { Stop-OwnedPreview } catch { $failure += "；预览收尾：$($_.Exception.Message)" }
+    Save-Report 'Failed' $failure
+    throw
 }

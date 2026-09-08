@@ -48,6 +48,26 @@ internal static class CodexStructuredInputPackageOfflineTests
         function readImage(item){return item.type==="localImage"?[item.path]:[]}
         """;
 
+    private const string EnvelopeOwnerSource = """
+        async function receiveEnvelope(manager,r){switch(r.method){case"thread-follower-start-turn":{let result=await manager.startTurn(r.params.conversationId,r.params.turnStart);return{method:r.method,result:{result:result}}}}}
+        class EnvelopeOwner{
+          startTurn(c,o,added){return this.executeTurnStart(c,o,"direct",void 0,added)}
+          executeTurnStart(c,o,origin="nested",unknown,added){this.assertActive();let id=o.request.clientUserMessageId??this.history.createSearchIslandId();return coordinate({manager:this,conversationId:c,operation:o,clientUserMessageId:id,capabilities:capabilities({conversationId:c,clientUserMessageId:id,runtime:this.runtime}),origin:origin})}
+          async handleThreadFollowerRequest(r){return receiveEnvelope(this,r)}
+        }
+        function coordinate(options){let{operation:o,conversationId:c}=options;if(o.request.input.length!==0||o.request.effort!==void 0)return submit(options);return emptyTurn(options)}
+        async function submit({manager:m,conversationId:c,operation:o,clientUserMessageId:id,capabilities:caps,origin:origin},done){let request=o.request,context=o.context??{};if(request.threadId!==c)throw Error("target");let preparation=prepare(m,c,o,id,origin,caps,onTitle,readValue),forwarded=await bridge({sendRequest:peer=>m.sendThreadFollowerRequest(peer,"thread-follower-start-turn",{conversationId:c,turnStart:{request:preparation.request,context:{}}})});if(m.getStreamRole(c)?.role!=="owner")throw Error("owner");let prepared=await preparation.prepare(state);let receipt,adapted=compat(prepared.request,m.requestClient.getAppServerVersion());receipt=await m.sendRequest("turn/start",adapted,{clientUserMessageId:id});return receipt}
+        function prepare(m,c,o,id,origin,caps,onTitle,readValue){let operation=o,request=operation.request;return{request:{...request,clientUserMessageId:id,additionalContext:extra},prepare:async state=>{let prepared=await build(m,c,operation,id,extra,state,caps);return caps.prepareRequest==null?prepared:{...prepared,request:await caps.prepareRequest(prepared.request)}}}}
+        function capabilities({runtime:runtime,conversationId:c}){return{prepareRequest:runtime.prepareTurnRequest?.bind(runtime,c)}}
+        const runtime={prepareTurnRequest:runtimeContext==null?void 0:async(c,request)=>{let program=getProgram(c);return{...request,cyberAccessProgram:program}}};
+        async function build(m,c,o,id,extra,state,caps){let{useAppServerPermissionDefault:permission,...rest}=await buildRequest(m,c,o,id,extra,state,{});return{...rest,params:Object.assign(rest.params,{useAppServerPermissionDefault:permission})}}
+        async function buildRequest(m,c,o,id,extra,state,caps){let request=o.request,wire={threadId:c,clientUserMessageId:id,input:request.input};return{request:wire,params:{}}}
+        function compat(request,version){return supports(version,"turnTrigger")?request:{...request,turnTrigger:void 0}}
+        const textItem={type:"text",text:"hello"};
+        function createImage(path){return{type:"localImage",path:path}}
+        function readImage(item){return item.type==="localImage"?[item.path]:[]}
+        """;
+
     internal static async Task RunAsync(Action<bool, string> assert)
     {
         ArgumentNullException.ThrowIfNull(assert);
@@ -62,6 +82,10 @@ internal static class CodexStructuredInputPackageOfflineTests
         RunCase(
             "structured ASAR semantics prove the direct follower receiver fail closed",
             TestDirectFollowerReceiverSemantics,
+            assert);
+        RunCase(
+            "structured ASAR semantics bind the request-context owner pipeline without relaxing traversal bounds",
+            TestEnvelopeOwnerSemantics,
             assert);
         RunCase(
             "structured ASAR semantics expose localImage only with coupled path handling",
@@ -170,6 +194,39 @@ internal static class CodexStructuredInputPackageOfflineTests
             first.PackageJson.Sha256 != second.PackageJson.Sha256,
             "the package version fixture did not change package.json identity");
         Ensure(first.OwnerEntryPath == OwnerPath, "the reachable owner module was not selected");
+    }
+
+    private static void TestEnvelopeOwnerSemantics()
+    {
+        var accepted = InspectArchive(BuildStructuredArchive(ownerSource: EnvelopeOwnerSource));
+        Ensure(accepted.StartTurnAssertsOwner && accepted.PreservesInput && accepted.PreservesStableClientUserMessageId &&
+            accepted.NativeInputKinds.SetEquals(new[] { "text", "localImage" }) && !accepted.NewConversation.SupportsAutomaticNewConversation,
+            "the envelope pipeline lost its required proof or authorized conversation creation");
+        var mutations = new (string From, string To)[]
+        {
+            ("r.params.turnStart", "r.params.other"),
+            ("this.executeTurnStart(c,o,", "this.executeTurnStart(other,o,"),
+            ("o.request.clientUserMessageId??", "createId()??"),
+            ("conversationId:c,operation:o", "conversationId:c,operation:other"),
+            ("input.length!==0||", "input.length===0||"),
+            ("if(request.threadId!==c)throw", "if(request.threadId!==other)throw"),
+            ("if(m.getStreamRole(c)?.role!==\"owner\")throw Error(\"owner\");", ""),
+            ("request:preparation.request", "request:other.request"),
+            ("prepare(m,c,o,id,", "prepare(m,c,o,createId(),"),
+            ("build(m,c,operation,id,", "build(m,c,other,id,"),
+            ("input:request.input", "input:[]"),
+            ("clientUserMessageId:id,input", "clientUserMessageId:other,input"),
+            ("{...request,cyberAccessProgram:program}", "{...request,input:[]}"),
+            ("turnTrigger:void 0", "input:[]"),
+            ("return receipt", "return other")
+        };
+        foreach (var mutation in mutations)
+        {
+            var changed = EnvelopeOwnerSource.Replace(mutation.From, mutation.To, StringComparison.Ordinal);
+            Ensure(changed != EnvelopeOwnerSource, "an envelope mutation did not change its fixture");
+            ExpectAsarCode(() => InspectArchive(BuildStructuredArchive(ownerSource: changed)),
+                "structured-owner-semantics-missing", compatibilityFailure: true);
+        }
     }
 
     private static void TestMissingOwnerRelations()

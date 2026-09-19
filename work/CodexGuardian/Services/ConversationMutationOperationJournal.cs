@@ -419,6 +419,7 @@ internal sealed class ConversationMutationOperationJournal
                 .ConfigureAwait(false);
             if (json.RootElement.ValueKind != JsonValueKind.Object ||
                 !json.RootElement.TryGetProperty("schemaVersion", out var schemaElement) ||
+                schemaElement.ValueKind != JsonValueKind.Number ||
                 !schemaElement.TryGetInt32(out var schemaVersion))
             {
                 return new(ConversationMutationJournalReadStatus.Corrupted, null);

@@ -457,6 +457,7 @@ internal sealed class WorkflowRuleStore
                 .ConfigureAwait(false);
             if (json.RootElement.ValueKind != JsonValueKind.Object ||
                 !json.RootElement.TryGetProperty("schemaVersion", out var schemaElement) ||
+                schemaElement.ValueKind != JsonValueKind.Number ||
                 !schemaElement.TryGetInt32(out var schemaVersion))
             {
                 return new RuleReadResult(WorkflowRuleStoreReadStatus.Corrupted, null);

@@ -41,11 +41,11 @@ $ExpectedGlobalJsonSha256 = '05CB6A541BB9EAAD38D13300C6557AA8BECD0A04B0D570DB418
 $ExpectedNuGetConfigSha256 = '1B7D09F1EFC7B80C109803EB4CF3CA5EAFA6D392D87061F89DD256FECD520362'
 $ExpectedControlLockFileSha256 = 'A94F3A16B20FF4CB3B0AE2EE7BBE6301892DE225F921C2309B40FD1EDDDDD6D7'
 $ExpectedProjectFileHashes = [ordered]@{
-    'CodexGuardian\CodexGuardian.csproj' = '8AAC813B927C2A8C61F9DFFB02853762A983BF42BD00CC2619C22CCA1A898842'
+    'CodexGuardian\CodexGuardian.csproj' = 'C8C2A45A1034628DE009A43264455D2AB413C4813A7C0A6C30E1F91D14BCCB79'
     'CodexGuardian.Tests\CodexGuardian.Tests.csproj' = '88980B1FBFB626E55CA011F528692D152334B544CFFD4AFA07AA55C903CFCD3D'
     'CodexGuardian.Control\CodexGuardian.Control.csproj' = '0CC5F00AB2F48C9BF8F3119C1C09486D6A37A0D0B85A6CCBF944358D02CBDE59'
     'CodexGuardian.Trust\CodexGuardian.Trust.csproj' = 'CA5D75EE5364BAB04B177E8E47C0B9429AE809D5B481A752506372A5A0C77E58'
-    'CodexGuardian.Broker\CodexGuardian.Broker.csproj' = '9B7C02004B0B165B565D89751C2BCBB317FB10E8CA59D8CDBEC64C34D935FF99'
+    'CodexGuardian.Broker\CodexGuardian.Broker.csproj' = '9509BE5DA9BD60860818F5EF90800224A4F9F482B517C45489A8A7AB85E166BA'
 }
 $ExpectedDotnetExecutablePath = 'C:\Program Files\dotnet\dotnet.exe'
 $ExpectedDotnetExecutableSha256 = '76E6472063F53379B86FE8370203AB6C46C75D27F405B722845F0E495D8F5FD0'
@@ -134,8 +134,8 @@ $SourceBuildResiduePaths = @($SourceProjectRoots | ForEach-Object {
     Join-Path $_ 'bin'
     Join-Path $_ 'obj'
 })
-$ExpectedProjectVersion = '2.1.0'
-$ExpectedFileVersion = [Version]'2.1.0.0'
+$ExpectedProjectVersion = '2.1.1'
+$ExpectedFileVersion = [Version]'2.1.1.0'
 $ExcludedDirectoryPatterns = @(
     'bin',
     'obj',

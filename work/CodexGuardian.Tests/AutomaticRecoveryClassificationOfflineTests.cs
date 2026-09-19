@@ -21,12 +21,16 @@ internal static class AutomaticRecoveryClassificationOfflineTests
             TestExplicitTransientAllowlistAsync,
             assert);
         await RunCaseAsync(
-            "only a no-work HTTP 429 is eligible for proven-unsent original replay",
+            "only an explicit no-work provider rejection is eligible for proven-unsent original replay",
             TestProvenUnsentOriginalReplayAsync,
             assert);
         await RunCaseAsync(
             "provider HTTP 429 is read when it is a sibling of codexErrorInfo",
             TestSiblingHttpStatusParsingAsync,
+            assert);
+        await RunCaseAsync(
+            "paginated Codex turn summaries hydrate full work evidence for rate-limit continue",
+            TestPaginatedTurnEvidenceCompatibilityAsync,
             assert);
         await RunCaseAsync(
             "bounded rollout evidence restores only one exact real user text",
@@ -273,14 +277,21 @@ internal static class AutomaticRecoveryClassificationOfflineTests
         {
             ErrorMessage = "An internal server error occurred."
         };
+        var curlyHighDemand = normalizedHighDemand with
+        {
+            ErrorMessage = "  We’re   currently experiencing high demand,\nwhich may cause temporary errors.  "
+        };
         Ensure(
             RecoveryClassifier.IsProvenUnsentOriginalReplay(
                 normalizedHighDemand,
                 classifier.Classify(normalizedHighDemand)) &&
+            RecoveryClassifier.IsProvenUnsentOriginalReplay(
+                curlyHighDemand,
+                classifier.Classify(curlyHighDemand)) &&
             !RecoveryClassifier.IsProvenUnsentOriginalReplay(
                 genericInternalError,
                 classifier.Classify(genericInternalError)),
-            "the exact normalized high-demand rejection was not distinguished from a generic internal error");
+            "the normalized high-demand rejection was not distinguished from a generic internal error");
         return Task.CompletedTask;
     }
 
@@ -314,6 +325,60 @@ internal static class AutomaticRecoveryClassificationOfflineTests
             decision.Action == RecoveryActionKind.ResendOriginal &&
             RecoveryClassifier.IsProvenUnsentOriginalReplay(turn, decision),
             "a no-output sibling-field HTTP 429 did not enter proven-unsent original replay");
+        return Task.CompletedTask;
+    }
+
+    private static Task TestPaginatedTurnEvidenceCompatibilityAsync()
+    {
+        using var summaryDocument = JsonDocument.Parse("""
+            {
+              "id": "11111111-1111-4111-8111-111111111112",
+              "status": "failed",
+              "error": {
+                "message": "rate limited",
+                "codexErrorInfo": "rateLimitExceeded",
+                "httpStatusCode": 429
+              },
+              "itemsView": "summary",
+              "items": [
+                {"type": "userMessage", "content": [{"type": "text", "text": "do work"}]}
+              ]
+            }
+            """);
+        var summary = AppServerClient.ParseTurn(summaryDocument.RootElement);
+        Ensure(
+            !summary.HasCompleteItemEvidence &&
+            !summary.HasUserMessage,
+            "a paginated summary was incorrectly treated as complete item evidence");
+
+        using var fullDocument = JsonDocument.Parse("""
+            {
+              "id": "11111111-1111-4111-8111-111111111113",
+              "status": "failed",
+              "error": {
+                "message": "rate limited",
+                "codexErrorInfo": "rateLimitExceeded",
+                "httpStatusCode": 429
+              },
+              "itemsView": "full",
+              "items": [
+                {"type": "userMessage", "content": [{"type": "text", "text": "do work"}]},
+                {"type": "functionCallOutput", "id": "function-output-1"}
+              ]
+            }
+            """);
+        var full = AppServerClient.ParseTurn(fullDocument.RootElement) with
+        {
+            HasConfirmedLocalTerminal = true
+        };
+        var decision = new RecoveryClassifier().Classify(full);
+        Ensure(
+            full.ErrorCode == "rateLimitExceeded" &&
+            full.HttpStatusCode == 429 &&
+            full.HasToolActivity &&
+            !full.HasAmbiguousActivity &&
+            decision.Action == RecoveryActionKind.SendContinue,
+            "a full paginated 429 turn with function output did not select SendContinue");
         return Task.CompletedTask;
     }
 

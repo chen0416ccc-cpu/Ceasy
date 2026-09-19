@@ -699,7 +699,8 @@ public sealed class AppServerClient : IAsyncDisposable
                 errorCode = ReadErrorCode(info);
                 // Current Desktop payloads put the provider's status beside the
                 // codexErrorInfo discriminator (for example, { codexErrorInfo:
-                // "responseTooManyFailedAttempts", httpStatusCode: 429 }).
+                // "rateLimitExceeded", httpStatusCode: 429 }). Older builds used
+                // "responseTooManyFailedAttempts" for the same rate-limit family.
                 // Older payloads can instead nest httpStatusCode in an object;
                 // accept both shapes without weakening the failure allowlist.
                 httpStatusCode = ReadHttpStatusCode(error) ?? ReadHttpStatusCode(info);
@@ -726,7 +727,10 @@ public sealed class AppServerClient : IAsyncDisposable
         var hasToolActivity = false;
         var hasAmbiguousActivity = false;
         var hasCompleteItemEvidence =
-            turn.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array;
+            turn.TryGetProperty("items", out var items) &&
+            items.ValueKind == JsonValueKind.Array &&
+            (!turn.TryGetProperty("itemsView", out var itemsView) ||
+             string.Equals(itemsView.GetString(), FullItemsView, StringComparison.OrdinalIgnoreCase));
 
         if (hasCompleteItemEvidence)
         {
@@ -809,6 +813,7 @@ public sealed class AppServerClient : IAsyncDisposable
 
                     case "commandExecution":
                     case "fileChange":
+                    case "functionCallOutput":
                     case "mcpToolCall":
                     case "dynamicToolCall":
                     case "collabAgentToolCall":
@@ -990,7 +995,9 @@ public sealed class AppServerClient : IAsyncDisposable
                     ? JsonDocument.Parse(payload.AsMemory(0, checked((int)stream.Length)))
                     : JsonDocument.Parse(stream.ToArray());
                 var root = document.RootElement;
-                if (!root.TryGetProperty("id", out var idElement) || !idElement.TryGetInt64(out var id))
+                if (!root.TryGetProperty("id", out var idElement) ||
+                    idElement.ValueKind != JsonValueKind.Number ||
+                    !idElement.TryGetInt64(out var id))
                 {
                     if (ParseNotification(root) is { } notification)
                     {
@@ -1564,6 +1571,7 @@ public sealed class AppServerClient : IAsyncDisposable
         }
 
         if (info.TryGetProperty("httpStatusCode", out var directStatus) &&
+            directStatus.ValueKind == JsonValueKind.Number &&
             directStatus.TryGetInt32(out var directValue))
         {
             return directValue;
@@ -1573,6 +1581,7 @@ public sealed class AppServerClient : IAsyncDisposable
         {
             if (outer.Value.ValueKind == JsonValueKind.Object &&
                 outer.Value.TryGetProperty("httpStatusCode", out var status) &&
+                status.ValueKind == JsonValueKind.Number &&
                 status.TryGetInt32(out var value))
             {
                 return value;

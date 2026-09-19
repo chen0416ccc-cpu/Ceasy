@@ -479,6 +479,7 @@
   <data name="Tasks.NoSessions" xml:space="preserve"><value>暂时没有会话</value></data>
   <data name="Tasks.NoSessionsHint" xml:space="preserve"><value>Ceasy 正在等待第一次只读同步。</value></data>
   <data name="Tasks.ClearSearch" xml:space="preserve"><value>清除搜索</value></data>
+  <data name="Tasks.RefreshConversations" xml:space="preserve"><value>刷新会话</value></data>
   <data name="Tasks.DragHandle" xml:space="preserve"><value>拖拽调整会话顺序</value></data>
   <data name="Tasks.ToggleSectionHint" xml:space="preserve"><value>展开或收起此部分</value></data>
   <data name="Tasks.Pin" xml:space="preserve"><value>置顶会话</value></data>

@@ -1727,9 +1727,11 @@ public sealed class DesktopIpcClient : IAsyncDisposable, IDesktopThreadOwnerProb
         if (string.Equals(type, "broadcast", StringComparison.Ordinal) ||
             string.Equals(type, "notification", StringComparison.Ordinal))
         {
+            _log.Trace($"Received Desktop message: type={type}");
             var activity = ParseActivityEvent(message);
             if (activity is not null)
             {
+                _log.Trace($"Parsed activity: method={activity.Method}, conversationId={activity.ConversationId}");
                 if (Guid.TryParse(activity.ConversationId, out _) &&
                     !string.IsNullOrWhiteSpace(activity.HostId) &&
                     activity.Method is NativeThreadFollowingMethod or NativeThreadStateMethod or
@@ -1745,6 +1747,10 @@ public sealed class DesktopIpcClient : IAsyncDisposable, IDesktopThreadOwnerProb
                     activity,
                     exception => _log.Trace(
                         "A Desktop activity subscriber failed (" + exception.GetType().Name + ")."));
+            }
+            else
+            {
+                _log.Warning("Failed to parse Desktop activity event");
             }
         }
     }
@@ -1802,12 +1808,14 @@ public sealed class DesktopIpcClient : IAsyncDisposable, IDesktopThreadOwnerProb
         {
             changeType = ReadString(change, "type");
             if (change.TryGetProperty("baseRevision", out var baseRevisionElement) &&
+                baseRevisionElement.ValueKind == JsonValueKind.Number &&
                 baseRevisionElement.TryGetInt64(out var parsedBaseRevision))
             {
                 baseRevision = parsedBaseRevision;
             }
 
             if (change.TryGetProperty("revision", out var revisionElement) &&
+                revisionElement.ValueKind == JsonValueKind.Number &&
                 revisionElement.TryGetInt64(out var parsedRevision))
             {
                 revision = parsedRevision;
@@ -1837,6 +1845,7 @@ public sealed class DesktopIpcClient : IAsyncDisposable, IDesktopThreadOwnerProb
         }
 
         var version = envelope.TryGetProperty("version", out var versionElement) &&
+                      versionElement.ValueKind == JsonValueKind.Number &&
                       versionElement.TryGetInt32(out var parsedVersion)
             ? parsedVersion
             : 0;
@@ -2063,7 +2072,7 @@ public sealed class DesktopIpcClient : IAsyncDisposable, IDesktopThreadOwnerProb
             "guardian-state-changed" or "guardian-owner-unavailable" or
             "guardian-original-input-unavailable" or "guardian-invalid-request" or
             "guardian-message-id-conflict" or
-            "native-edit-rejected" => DesktopIpcDeliveryStage.Rejected,
+            "native-edit-rejected" or "thread-follower-edit-last-user-turn-timeout" => DesktopIpcDeliveryStage.Rejected,
         _ when IsStaleEditRefusal(code) => DesktopIpcDeliveryStage.NotDispatched,
         _ => DesktopIpcDeliveryStage.DispatchedUnknown
     };

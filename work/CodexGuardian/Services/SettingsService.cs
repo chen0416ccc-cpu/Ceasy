@@ -1050,12 +1050,22 @@ public sealed class SettingsService
                     nameof(SettingsEnvelopeDocument.SchemaVersion),
                     nameof(SettingsEnvelopeDocument.Generation),
                     nameof(SettingsEnvelopeDocument.Settings),
-                    nameof(SettingsEnvelopeDocument.Checksum)) ||
-                !root.GetProperty(nameof(SettingsEnvelopeDocument.SchemaVersion))
-                    .TryGetInt32(out var schemaVersion) ||
-                schemaVersion != CurrentEnvelopeSchemaVersion ||
-                !root.GetProperty(nameof(SettingsEnvelopeDocument.Generation))
-                    .TryGetInt64(out var generation) ||
+                    nameof(SettingsEnvelopeDocument.Checksum)))
+            {
+                return new PersistedEnvelopeRead(PersistedReadStatus.Invalid, null);
+            }
+
+            var schemaVersionElement = root.GetProperty(nameof(SettingsEnvelopeDocument.SchemaVersion));
+            if (schemaVersionElement.ValueKind != JsonValueKind.Number ||
+                !schemaVersionElement.TryGetInt32(out var schemaVersion) ||
+                schemaVersion != CurrentEnvelopeSchemaVersion)
+            {
+                return new PersistedEnvelopeRead(PersistedReadStatus.Invalid, null);
+            }
+
+            var generationElement = root.GetProperty(nameof(SettingsEnvelopeDocument.Generation));
+            if (generationElement.ValueKind != JsonValueKind.Number ||
+                !generationElement.TryGetInt64(out var generation) ||
                 generation <= 0)
             {
                 return new PersistedEnvelopeRead(PersistedReadStatus.Invalid, null);
@@ -1353,6 +1363,7 @@ public sealed class SettingsService
 
     private static bool ShouldMigrateLegacy(JsonElement settings) =>
         !settings.TryGetProperty(nameof(AppSettings.ConfigurationVersion), out var version) ||
+        version.ValueKind != JsonValueKind.Number ||
         !version.TryGetInt32(out var configurationVersion) ||
         configurationVersion < AppSettings.CurrentConfigurationVersion;
 

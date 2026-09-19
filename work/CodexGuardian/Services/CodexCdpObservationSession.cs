@@ -510,6 +510,7 @@ internal sealed class CodexCdpObservationSession : IAsyncDisposable
         if (!TryGetBoundedIdentifier(message, "sessionId", MaximumSessionIdCharacters, out var sessionId) ||
             !TryGetString(parameters, "payload", out var payload) ||
             !parameters.TryGetProperty("executionContextId", out var contextElement) ||
+            contextElement.ValueKind != JsonValueKind.Number ||
             !contextElement.TryGetInt32(out var executionContextId) ||
             !_registry.ApplyBindingPayload(
                 sessionId,

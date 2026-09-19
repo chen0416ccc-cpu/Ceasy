@@ -94,11 +94,11 @@ internal sealed record DesktopThreadOwnerStateSnapshot(
             return ParseStatus.Incompatible;
         }
 
-        if (string.IsNullOrWhiteSpace(eventArgs.RuntimeStatus))
-        {
-            incompatibleReason = "runtimeStatus";
-            return ParseStatus.Incompatible;
-        }
+        // Desktop may send null or empty runtimeStatus during certain lifecycle transitions.
+        // Use a sentinel value instead of rejecting the snapshot.
+        var runtimeStatus = string.IsNullOrWhiteSpace(eventArgs.RuntimeStatus)
+            ? "unknown"
+            : eventArgs.RuntimeStatus;
 
         if (eventArgs.Parameters is not { } parameters ||
             !parameters.TryGetProperty("change", out var change) ||
@@ -148,7 +148,7 @@ internal sealed record DesktopThreadOwnerStateSnapshot(
             eventArgs.HostId,
             eventArgs.SourceClientId,
             eventArgs.Revision.Value,
-            eventArgs.RuntimeStatus,
+            runtimeStatus,
             latestTurn.TurnId,
             latestTurn.Status);
         return ParseStatus.Available;

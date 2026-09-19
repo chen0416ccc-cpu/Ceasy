@@ -4691,6 +4691,14 @@ Assert(
     LocalConversationEventWatcher.TryParseSubAgentSource(rootSessionMeta, out var parsedRoot) &&
     !parsedRoot,
     "new rollout metadata identifies subagents without rereading historical files");
+var rolloutThreadId = "11111111-1111-4111-8111-111111111114";
+var rolloutSessionId = "22222222-2222-4222-8222-222222222224";
+Assert(
+    LocalConversationEventWatcher.TryGetThreadId(
+        $"rollout-2026-09-18T17-25-07-{rolloutThreadId}_{rolloutSessionId}.jsonl",
+        out var canonicalRolloutThreadId) &&
+    canonicalRolloutThreadId == rolloutThreadId,
+    "new rollout names use the first UUID as the canonical thread id instead of the session id");
 Assert(
     !GuardianEngine.ShouldScheduleLocalTerminal(false, eventIsSubAgent: true, isKnownInteractiveThread: false) &&
     GuardianEngine.ShouldScheduleLocalTerminal(false, eventIsSubAgent: false, isKnownInteractiveThread: false) &&

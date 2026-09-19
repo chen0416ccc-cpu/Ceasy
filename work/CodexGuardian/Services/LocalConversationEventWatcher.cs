@@ -416,11 +416,29 @@ public sealed class LocalConversationEventWatcher : IAsyncDisposable
         string.Equals(eventType, "turn_aborted", StringComparison.Ordinal) ||
         string.Equals(eventType, TaskStartedType, StringComparison.Ordinal);
 
-    private static bool TryGetThreadId(string path, out string threadId)
+    internal static bool TryGetThreadId(string path, out string threadId)
     {
         var fileName = Path.GetFileNameWithoutExtension(path);
-        threadId = fileName.Length >= 36 ? fileName[^36..] : string.Empty;
-        return Guid.TryParse(threadId, out _);
+        const int guidLength = 36;
+        for (var offset = 0; offset <= fileName.Length - guidLength; offset++)
+        {
+            var candidate = fileName.Substring(offset, guidLength);
+            if (!Guid.TryParseExact(candidate, "D", out _))
+            {
+                continue;
+            }
+
+            // Rollout names are `rollout-<timestamp>-<threadId>.jsonl` and, for an
+            // in-place retry, `rollout-<timestamp>-<threadId>_<sessionId>.jsonl`.
+            // The first UUID is the stable Codex thread id; the optional trailing
+            // UUID identifies only that rollout file and must never drive a task
+            // refresh or recovery lookup.
+            threadId = candidate;
+            return true;
+        }
+
+        threadId = string.Empty;
+        return false;
     }
 
     internal static bool TryParseSubAgentSource(string line, out bool isSubAgent)

@@ -479,6 +479,7 @@
   <data name="Tasks.NoSessions" xml:space="preserve"><value>No conversations yet</value></data>
   <data name="Tasks.NoSessionsHint" xml:space="preserve"><value>Ceasy is waiting for the first read-only sync.</value></data>
   <data name="Tasks.ClearSearch" xml:space="preserve"><value>Clear search</value></data>
+  <data name="Tasks.RefreshConversations" xml:space="preserve"><value>Refresh conversations</value></data>
   <data name="Tasks.DragHandle" xml:space="preserve"><value>Drag to reorder conversation</value></data>
   <data name="Tasks.ToggleSectionHint" xml:space="preserve"><value>Expand or collapse this section</value></data>
   <data name="Tasks.Pin" xml:space="preserve"><value>Pin conversation</value></data>

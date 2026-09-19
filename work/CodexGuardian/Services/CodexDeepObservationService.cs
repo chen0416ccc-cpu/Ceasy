@@ -1209,6 +1209,7 @@ internal sealed class CodexDeepObservationStateStore
         value = 0;
         return root.ValueKind == JsonValueKind.Object &&
                root.TryGetProperty(propertyName, out var property) &&
+               property.ValueKind == JsonValueKind.Number &&
                property.TryGetInt32(out value);
     }
 
@@ -1217,6 +1218,7 @@ internal sealed class CodexDeepObservationStateStore
         value = 0;
         return root.ValueKind == JsonValueKind.Object &&
                root.TryGetProperty(propertyName, out var property) &&
+               property.ValueKind == JsonValueKind.Number &&
                property.TryGetInt64(out value);
     }
 

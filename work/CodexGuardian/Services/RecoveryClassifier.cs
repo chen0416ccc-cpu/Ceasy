@@ -8,9 +8,10 @@ public sealed class RecoveryClassifier
     internal const string IncompleteTerminalStatus = "completedWithoutFinalOutput";
     internal const string UnverifiedAbortStatus = "abortReasonUnverified";
     private const string ExplicitRateLimitErrorCode = "responseTooManyFailedAttempts";
+    private const string CurrentRateLimitErrorCode = "rateLimitExceeded";
     private const string NormalizedHighDemandErrorCode = "internal_server_error";
-    private const string NormalizedHighDemandErrorMessage =
-        "We're currently experiencing high demand, which may cause temporary errors.";
+    private const string HighDemandErrorMessageFragment = "currently experiencing high demand";
+    private const string TemporaryErrorMessageFragment = "temporary errors";
 
     private static readonly HashSet<string> RecoverableErrorCodes = new(
         StringComparer.OrdinalIgnoreCase)
@@ -20,6 +21,7 @@ public sealed class RecoveryClassifier
         "responseStreamConnectionFailed",
         "responseStreamDisconnected",
         "responseTooManyFailedAttempts",
+        "rateLimitExceeded",
         "serverOverloaded"
     };
 
@@ -370,9 +372,43 @@ public sealed class RecoveryClassifier
                !turn.HasAmbiguousActivity;
     }
 
-    internal static bool IsExplicitUnsentProviderRejection(TurnSnapshot turn) =>
-        turn.HttpStatusCode == 429 ||
-        string.Equals(turn.ErrorCode?.Trim(), ExplicitRateLimitErrorCode, StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(turn.ErrorCode?.Trim(), NormalizedHighDemandErrorCode, StringComparison.OrdinalIgnoreCase) &&
-        string.Equals(turn.ErrorMessage?.Trim(), NormalizedHighDemandErrorMessage, StringComparison.Ordinal);
+    internal static bool IsExplicitUnsentProviderRejection(TurnSnapshot turn)
+    {
+        if (turn.HttpStatusCode == 429 ||
+            string.Equals(turn.ErrorCode?.Trim(), ExplicitRateLimitErrorCode, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(turn.ErrorCode?.Trim(), CurrentRateLimitErrorCode, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (!string.Equals(
+                turn.ErrorCode?.Trim(),
+                NormalizedHighDemandErrorCode,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        // Recent Codex Desktop builds emit the same provider rejection with curly apostrophes,
+        // line wrapping, or repeated whitespace. Match its stable semantic fragments after
+        // normalizing those presentation differences instead of requiring one ASCII sentence.
+        var message = NormalizeProviderErrorMessage(turn.ErrorMessage);
+        return message.Contains(HighDemandErrorMessageFragment, StringComparison.OrdinalIgnoreCase) &&
+               message.Contains(TemporaryErrorMessageFragment, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string NormalizeProviderErrorMessage(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        var normalized = value.Trim()
+            .Replace('\u2018', '\'')
+            .Replace('\u2019', '\'')
+            .Replace('\u201B', '\'')
+            .Replace('\uFF07', '\'');
+        return string.Join(' ', normalized.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+    }
 }

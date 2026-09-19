@@ -395,9 +395,15 @@ public sealed class GuardianEngine : IAsyncDisposable
             var relevantIds = relevantThreads
                 .Select(thread => thread.Id)
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            // Subscribe to newly discovered threads
+            var newThreadIds = new List<string>();
             foreach (var threadId in relevantIds)
             {
-                _knownInteractiveThreadIds[threadId] = 0;
+                if (_knownInteractiveThreadIds.TryAdd(threadId, 0))
+                {
+                    newThreadIds.Add(threadId);
+                }
             }
 
             foreach (var threadId in _knownInteractiveThreadIds.Keys)
@@ -406,6 +412,42 @@ public sealed class GuardianEngine : IAsyncDisposable
                 {
                     _knownInteractiveThreadIds.TryRemove(threadId, out _);
                 }
+            }
+
+            // Subscribe to new threads if Desktop is connected (async, non-blocking)
+            _log.Info($"Thread subscription check: Desktop connected={_desktopIpc.IsConnected}, " +
+                     $"new threads={newThreadIds.Count}, known threads={_knownInteractiveThreadIds.Count}, " +
+                     $"relevant threads={relevantIds.Count}");
+
+            if (_desktopIpc.IsConnected && newThreadIds.Count > 0)
+            {
+                _log.Info($"Starting background subscription for {newThreadIds.Count} new threads");
+                // Start subscription in background without blocking the scan
+                _ = Task.Run(async () =>
+                {
+                    foreach (var threadId in newThreadIds)
+                    {
+                        try
+                        {
+                            var result = await _desktopIpc.AcquireThreadOwnerStateGuardAsync(threadId, CancellationToken.None)
+                                .ConfigureAwait(false);
+                            if (result.Guard is not null)
+                            {
+                                _log.Trace($"Subscribed to thread {threadId}");
+                                await result.Guard.DisposeAsync().ConfigureAwait(false);
+                            }
+                        }
+                        catch
+                        {
+                            // Ignore individual subscription failures
+                        }
+                    }
+                    _log.Info($"Finished background subscription for {newThreadIds.Count} threads");
+                });
+            }
+            else if (!_desktopIpc.IsConnected && newThreadIds.Count > 0)
+            {
+                _log.Warning($"Cannot subscribe to {newThreadIds.Count} new threads: Desktop IPC not connected");
             }
 
             PruneTurnCache(relevantThreads);
@@ -520,15 +562,7 @@ public sealed class GuardianEngine : IAsyncDisposable
             foreach (var state in ordered)
             {
                 _stateCache[state.Thread.Id] = state;
-                // A normal reply anywhere is the sentinel's trigger: on a contended endpoint it proves the
-                // way in is open right now. Recorded regardless of whether the sentinel is currently on,
-                // so switching it on does not have to wait for the next reply to become useful. Note this
-                // no longer gates on `state.IsEnabled` — that is the automatic-recovery hold, and a
-                // conversation with recovery switched off still answers normally.
-                if (KeepAliveCoordinator.IsSettled(state) && !state.Thread.IsArchived)
-                {
-                    _keepAlive.NoteHealthyConversation(state.Thread.Id, DateTimeOffset.UtcNow);
-                }
+                NoteHealthyKeepAliveState(state);
             }
 
             foreach (var threadId in _stateCache.Keys)
@@ -1405,6 +1439,10 @@ public sealed class GuardianEngine : IAsyncDisposable
         if (connected)
         {
             _appServerConnectionFailureCount = 0;
+            // A connection can be established after the initial monitor pass. Reconcile the
+            // complete task directory now so a missed thread/status notification cannot leave
+            // a task in Unknown until the next periodic scan.
+            RequestFullReconciliation("app-server-connected");
             return;
         }
 
@@ -1439,6 +1477,9 @@ public sealed class GuardianEngine : IAsyncDisposable
         if (connected)
         {
             _desktopConnectionFailureCount = 0;
+            // Desktop may have started before Ceasy and its owner-channel state is not replayed
+            // as a notification. Re-read every task when the channel becomes usable.
+            RequestFullReconciliation("desktop-connected");
             WakeDesktopWaiters();
             return;
         }
@@ -1463,6 +1504,7 @@ public sealed class GuardianEngine : IAsyncDisposable
         }
 
         _log.Info("The Codex Desktop native owner channel is ready; pending retries resume now.");
+        RequestFullReconciliation("native-channel-available");
         WakeDesktopWaiters();
     }
 
@@ -2338,6 +2380,7 @@ public sealed class GuardianEngine : IAsyncDisposable
                 }
 
                 _stateCache[thread.Id] = state;
+                NoteHealthyKeepAliveState(state);
             }
 
             LastScanAt = DateTimeOffset.Now;
@@ -3196,6 +3239,30 @@ public sealed class GuardianEngine : IAsyncDisposable
         return TaskHealth.Processing;
     }
 
+    /// <summary>
+    /// Identifies a settled, live conversation whose normal reply can arm the keep-alive sentinel.
+    /// </summary>
+    /// <remarks>
+    /// Full reconciliation and event-driven targeted refresh both feed this signal. Keeping the predicate
+    /// here prevents the faster targeted path from leaving the sentinel unarmed after a healthy reply.
+    /// </remarks>
+    internal static bool IsHealthyKeepAliveSignal(GuardianTaskState state) =>
+        !state.Thread.IsArchived &&
+        !state.IsRunningNow &&
+        KeepAliveCoordinator.IsSettled(state);
+
+    private void NoteHealthyKeepAliveState(GuardianTaskState state)
+    {
+        // A normal reply anywhere is the sentinel's trigger: on a contended endpoint it proves the way in
+        // is open right now. Record it regardless of whether the sentinel is currently on, so switching it
+        // on does not have to wait for the next reply to become useful. This deliberately does not consult
+        // state.IsEnabled, which belongs to automatic recovery rather than keep-alive.
+        if (IsHealthyKeepAliveSignal(state))
+        {
+            _keepAlive.NoteHealthyConversation(state.Thread.Id, DateTimeOffset.UtcNow);
+        }
+    }
+
     internal static (TaskHealth Health, string Status) DescribeUnprotectedRecovery(RecoveryDecision decision) =>
         (decision.Health, ProtectionPausedStatus);
 
@@ -3214,12 +3281,10 @@ public sealed class GuardianEngine : IAsyncDisposable
              RecoveryClassifier.IncompleteTerminalStatus,
              StringComparison.OrdinalIgnoreCase));
 
-    // An inexact successor is a residual record whose new turn id was never confirmed, which the
-    // edit-last-user-turn contract produces on any confirmation timeout because it does not read the id
-    // back. Treating that as a permanent block stranded the task: the block flag outlived every later
-    // failure. An in-place retry is dispatched anyway -- the owner's expected-turn compare-and-swap either
-    // applies the edit or rejects it as stale, so no message can be duplicated. Append actions keep the
-    // stricter rule, because a lost acknowledgement there could mean a message did land.
+    // An inexact successor is a residual record whose new turn id was never confirmed. Only an
+    // explicitly in-place retry may proceed in that state: the owner's expected-turn compare-and-swap
+    // either applies the edit or rejects it as stale, so no message can be duplicated. Append actions
+    // keep the stricter block because a lost acknowledgement there could mean a message did land.
     internal static bool ShouldBlockFailedRecoverySuccessor(
         TurnSnapshot turn,
         RecoveryOperationRecord? recoverySuccessor,

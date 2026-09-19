@@ -19,6 +19,7 @@ internal static class UiRefinementOfflineTests
     {
         ArgumentNullException.ThrowIfNull(assert);
         await RunCaseAsync("conversation headings inherit the themed foreground", TestHeadingThemeAsync, assert);
+        await RunCaseAsync("conversation list exposes a read-only refresh command", TestConversationRefreshContractAsync, assert);
         await RunCaseAsync("closed combo boxes forward the display-member selector", TestComboBoxContractAsync, assert);
         await RunCaseAsync("closed combo boxes render display names without an application window", TestComboBoxRenderingAsync, assert);
         await RunCaseAsync("the user guide has complete bilingual resources and accurate defaults", TestGuideAsync, assert);
@@ -49,6 +50,23 @@ internal static class UiRefinementOfflineTests
                 "a conversation heading overrides the implicit style without retaining InkBrush: " + binding);
         }
 
+        return Task.CompletedTask;
+    }
+
+    private static Task TestConversationRefreshContractAsync()
+    {
+        var main = ReadProductXaml("MainWindow.xaml");
+        var zh = ReadResources("AppStrings.resx");
+        var en = ReadResources("AppStrings.en.resx");
+        var button = FindAutomationId(main, "ConversationRefreshButton");
+        Ensure(
+            Attribute(button, "Command") == "{Binding ScanNowCommand}" &&
+            Attribute(button, "AutomationProperties.Name") ==
+                "{Binding [Tasks.RefreshConversations], Source={StaticResource Loc}}" &&
+            Attribute(button, "ToolTip") == "{Binding [Tip.ScanNow], Source={StaticResource Loc}}" &&
+            zh.ContainsKey("Tasks.RefreshConversations") &&
+            en.ContainsKey("Tasks.RefreshConversations"),
+            "the conversation refresh action is missing its read-only command or bilingual UI contract");
         return Task.CompletedTask;
     }
 

@@ -2564,15 +2564,15 @@ internal static class FollowUpOfflineTests
         var focusTitleBar = SliceSource(
             xaml,
             "<!-- Focus Workspace title bar -->",
-            "<!-- Focus Workspace product rail -->");
+            "<!-- The navigation dock floats independently of the working surface. -->");
         var focusProductRail = SliceSource(
             xaml,
-            "<!-- Focus Workspace product rail -->",
-            "<Grid x:Name=\"WorkspaceViewport\"");
+            "<!-- The navigation dock floats independently of the working surface. -->",
+            "<controls:GlassSurface x:Name=\"WorkspaceGlassSurface\"");
         var workspaceViewport = SliceSource(
             xaml,
-            "<Grid x:Name=\"WorkspaceViewport\"",
-            "<!-- Conversations studio -->");
+            "<controls:GlassSurface x:Name=\"WorkspaceGlassSurface\"",
+            "<Grid x:Name=\"WorkspaceViewport\"");
         var conversationStudio = SliceSource(
             xaml,
             "<!-- Conversations studio -->",
@@ -2704,7 +2704,7 @@ internal static class FollowUpOfflineTests
             new FileInfo(logoIcoPath).Length > 0 &&
             project.Contains("<ApplicationIcon>Assets\\Ceasy.ico</ApplicationIcon>", StringComparison.Ordinal) &&
             project.Contains("<Resource Include=\"Assets\\CeasyLogo.png\" />", StringComparison.Ordinal) &&
-            xaml.Contains("Icon=\"/CodexGuardian;component/Assets/CeasyLogo.png\"", StringComparison.Ordinal) &&
+            xaml.Contains("Icon=\"/CodexGuardian;component/Assets/Ceasy.ico\"", StringComparison.Ordinal) &&
             xaml.Contains("Source=\"/CodexGuardian;component/Assets/CeasyLogo.png\"", StringComparison.Ordinal) &&
             !xaml.Contains("SafeDrill", StringComparison.Ordinal) &&
             !xaml.Contains("Recovery.Backoff", StringComparison.Ordinal) &&
@@ -2725,14 +2725,14 @@ internal static class FollowUpOfflineTests
             xaml.Contains("UseLayoutRounding=\"True\"", StringComparison.Ordinal) &&
             xaml.Contains("SnapsToDevicePixels=\"True\"", StringComparison.Ordinal) &&
             xaml.Contains("TextOptions.TextHintingMode=\"Auto\"", StringComparison.Ordinal) &&
-             xaml.Contains("CaptionHeight=\"52\"", StringComparison.Ordinal) &&
-             xaml.Contains("<ColumnDefinition Width=\"64\" />", StringComparison.Ordinal) &&
+             xaml.Contains("CaptionHeight=\"56\"", StringComparison.Ordinal) &&
+             xaml.Contains("<ColumnDefinition Width=\"212\" />", StringComparison.Ordinal) &&
              xaml.Contains("<RowDefinition Height=\"52\" />", StringComparison.Ordinal) &&
              !xaml.Contains("<!-- Product deck -->", StringComparison.Ordinal) &&
              !xaml.Contains("<!-- Workspace deck -->", StringComparison.Ordinal) &&
              !xaml.Contains("SelectedPageDescription", StringComparison.Ordinal) &&
              focusTitleBar.Contains("Grid.Column=\"1\"", StringComparison.Ordinal) &&
-             !focusTitleBar.Contains("SelectedPageTitle", StringComparison.Ordinal) &&
+             focusTitleBar.Contains("Text=\"{Binding SelectedPageTitle}\"", StringComparison.Ordinal) &&
              focusTitleBar.Contains("Text=\"{Binding MonitoringSummaryText}\"", StringComparison.Ordinal) &&
              focusTitleBar.Contains("AutomationProperties.AutomationId=\"UpdateUtilityButton\"", StringComparison.Ordinal) &&
              // This button used to be a hard-coded Collapsed placeholder, and the literal was asserted because
@@ -2766,7 +2766,7 @@ internal static class FollowUpOfflineTests
              focusProductRail.Contains("CommandParameter=\"Recovery\"", StringComparison.Ordinal) &&
              focusProductRail.Contains("CommandParameter=\"Settings\"", StringComparison.Ordinal) &&
              !focusProductRail.Contains("ToggleMonitoringCommand", StringComparison.Ordinal) &&
-             workspaceViewport.Contains("Grid.Row=\"1\"", StringComparison.Ordinal) &&
+             workspaceViewport.Contains("Grid.Row=\"2\"", StringComparison.Ordinal) &&
              workspaceViewport.Contains("Grid.Column=\"1\"", StringComparison.Ordinal) &&
              railNavigationButtonStyle.Contains("<Setter Property=\"Width\" Value=\"40\" />", StringComparison.Ordinal) &&
              railNavigationButtonStyle.Contains("<Setter Property=\"Height\" Value=\"40\" />", StringComparison.Ordinal) &&
@@ -2786,13 +2786,15 @@ internal static class FollowUpOfflineTests
             appXaml.Contains("x:Key=\"ControlSurfaceBrush\"", StringComparison.Ordinal) &&
             appXaml.Contains("x:Key=\"FieldSurfaceBrush\"", StringComparison.Ordinal) &&
             appXaml.Contains("x:Key=\"DisabledInkBrush\"", StringComparison.Ordinal) &&
-            appXaml.Contains("CornerRadius=\"8\"", StringComparison.Ordinal) &&
-            xaml.Contains("Background=\"{DynamicResource AmbientGlowBrush}\"", StringComparison.Ordinal) &&
+            xaml.Contains("CornerRadius=\"8\"", StringComparison.Ordinal) &&
+            xaml.Contains("Background=\"{DynamicResource AmbientCoolBrush}\"", StringComparison.Ordinal) &&
+            xaml.Contains("Background=\"{DynamicResource AmbientWarmBrush}\"", StringComparison.Ordinal) &&
             xaml.Contains("Background=\"{DynamicResource GlassSurfaceStrongBrush}\"", StringComparison.Ordinal) &&
             xaml.Contains("BorderBrush=\"{DynamicResource GlassBorderBrush}\"", StringComparison.Ordinal) &&
             !xaml.Contains("<BlurEffect", StringComparison.Ordinal) &&
             !xaml.Contains("EngineState", StringComparison.Ordinal) &&
-            !xaml.Contains("ScanNowCommand", StringComparison.Ordinal),
+            xaml.Contains("AutomationProperties.AutomationId=\"ConversationRefreshButton\"", StringComparison.Ordinal) &&
+            xaml.Contains("Command=\"{Binding ScanNowCommand}\"", StringComparison.Ordinal),
             "the dark-first single-accent glass foundation or engineering-entry removal drifted");
         // The keep-alive row must take both its surface and its hover tint from the palette. An inline
         // SolidColorBrush or a ColorAnimation cannot: ColorAnimation.To takes no DynamicResource, so either
@@ -2857,6 +2859,10 @@ internal static class FollowUpOfflineTests
         resourceReferences.UnionWith(CollectResourceReferences(xaml, "StaticResource"));
         var danglingReferences = resourceReferences
             .Where(reference => !reference.Contains('.', StringComparison.Ordinal))
+            // An implicit WPF style can be referenced as {StaticResource {x:Type controls:GlassSurface}}.
+            // The lightweight token scanner sees the nested markup extension's opening token as a key;
+            // it is a type lookup, not a resource dictionary entry.
+            .Where(reference => !reference.StartsWith("{x:Type", StringComparison.Ordinal))
             .Where(reference => !markupKeys.Contains(reference))
             .OrderBy(reference => reference, StringComparer.Ordinal)
             .ToArray();
@@ -2882,7 +2888,7 @@ internal static class FollowUpOfflineTests
             fieldContentHost.Contains("VerticalAlignment=\"Stretch\"", StringComparison.Ordinal) &&
             !fieldContentHost.Contains("TemplateBinding Padding", StringComparison.Ordinal) &&
             tasksSearchStage.Contains("TextAlignment=\"Left\"", StringComparison.Ordinal) &&
-            tasksSearchStage.Contains("Padding=\"34,0,38,0\"", StringComparison.Ordinal) &&
+            tasksSearchStage.Contains("Padding=\"34,0,72,0\"", StringComparison.Ordinal) &&
             tasksSearchStage.Contains("Margin=\"34,0,38,0\"", StringComparison.Ordinal) &&
             datePickerTextBoxStyle.Contains("<Setter Property=\"TextAlignment\" Value=\"Left\"", StringComparison.Ordinal) &&
             datePickerTextBoxStyle.Contains("<Setter Property=\"HorizontalContentAlignment\" Value=\"Stretch\"", StringComparison.Ordinal) &&
@@ -3009,13 +3015,11 @@ internal static class FollowUpOfflineTests
             "the themed date picker or complete calendar state template drifted");
         Ensure(
             baseButtonStyle.Contains("x:Name=\"ButtonScale\"", StringComparison.Ordinal) &&
-            // Press feedback is the one place that deliberately sits below the 150 ms floor the rest of the
-            // language uses: a pointer can outrun this animation, and past roughly 100 ms the button reads as
-            // having ignored the click and caught up afterwards. The retired 220 ms BackEase release is
-            // asserted absent rather than forgotten — 0.975 to 1.0 is too little travel for overshoot to read
-            // as spring, so bringing it back would look like a button still moving after the finger left.
+            // Press feedback stays below 150 ms so a pointer can outrun it. Release uses the shared spring
+            // easing surface and its deliberate 360 ms settling window; the retired BackEase release is
+            // asserted absent so the base button and custom spring do not compete for the same transition.
             baseButtonStyle.Contains("GeneratedDuration=\"0:0:0.07\"", StringComparison.Ordinal) &&
-            baseButtonStyle.Contains("GeneratedDuration=\"0:0:0.12\"", StringComparison.Ordinal) &&
+            baseButtonStyle.Contains("GeneratedDuration=\"0:0:0.36\"", StringComparison.Ordinal) &&
             baseButtonStyle.Contains("<CubicEase EasingMode=\"EaseOut\" />", StringComparison.Ordinal) &&
             !baseButtonStyle.Contains("<BackEase", StringComparison.Ordinal) &&
             appXaml.Contains("<Trigger Property=\"Validation.HasError\" Value=\"True\">", StringComparison.Ordinal) &&
@@ -3034,7 +3038,7 @@ internal static class FollowUpOfflineTests
             window.Contains("TimeSpan.FromMilliseconds(200)", StringComparison.Ordinal) &&
             window.Contains("EasingFunction = new BackEase", StringComparison.Ordinal) &&
             window.Contains("TimeSpan.FromMilliseconds(220)", StringComparison.Ordinal),
-            "the interaction language drifted: press feedback stays under 150 ms, every other transition stays 150-250 ms, and all of them stay non-linear");
+            "the interaction language drifted: press feedback, spring release, or non-linear easing changed");
         Ensure(
             !followUpPage.Contains("FollowUpTaskList", StringComparison.Ordinal) &&
             !followUpPage.Contains("FollowUpMoveUpButton", StringComparison.Ordinal) &&
@@ -3073,7 +3077,7 @@ internal static class FollowUpOfflineTests
             followUpPage.Contains("HorizontalAlignment=\"Stretch\"", StringComparison.Ordinal) &&
             followUpPage.Contains("ColumnDefinition Width=\"Auto\"", StringComparison.Ordinal) &&
             followUpPage.Contains("ColumnDefinition Width=\"*\"", StringComparison.Ordinal) &&
-            followUpPage.Contains("MinHeight=\"64\"", StringComparison.Ordinal) &&
+            followUpPage.Contains("MinHeight=\"78\"", StringComparison.Ordinal) &&
             followUpPage.Contains("MinHeight=\"48\"", StringComparison.Ordinal) &&
             followUpPage.Contains("MinHeight=\"62\"", StringComparison.Ordinal) &&
             followUpPage.Contains("MaxHeight=\"112\"", StringComparison.Ordinal) &&
@@ -3279,8 +3283,9 @@ internal static class FollowUpOfflineTests
             window.Contains("AnimateWorkspaceTransition", StringComparison.Ordinal) &&
             window.Contains("ApplyRouteVisibility", StringComparison.Ordinal) &&
             window.Contains("AnimateRouteReveal", StringComparison.Ordinal) &&
-            window.Contains("AnimateVisibleListItems", StringComparison.Ordinal) &&
-            window.Contains("AnimateRouteExit", StringComparison.Ordinal) &&
+            window.Contains("CancelRouteRevealAnimations", StringComparison.Ordinal) &&
+            window.Contains("ScheduleConversationContentTransition", StringComparison.Ordinal) &&
+            window.Contains("AnimateTaskWorkbenchTransition", StringComparison.Ordinal) &&
             window.Contains("CompleteRouteReveal", StringComparison.Ordinal) &&
             window.Contains("FindToolTipOwner(Mouse.DirectlyOver)", StringComparison.Ordinal) &&
             window.Contains("ToolTipService.GetToolTip(current)", StringComparison.Ordinal) &&
@@ -3299,20 +3304,19 @@ internal static class FollowUpOfflineTests
             window.Contains("ActivityPageRoot", StringComparison.Ordinal) &&
             window.Contains("GuardrailsPageRoot", StringComparison.Ordinal) &&
             window.Contains("PreferencesPageRoot", StringComparison.Ordinal) &&
-            // Route reveal is staggered rather than simultaneous, so what this pins is that a per-index delay
-            // exists at all. The offsets are now half of the 36/28 ms this line used to name; they live in the
-            // AnimateRouteElement calls, and halving them is a timing decision, not a loss of the stagger.
-            window.Contains("index * 18", StringComparison.Ordinal) &&
-            window.Contains("index * 14", StringComparison.Ordinal) &&
-            window.Contains("new QuinticEase", StringComparison.Ordinal) &&
-            xaml.Contains("x:Name=\"ThemeTransitionOverlay\"", StringComparison.Ordinal) &&
-            xaml.Contains("x:Name=\"ThemeTransitionSnapshot\"", StringComparison.Ordinal) &&
+            window.Contains("AnimateRouteElement(root, 0, TimeSpan.FromMilliseconds(260))", StringComparison.Ordinal) &&
+            window.Contains("AnimateRouteElement(stage, 0, TimeSpan.FromMilliseconds(220))", StringComparison.Ordinal) &&
+            window.Contains("new CubicEase", StringComparison.Ordinal) &&
             xaml.Contains("x:Name=\"ThemeUtilityButton\"", StringComparison.Ordinal) &&
-            window.Contains("RenderTargetBitmap", StringComparison.Ordinal) &&
-            window.Contains("CombinedGeometry", StringComparison.Ordinal) &&
-            window.Contains("GeometryCombineMode.Exclude", StringComparison.Ordinal) &&
-            window.Contains("EllipseGeometry", StringComparison.Ordinal) &&
-            window.Contains("CompleteThemeTransition", StringComparison.Ordinal) &&
+            window.Contains("StartThemeTransition", StringComparison.Ordinal) &&
+            window.Contains("CancelThemeTransition(keepCurrentColors: true)", StringComparison.Ordinal) &&
+            window.Contains("ParallelTimeline", StringComparison.Ordinal) &&
+            window.Contains("ColorAnimation", StringComparison.Ordinal) &&
+            window.Contains("ApplyAnimationClock", StringComparison.Ordinal) &&
+            !xaml.Contains("ThemeTransitionOverlay", StringComparison.Ordinal) &&
+            !xaml.Contains("ThemeTransitionSnapshot", StringComparison.Ordinal) &&
+            !window.Contains("CombinedGeometry", StringComparison.Ordinal) &&
+            !window.Contains("EllipseGeometry", StringComparison.Ordinal) &&
             window.Contains("CancelThemeTransition", StringComparison.Ordinal) &&
             window.Contains("SystemParameters.ClientAreaAnimation", StringComparison.Ordinal) &&
             window.Contains("HandoffBehavior.SnapshotAndReplace", StringComparison.Ordinal),

@@ -11,7 +11,7 @@
 .PARAMETER OlderSetupExe
     执行模式必需的真实旧版安装包，不再篡改注册表版本模拟降级。
 .EXAMPLE
-    pwsh -File work\installer\verify-installer.ps1 -SetupExe D:\CodexData\CodexGuardian\candidate\output\Ceasy-2.1.0-Setup.exe
+    pwsh -File work\installer\verify-installer.ps1 -SetupExe D:\CodexData\CodexGuardian\candidate\output\Ceasy-2.1.1-Setup.exe
 #>
 [CmdletBinding()]
 param(

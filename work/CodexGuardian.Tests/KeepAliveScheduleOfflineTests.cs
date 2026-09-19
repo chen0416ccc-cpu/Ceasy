@@ -29,6 +29,10 @@ internal static class KeepAliveScheduleOfflineTests
             TestUnansweredHeartbeatStaysDueAsync,
             assert);
         await RunCaseAsync(
+            "a healthy reply arms the sentinel target for its scheduled message",
+            TestHealthyReplyArmsSentinelAsync,
+            assert);
+        await RunCaseAsync(
             "a restarted coordinator claims only the wording it sent to that conversation",
             TestForeignTextKeepsRecoveryAsync,
             assert);
@@ -77,6 +81,53 @@ internal static class KeepAliveScheduleOfflineTests
                 "a restarted coordinator still recognises its own unanswered heartbeat");
         }
 
+        return Task.CompletedTask;
+    }
+
+    private static Task TestHealthyReplyArmsSentinelAsync()
+    {
+        var root = CreateDataRoot("keepalive-sentinel");
+        using var log = new GuardianLog(root);
+        var coordinator = new KeepAliveCoordinator(log);
+        var state = CreateState(CreateCompletedTurn());
+        var policy = CreateSentinelPolicy();
+        var now = DateTimeOffset.UtcNow;
+
+        Ensure(
+            KeepAliveCoordinator.IsSettled(state),
+            "the fixture represents a reliable final reply");
+        Ensure(
+            GuardianEngine.IsHealthyKeepAliveSignal(state),
+            "a settled live conversation is a keep-alive health signal");
+        Ensure(
+            coordinator.SelectDue([state], policy, now).Count == 0,
+            "the sentinel remains idle until a healthy reply is observed");
+
+        coordinator.NoteHealthyConversation(ThreadId, now.AddMinutes(-1));
+        var due = coordinator.SelectDue([state], policy, now);
+        Ensure(
+            due.Count == 1 && string.Equals(due[0].ThreadId, ThreadId, StringComparison.Ordinal),
+            "the sentinel target becomes due after the healthy reply arms it");
+
+        Ensure(
+            !GuardianEngine.IsHealthyKeepAliveSignal(state with { IsRunningNow = true }),
+            "a running conversation cannot arm the sentinel");
+        Ensure(
+            !GuardianEngine.IsHealthyKeepAliveSignal(state with
+            {
+                Health = TaskHealth.NeedsAttention,
+                Decision = RecoveryDecision.None(TaskHealth.NeedsAttention, "failed")
+            }),
+            "a failed conversation cannot arm the sentinel");
+        Ensure(
+            !GuardianEngine.IsHealthyKeepAliveSignal(state with
+            {
+                Thread = state.Thread with { IsArchived = true }
+            }),
+            "an archived conversation cannot arm the sentinel");
+        Ensure(
+            !GuardianEngine.IsHealthyKeepAliveSignal(state with { Turn = CreateUnansweredTurn("pending") }),
+            "a conversation without reliable final output cannot arm the sentinel");
         return Task.CompletedTask;
     }
 
@@ -215,6 +266,25 @@ internal static class KeepAliveScheduleOfflineTests
             HasCompleteItemEvidence: true,
             IsSingleTextUserInput: true);
 
+    private static TurnSnapshot CreateCompletedTurn() =>
+        new(
+            "turn-" + Guid.NewGuid().ToString("N")[..8],
+            "completed",
+            null,
+            null,
+            null,
+            "original request",
+            HasAttachments: false,
+            HasAssistantOutput: true,
+            HasWorkOutput: true,
+            OutputFingerprint: "complete",
+            StartedAt: 1,
+            CompletedAt: 2,
+            HasUserMessage: true,
+            HasFinalAssistantOutput: true,
+            HasCompleteItemEvidence: true,
+            IsSingleTextUserInput: true);
+
     private static GuardianTaskState CreateState(TurnSnapshot turn) =>
         new(
             new ThreadSummary(
@@ -247,6 +317,15 @@ internal static class KeepAliveScheduleOfflineTests
             {
                 [ThreadId] = true
             });
+
+    private static KeepAlivePolicySnapshot CreateSentinelPolicy() =>
+        new(
+            Enabled: true,
+            SentinelEnabled: true,
+            SentinelThreadId: ThreadId,
+            Interval: TimeSpan.FromMinutes(5),
+            Message: "configured keep-alive message",
+            ThreadEnabled: new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase));
 
     private static string CreateDataRoot(string label)
     {
